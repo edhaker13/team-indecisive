@@ -78,6 +78,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="IDrawable.h" />
+    <ClInclude Include="IUpdatable.h" />
     <ClInclude Include="IGraphics.h" />
   </ItemGroup>
   <ItemGroup>
