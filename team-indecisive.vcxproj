@@ -78,7 +78,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="IAIComponent.h" />
+    <ClInclude Include="IComponent.h" />
+    <ClInclude Include="IControls.h" />
     <ClInclude Include="IDrawable.h" />
+    <ClInclude Include="IGameObject.h" />
+    <ClInclude Include="IPhysicsComponent.h" />
     <ClInclude Include="IUpdatable.h" />
     <ClInclude Include="IGraphics.h" />
   </ItemGroup>
