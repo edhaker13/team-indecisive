@@ -1,13 +1,11 @@
 #pragma once
 typedef long HRESULT;
-// HINSTANCE;
 
-class IGraphics
+namespace Indecisive
 {
-public:
-	IGraphics() {};
-	~IGraphics() {};
-
-	virtual HRESULT Initialise(HINSTANCE hInstance, int nCmdShow) = 0;
+	class IGraphics
+	{
+	public:
+		virtual HRESULT Initialise(HINSTANCE hInstance, int nCmdShow) = 0;
+	};
 };
-

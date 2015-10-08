@@ -1,10 +1,10 @@
 #pragma once
-class IDrawable
+
+namespace Indecisive
 {
-public:
-	IDrawable() {}
-	~IDrawable() {}
-
-	virtual void Draw() = 0;
+	class IDrawable
+	{
+	public:
+		virtual void Draw() = 0;
+	};
 };
-

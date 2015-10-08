@@ -1,10 +1,10 @@
 #pragma once
-class IUpdatable
+
+namespace Indecisive
 {
-public:
-	IUpdatable() {}
-	~IUpdatable() {}
-
-	virtual void Update() = 0;
+	class IUpdatable
+	{
+	public:
+		virtual void Update(int elapsedTime) = 0;
+	};
 };
-
