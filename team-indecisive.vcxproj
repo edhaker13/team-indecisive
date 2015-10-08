@@ -79,6 +79,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DirectXMath.h" />
     <ClInclude Include="GraphicsDirectX.h" />
     <ClInclude Include="IAIComponent.h" />
     <ClInclude Include="IComponent.h" />
@@ -91,6 +92,7 @@
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DirectXMath.cpp" />
     <ClCompile Include="GraphicsDirectX.cpp" />
   </ItemGroup>
   <ItemGroup>
