@@ -406,6 +406,9 @@ namespace Indecisive
 		// Update our time
 		static float t = 0.0f;
 
+		//
+		//To be removed (placed in game loop)
+		//
 		if (_driverType == D3D_DRIVER_TYPE_REFERENCE)
 		{
 			t += (float)XM_PI * 0.0125f;
@@ -420,6 +423,7 @@ namespace Indecisive
 
 			t = (dwTimeCur - dwTimeStart) / 1000.0f;
 		}
+		//------
 
 		//
 		// Animate the cube
@@ -435,16 +439,18 @@ namespace Indecisive
 		float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red,green,blue,alpha
 		_pImmediateContext->ClearRenderTargetView(_pRenderTargetView, ClearColor);
 
+		//
+
 		XMMATRIX world = XMLoadFloat4x4(&_world);
 		XMMATRIX view = XMLoadFloat4x4(&_view);
 		XMMATRIX projection = XMLoadFloat4x4(&_projection);
-		//
-		// Update variables
-		//
+		
 		ConstantBuffer cb;
 		cb.mWorld = XMMatrixTranspose(world);
 		cb.mView = XMMatrixTranspose(view);
 		cb.mProjection = XMMatrixTranspose(projection);
+		
+		//--------
 
 		_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
