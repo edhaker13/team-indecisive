@@ -1,113 +1,80 @@
 #pragma once
-#include <list>
+#include <map>
 #include "DirectXMath.h"
+
 namespace Indecisive
 {
 	/// <summary> Self contained n-ary tree. Expects a Matrix </summary> Polymorphism and recursion idea from http://www.andresilaghi.com/curious-projects/opengl-scene-graph-in-c/
-	struct BaseNode
+	struct TreeNode
 	{
 		// TODO: Change to map
-		std::list<BaseNode*> children;
+		std::map<std::string, TreeNode*> children;
 		std::string key;
-		BaseNode* parent = nullptr;
+		TreeNode* parent = nullptr;
 		Matrix world = Matrix::Identity;
 
-		BaseNode() {};
-		BaseNode(std::string key) : key(key), parent(nullptr), world(M::Identity) {};
-		~BaseNode(void)
+		TreeNode(): parent(nullptr) {};
+		TreeNode(std::string key) : key(key), parent(nullptr) {};
+		~TreeNode(void)
 		{
-			std::list<BaseNode*>::iterator it;
-			for (it = children.begin(); it != children.end();)
+			for (auto it = children.begin(); it != children.end();)
 			{
-				delete *it;
+				delete it->second;
 				it = children.erase(it);
 			}
 			if (parent != nullptr)
 			{
-				parent->children.remove(this);
+				delete parent;
+				parent = nullptr;
 			}
 		};
 
-		void Append(BaseNode* appendix)
+		void Append(TreeNode* appendix)
 		{
 			if (appendix != nullptr)
 			{
-				children.push_back(appendix);
+				children.emplace(appendix->key, appendix);
 				appendix->parent = this;
 			}
 		};
 
-		/// <summary> Searches in deepest children first </summary>
-		static BaseNode* Find(BaseNode* node, const std::string& value)
+		/// <summary> Searches in all siblings first </summary>
+		static TreeNode* Find(TreeNode* node, const std::string& key)
 		{
 			if (node != nullptr)
 			{
-				if (node->key == value)
+				if (node->key == key)
 				{
 					return node;
 				}
-				BaseNode* found = nullptr;
-				std::list<BaseNode*>::iterator it;
-				for (it = node->children.begin(); it != node->children.end(); it++)
+				TreeNode* found = node->children.find(key)->second;
+				if (found == node->children.end()->second)
 				{
-					if (*it != nullptr && found == nullptr)
+					for (const auto& p: node->children)
 					{
-						found = Find(*it, value);
-					}
+						found = Find(p.second, key);
+					}				
 				}
 				return found;
 			}
 			return nullptr;
 		};
 
-		static BaseNode* Insert(BaseNode* beforeNode, BaseNode* node)
-		{
-			if (node != nullptr)
-			{
-				bool insert = true;
-				std::list<BaseNode*>::iterator it;
-				for (it = node->children.begin(); it != node->children.end(); it++)
-				{
-					if (*it == node)
-					{
-						insert = false;
-					}
-				}
-
-				if (insert)
-				{
-					node->children.push_back(beforeNode);
-					beforeNode->parent = node;
-				}
-
-				return node;
-			}
-			return nullptr;
-		};
-
-		/// <summary> Recursively draw on children </summary>
+		/// <summary> Recursively draw children </summary>
 		virtual void Draw()
 		{
-			std::list<BaseNode*>::iterator it;
-			for (it = children.begin(); it != children.end(); it++)
+			for (const auto& pair: children)
 			{
-				if ((*it) != nullptr)
-				{
-					(*it)->Draw();
-				}
+				(pair.second)->Draw();
 			}
 		};
 
 		/// <summary> Recursively update children </summary>
-		virtual void Update(int elapsedTime)
+		virtual void Update(float elapsedTime)
 		{
-			std::list<BaseNode*>::iterator it;
-			for (it = children.begin(); it != children.end(); it++)
+			for(const auto& pair: children)
 			{
-				if ((*it) != nullptr)
-				{
-					(*it)->Update(elapsedTime);
-				}
+				(pair.second)->Update(elapsedTime);
 			}
 		};
 
@@ -128,46 +95,43 @@ namespace Indecisive
 		}
 	};
 
-	//struct ObjectNode : public BaseNode
+	//struct ObjectNode : public TreeNode
 	//{
-	//	GameObject* object;
+	//	IGameObject* object;
 	//
 	//	ObjectNode() : object(nullptr) {};
-	//	ObjectNode(std::string key, GameObject* object) : BaseNode(key), object(object) {};
+	//	ObjectNode(std::string key, IGameObject* object) : TreeNode(key), object(object) {};
 	//	~ObjectNode() {	delete object; object = nullptr; };
-	//	//virtual void Draw() { object->Draw(); BaseNode::Draw(); }; // Needs adding arguments
-	//	virtual void Update(int elapsedTime) { object->Update(elapsedTime);	BaseNode::Update(elapsedTime); };
+	//	//virtual void Draw() { object->Draw(); TreeNode::Draw(); }; // Needs adding arguments
+	//	virtual void Update(float elapsedTime) { object->Update(elapsedTime);	TreeNode::Update(elapsedTime); };
 	//	//virtual void Selection(std::vector<ObjectNode*>& hits, const float3& rStart, const float3& rEnd);
 	//};
 
-	struct RotationNode : public BaseNode
+	struct RotationNode : public TreeNode
 	{
 		Vector3 yawPitchRoll;
 
-		RotationNode(std::string key, Vector3 yawPitchRoll) : BaseNode(key), yawPitchRoll(yawPitchRoll) {};
+		RotationNode(std::string key, Vector3 yawPitchRoll) : TreeNode(key), yawPitchRoll(yawPitchRoll) {};
 
-		// Needs implementation after VectorMath
-		virtual void Draw()
+		virtual void Update(float elapsedTime)
 		{
 			Matrix Transform = Matrix::CreateFromYawPitchRoll(yawPitchRoll.x, yawPitchRoll.y, yawPitchRoll.z);
 			world = Transform * GetParentWorld();
-			BaseNode::Draw();
 		};
 	};
 
-	struct PositionNode : public BaseNode
+	struct PositionNode : public TreeNode
 	{
 		Vector3 position;
-		PositionNode(std::string key, Vector3 position) : BaseNode(key), position(position) {};
+		PositionNode(std::string key, Vector3 position) : TreeNode(key), position(position) {};
 
 		// Needs implementation after VectorMath
-		virtual void Draw()
+		virtual void Update(float elapsedTime)
 		{
-			//World = XMMatrixTranslation(position.x, position.y, position.z) * GetParentWorld();
-			BaseNode::Draw();
+			world = Matrix::CreateTranslation(position) * GetParentWorld();
 		};
 	};
-	/// <summary> Node with position data that will stay with it the offsets of cameraEye </summary>
+	/// <summary> Node with position that will stay within the offsets of cameraEye </summary>
 	struct ClampedPositionNode : public PositionNode
 	{
 		const Vector3& cameraEye;
@@ -175,18 +139,17 @@ namespace Indecisive
 		ClampedPositionNode(std::string key, Vector3 position, const Vector3& cameraEye, float lowerBound, float upperBound) :
 			PositionNode(key, position), cameraEye(cameraEye), lowerBound(lowerBound), upperBound(upperBound) {};
 
-		virtual void Update(int elapsedTime)
+		virtual void Update(float elapsedTime)
 		{
 			if (position.z < lowerBound && position.z > upperBound)
 			{
 				position.z = (upperBound - lowerBound) / 2;
 			}
-			PositionNode::Update(elapsedTime);
 		}
 	};
 
 	/// <summary> Node with camera center, eye, and up positions </summary>
-	struct CameraNode : public BaseNode
+	struct CameraNode : public TreeNode
 	{
 		Vector3 eye, up, distance;
 
@@ -194,7 +157,7 @@ namespace Indecisive
 		Vector3& center;
 
 		CameraNode(std::string key, Vector3& center, Vector3 eye, Vector3 up) :
-			BaseNode(key), center(center), eye(eye), up(up)
+			TreeNode(key), center(center), eye(eye), up(up)
 		{
 			distance = center - eye;
 		};

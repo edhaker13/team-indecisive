@@ -20,7 +20,8 @@ namespace Indecisive
 	struct Matrix;
 	using namespace DirectX;
 
-	struct Vector3 : public XMFLOAT3 {
+	struct Vector3 : public XMFLOAT3
+	{
 		Vector3() : XMFLOAT3(0.f, 0.f, 0.f) {}
 		explicit Vector3(float x) : XMFLOAT3(x, x, x) {}
 		Vector3(float _x, float _y, float _z) : XMFLOAT3(_x, _y, _z) {}
@@ -233,22 +234,26 @@ namespace Indecisive
 			1.f, 0, 0, 0,
 			0, 1.f, 0, 0,
 			0, 0, 1.f, 0,
-			0, 0, 0, 1.f) {}
+			0, 0, 0, 1.f)
+		{}
 		Matrix(float m00, float m01, float m02, float m03,
 			float m10, float m11, float m12, float m13,
 			float m20, float m21, float m22, float m23,
 			float m30, float m31, float m32, float m33) : XMFLOAT4X4(m00, m01, m02, m03,
 			m10, m11, m12, m13,
 			m20, m21, m22, m23,
-			m30, m31, m32, m33) {}
+			m30, m31, m32, m33)
+		{}
 		explicit Matrix(const Vector3& r0, const Vector3& r1, const Vector3& r2) : XMFLOAT4X4(r0.x, r0.y, r0.z, 0,
 			r1.x, r1.y, r1.z, 0,
 			r2.x, r2.y, r2.z, 0,
-			0, 0, 0, 1.f) {}
+			0, 0, 0, 1.f)
+		{}
 		explicit Matrix(const Vector4& r0, const Vector4& r1, const Vector4& r2, const Vector4& r3) : XMFLOAT4X4(r0.x, r0.y, r0.z, r0.w,
 			r1.x, r1.y, r1.z, r1.w,
 			r2.x, r2.y, r2.z, r2.w,
-			r3.x, r3.y, r3.z, r3.w) {}
+			r3.x, r3.y, r3.z, r3.w)
+		{}
 		Matrix(const XMFLOAT4X4& M) { memcpy_s(this, sizeof(float) * 16, &M, sizeof(XMFLOAT4X4)); }
 
 		explicit Matrix(_In_reads_(16) const float *pArray) : XMFLOAT4X4(pArray) {}
@@ -289,7 +294,7 @@ namespace Indecisive
 		Vector3 Left() const { return Vector3(-_11, -_12, -_13); }
 		void Left(const Vector3& v) { _11 = -v.x; _12 = -v.y; _13 = -v.z; }
 
-		Vector3 Forward() const  { return Vector3(-_31, -_32, -_33); }
+		Vector3 Forward() const { return Vector3(-_31, -_32, -_33); }
 		void Forward(const Vector3& v) { _31 = -v.x; _32 = -v.y; _33 = -v.z; }
 
 		Vector3 Backward() const { return Vector3(_31, _32, _33); }
