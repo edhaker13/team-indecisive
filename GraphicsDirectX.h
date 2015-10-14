@@ -7,17 +7,13 @@
 #include <directxcolors.h>
 #include "resource.h"
 #include "IGraphics.h"
-#include "DirectXMath.h"
+#include "Structures.h"
 
 namespace Indecisive
 {
 	using namespace DirectX;
 
-	struct SimpleVertex
-	{
-		XMFLOAT3 Pos;
-		XMFLOAT4 Color;
-	};
+	class GameObject;
 
 	struct ConstantBuffer
 	{
@@ -29,32 +25,39 @@ namespace Indecisive
 	class GraphicsDirectX : public IGraphics
 	{
 	public:
-		GraphicsDirectX();
 		~GraphicsDirectX();
-
+		// This method should go in game or other manager
+		static GraphicsDirectX& Instance() { static GraphicsDirectX instance; return instance; }
 		virtual HRESULT Initialise(HINSTANCE hInstance, int nCmdShow) override;
-
-		Buffer* InitVertexBuffer(SimpleVertex** vertices, int arraySize);
-		Buffer* InitIndexBuffer(unsigned short** indices, int arraySize);
+		// This method should go in game or other manager
+		virtual Buffer* InitVertexBuffer(SimpleVertex vertices[], unsigned arraySize) override;
+		// This method should go in game or other manager
+		virtual Buffer* InitIndexBuffer(unsigned short indices[], unsigned arraySize) override;
+		// This method should go in game or other manager
+		virtual void DrawGeometry(Geometry* g) override;
 
 		void Update();
 		void Draw();
 
 	private:
-		HINSTANCE               _hInst;
-		HWND                    _hWnd;
-		D3D_DRIVER_TYPE         _driverType;
-		D3D_FEATURE_LEVEL       _featureLevel;
-		ID3D11Device*           _pd3dDevice;
-		ID3D11DeviceContext*    _pImmediateContext;
-		IDXGISwapChain*         _pSwapChain;
-		ID3D11RenderTargetView* _pRenderTargetView;
-		ID3D11VertexShader*     _pVertexShader;
-		ID3D11PixelShader*      _pPixelShader;
-		ID3D11InputLayout*      _pVertexLayout;
-		ID3D11Buffer*           _pVertexBuffer;
-		ID3D11Buffer*           _pIndexBuffer;
-		ID3D11Buffer*           _pConstantBuffer;
+		GraphicsDirectX(): IGraphics() {};
+		GraphicsDirectX(GraphicsDirectX const&) = delete;
+		void operator=(GraphicsDirectX const&) = delete;
+
+		HINSTANCE               _hInst = nullptr;
+		HWND                    _hWnd = nullptr;
+		D3D_DRIVER_TYPE         _driverType = D3D_DRIVER_TYPE_NULL;
+		D3D_FEATURE_LEVEL       _featureLevel = D3D_FEATURE_LEVEL_11_0;
+		ID3D11Device*           _pd3dDevice = nullptr;
+		ID3D11DeviceContext*    _pImmediateContext = nullptr;
+		IDXGISwapChain*         _pSwapChain = nullptr;
+		ID3D11RenderTargetView* _pRenderTargetView = nullptr;
+		ID3D11VertexShader*     _pVertexShader = nullptr;
+		ID3D11PixelShader*      _pPixelShader = nullptr;
+		ID3D11InputLayout*      _pVertexLayout = nullptr;
+		ID3D11Buffer*           _pVertexBuffer = nullptr;
+		ID3D11Buffer*           _pIndexBuffer = nullptr;
+		ID3D11Buffer*           _pConstantBuffer = nullptr;
 		XMFLOAT4X4              _world;
 		XMFLOAT4X4              _view;
 		XMFLOAT4X4              _projection;
@@ -84,5 +87,7 @@ namespace Indecisive
 
 		ID3D11RasterizerState* CCWcullMode;
 		ID3D11RasterizerState* CWcullMode;
+
+		GameObject* _pGameObject = nullptr;
 	};
 };

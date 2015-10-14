@@ -1,3 +1,4 @@
+#pragma once
 #include "DirectXMath.h"
 
 namespace Indecisive
@@ -22,13 +23,13 @@ namespace Indecisive
 
 	struct Geometry
 	{
-		Vertex* vertexBuffer;
-		unsigned short* indexBuffer;
-		int numberOfIndices;
+		Buffer* vertexBuffer;
+		Buffer* indexBuffer;
 
-		unsigned int vertexBufferStride;
-		unsigned int vertexBufferOffset;
-
+		unsigned vertexBufferStride;
+		unsigned vertexBufferOffset;
+		unsigned indexBufferSize;
+		unsigned indexBufferOffset;
 	};
 
 	struct Material

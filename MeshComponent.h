@@ -1,23 +1,34 @@
 #pragma once
-#include "Structures.h"
-
+#include "IComponent.h"
+#include "IDrawable.h"
+#include "GraphicsDirectX.h"
 
 namespace Indecisive
 { 
+	struct Geometry;
+	struct Material;
 
-	class MeshComponent
+	class MeshComponent: public IComponent, public IDrawable
 	{
 	private:
-		
+		Geometry* _geometry;
+		Material* _material;
 
 	public:
-		MeshComponent(Geometry* newGeometry, Material* newMaterial);
-		~MeshComponent();
+		MeshComponent(Geometry* geometry, Material* material) : IComponent("Mesh"), _geometry(geometry), _material(material) {};
+		~MeshComponent()
+		{
+			delete _geometry;
+			delete _material;
 
-	private:
-		Geometry* _Geometry;
-		Material* _Material;
-
+			_geometry = nullptr;
+			_material = nullptr;
+		};
+		virtual void Draw() override
+		{
+			/// TODO:: REMOVE GRAPHICS DEPENDCY !!!!!!
+			GraphicsDirectX::Instance().DrawGeometry(_geometry);
+		};
 	};
 
 }

@@ -1,24 +1,8 @@
 #include "GraphicsDirectX.h"
+#include "ComponentFactory.h"
+
 namespace Indecisive
 {
-	GraphicsDirectX::GraphicsDirectX() : IGraphics()
-	{
-		_hInst = nullptr;
-		_hWnd = nullptr;
-		_driverType = D3D_DRIVER_TYPE_NULL;
-		_featureLevel = D3D_FEATURE_LEVEL_11_0;
-		_pd3dDevice = nullptr;
-		_pImmediateContext = nullptr;
-		_pSwapChain = nullptr;
-		_pRenderTargetView = nullptr;
-		_pVertexShader = nullptr;
-		_pPixelShader = nullptr;
-		_pVertexLayout = nullptr;
-		_pVertexBuffer = nullptr;
-		_pIndexBuffer = nullptr;
-		_pConstantBuffer = nullptr;
-	}
-
 	GraphicsDirectX::~GraphicsDirectX()
 	{
 		Cleanup();
@@ -78,6 +62,7 @@ namespace Indecisive
 
 		// Initialize the projection matrix
 		XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _windowWidth / (FLOAT)_windowHeight, 0.01f, 100.0f));
+
 
 		return S_OK;
 	}
@@ -147,7 +132,7 @@ namespace Indecisive
 		return hr;
 	}
 
-	Buffer* GraphicsDirectX::InitVertexBuffer(SimpleVertex** vertices, int arraySize)
+	Buffer* GraphicsDirectX::InitVertexBuffer(SimpleVertex vertices[], unsigned arraySize)
 	{
 		HRESULT hr;
 
@@ -174,7 +159,7 @@ namespace Indecisive
 		return pBuffer;
 	}
 
-	Buffer* GraphicsDirectX::InitIndexBuffer(unsigned short** indices, int arraySize)
+	Buffer* GraphicsDirectX::InitIndexBuffer(unsigned short indices[], unsigned arraySize)
 	{
 		HRESULT hr;
 
@@ -410,7 +395,7 @@ namespace Indecisive
 
 		InitShadersAndInputLayout();
 
-		InitVertexBuffer();
+		/*InitVertexBuffer();
 
 		// Set vertex buffer
 		UINT stride = sizeof(SimpleVertex);
@@ -421,6 +406,11 @@ namespace Indecisive
 
 		// Set index buffer
 		_pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+		*/
+
+		// TODO: ASSET MANAGER
+		_pGameObject = ComponentFactory::MakeTestObject();
+
 
 		// Set primitive topology
 		_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -514,12 +504,23 @@ namespace Indecisive
 		_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
 		_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
 		_pImmediateContext->PSSetShader(_pPixelShader, nullptr, 0);
-		_pImmediateContext->DrawIndexed(6, 0, 0);
-
+		
+		//_pImmediateContext->DrawIndexed(6, 0, 0);
+		
+		// TODO: USE SCENE GRAPH
+		_pGameObject->Draw();
+		
 		//
 		// Present our back buffer to our front buffer
 		//
 		_pSwapChain->Present(0, 0);
+	}
+
+	void GraphicsDirectX::DrawGeometry(Geometry* g)
+	{
+		_pImmediateContext->IASetVertexBuffers(0, 1, (ID3D11Buffer**)&g->vertexBuffer, &g->vertexBufferStride, &g->vertexBufferOffset);
+		_pImmediateContext->IASetIndexBuffer((ID3D11Buffer*)g->indexBuffer, DXGI_FORMAT_R16_UINT, g->indexBufferOffset);
+		_pImmediateContext->DrawIndexed(g->indexBufferSize, 0, 0);
 	}
 };
 
@@ -528,9 +529,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-	Indecisive::GraphicsDirectX * theApp = new Indecisive::GraphicsDirectX();
+	Indecisive::GraphicsDirectX& theApp = Indecisive::GraphicsDirectX::Instance();
 
-	if (FAILED(theApp->Initialise(hInstance, nCmdShow)))
+	if (FAILED(theApp.Initialise(hInstance, nCmdShow)))
 	{
 		return -1;
 	}
@@ -547,13 +548,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		}
 		else
 		{
-			theApp->Update();
-			theApp->Draw();
+			theApp.Update();
+			theApp.Draw();
 		}
 	}
-
-	delete theApp;
-	theApp = nullptr;
 
 	return (int)msg.wParam;
 }

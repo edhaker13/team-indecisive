@@ -1,9 +1,11 @@
 #include "MeshComponent.h"
+#include "GameObject.h"
 
 namespace Indecisive
 {
 	namespace ComponentFactory
 	{
-		MeshComponent* MeshTestMesh();
+		GameObject* MakeTestObject();
+		MeshComponent* MakeTestMesh();
 	}
 }

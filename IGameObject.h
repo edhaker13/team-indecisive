@@ -1,47 +1,13 @@
 #pragma once
-#include <list>
-#include "IUpdatable.h"
 #include "IDrawable.h"
+#include "IUpdatable.h"
 
 namespace Indecisive
 {
-	class IGameObject : public IDrawable, IUpdatable
+	class IGameObject : public IDrawable, public IUpdatable
 	{
-	private:
-		std::list<IDrawable*> _drawableComponents;
-		std::list<IUpdatable*> _updatableComponents;
-
 	public:
-		virtual void AddDrawable(IDrawable* pComponent)
-		{
-			if (pComponent != nullptr)
-			{
-				_drawableComponents.push_back(pComponent);
-			}
-		}
-
-		virtual void AddUpdatable(IUpdatable* pComponent)
-		{
-			if (pComponent != nullptr)
-			{
-				_updatableComponents.push_back(pComponent);
-			}
-		}
-
-		virtual void Draw() override
-		{
-			for (IDrawable* pComponent : _drawableComponents)
-			{
-				pComponent->Draw();
-			}
-		}
-
-		virtual void Update(float elapsedTime) override
-		{
-			for (IUpdatable* pComponent : _updatableComponents)
-			{
-				pComponent->Update(elapsedTime);
-			}
-		}
+		virtual void AddDrawable(IDrawable*) = 0;
+		virtual void AddUpdatable(IUpdatable*) = 0;
 	};
-};
+}
