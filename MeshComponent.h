@@ -1,8 +1,6 @@
 #pragma once
-#include <Windows.h>	
-#include <fstream>		
-#include <vector>		
-#include <map>			
+#include "Structures.h"
+
 
 namespace Indecisive
 { 
@@ -10,12 +8,16 @@ namespace Indecisive
 	class MeshComponent
 	{
 	private:
-		bool StoreVertex();
-		bool StoreIndices();
+		
 
 	public:
 		MeshComponent();
 		~MeshComponent();
+
+	private:
+		Geometry* TestGeometry;
+		Material* TestMaterial;
+
 	};
 
 }
