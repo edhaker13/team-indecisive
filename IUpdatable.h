@@ -5,6 +5,6 @@ namespace Indecisive
 	class IUpdatable
 	{
 	public:
-		virtual void Update(int elapsedTime) = 0;
+		virtual void Update(float elapsedTime) = 0;
 	};
 };
