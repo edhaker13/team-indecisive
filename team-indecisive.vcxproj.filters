@@ -37,9 +37,6 @@
     <ClInclude Include="IGameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IPhysicsComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IAIComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -58,12 +55,24 @@
     <ClInclude Include="IInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PhysicsComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Structures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphicsDirectX.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DirectXMath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

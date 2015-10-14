@@ -86,15 +86,18 @@
     <ClInclude Include="IInput.h" />
     <ClInclude Include="IDrawable.h" />
     <ClInclude Include="IGameObject.h" />
-    <ClInclude Include="IPhysicsComponent.h" />
+    <ClInclude Include="MeshComponent.h" />
+    <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="IUpdatable.h" />
     <ClInclude Include="IGraphics.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneGraph.h" />
+    <ClInclude Include="Structures.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectXMath.cpp" />
     <ClCompile Include="GraphicsDirectX.cpp" />
+    <ClCompile Include="MeshComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DX11 Framework.rc" />
