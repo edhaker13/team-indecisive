@@ -11,12 +11,12 @@ namespace Indecisive
 		
 
 	public:
-		MeshComponent();
+		MeshComponent(Geometry* newGeometry, Material* newMaterial);
 		~MeshComponent();
 
 	private:
-		Geometry* TestGeometry;
-		Material* TestMaterial;
+		Geometry* _Geometry;
+		Material* _Material;
 
 	};
 
