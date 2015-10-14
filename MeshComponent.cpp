@@ -10,6 +10,10 @@ namespace Indecisive
 
 	MeshComponent::~MeshComponent()
 	{
+		delete _Geometry;
+		delete _Material;
 
+		_Geometry = nullptr;
+		_Material = nullptr;
 	}
 }
