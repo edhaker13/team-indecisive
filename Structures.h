@@ -5,7 +5,7 @@ namespace Indecisive
 	struct Geometry
 	{
 		Vertex* vertexBuffer;
-		unsigned short indexBuffer;
+		unsigned short* indexBuffer;
 		int numberOfIndices;
 
 		unsigned int vertexBufferStride;
