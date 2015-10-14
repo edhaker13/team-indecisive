@@ -147,7 +147,7 @@ namespace Indecisive
 		return hr;
 	}
 
-	bool GraphicsDirectX::InitVertexBuffer(SimpleVertex** vertices, int arraySize)
+	Buffer* GraphicsDirectX::InitVertexBuffer(SimpleVertex** vertices, int arraySize)
 	{
 		HRESULT hr;
 
@@ -174,7 +174,7 @@ namespace Indecisive
 		return pBuffer;
 	}
 
-	bool GraphicsDirectX::InitIndexBuffer(unsigned short** indices, int arraySize)
+	Buffer* GraphicsDirectX::InitIndexBuffer(unsigned short** indices, int arraySize)
 	{
 		HRESULT hr;
 

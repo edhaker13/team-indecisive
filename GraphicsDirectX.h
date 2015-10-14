@@ -34,8 +34,8 @@ namespace Indecisive
 
 		virtual HRESULT Initialise(HINSTANCE hInstance, int nCmdShow) override;
 
-		bool InitVertexBuffer(SimpleVertex** vertices, int arraySize);
-		bool InitIndexBuffer(unsigned short** indices, int arraySize);
+		Buffer* InitVertexBuffer(SimpleVertex** vertices, int arraySize);
+		Buffer* InitIndexBuffer(unsigned short** indices, int arraySize);
 
 		void Update();
 		void Draw();
