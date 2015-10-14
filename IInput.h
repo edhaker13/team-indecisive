@@ -1,9 +1,6 @@
 #pragma once
-class IInput
+namespace Indecisive
 {
-public:
-	IInput() {}
-	~IInput() {}
-
+	class IInput
+	{};
 };
-
