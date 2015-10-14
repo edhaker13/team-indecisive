@@ -1,7 +1,25 @@
 #include "DirectXMath.h"
 
 namespace Indecisive
-{ 
+{
+	struct Vertex
+	{
+		Vector3 Pos;
+		Vector3 Normal;
+		Vector3 TexC;
+
+		bool operator<(const Vertex other) const
+		{
+			return memcmp((void*)this, (void*)&other, sizeof(Vertex)) > 0;
+		}
+	};
+
+	struct SimpleVertex
+	{
+		Vector3 Pos;
+		Vector4 Colour;
+	};
+
 	struct Geometry
 	{
 		Vertex* vertexBuffer;
@@ -25,25 +43,4 @@ namespace Indecisive
 
 		//-------
 	};
-
-	struct Vertex
-	{
-		Vector3 Pos;
-		Vector3 Normal;
-		Vector3 TexC;
-
-		bool operator<(const Vertex other) const
-		{
-			return memcmp((void*)this, (void*)&other, sizeof(Vertex)) > 0;
-		}
-	};
-
-	struct SimpleVertex
-	{
-		Vector3 Pos;
-		Vector4 Colour;
-	};
-
-		
-
 }

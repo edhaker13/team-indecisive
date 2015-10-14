@@ -4,6 +4,6 @@ namespace Indecisive
 {
 	MeshComponent* ComponentFactory::MeshTestMesh()
 	{
-
+		return nullptr;
 	}
 }
