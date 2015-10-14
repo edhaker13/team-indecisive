@@ -37,7 +37,7 @@
     <ClInclude Include="IGameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="IAIComponent.h">
+    <ClInclude Include="AIComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsDirectX.h">

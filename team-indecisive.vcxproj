@@ -81,7 +81,7 @@
   <ItemGroup>
     <ClInclude Include="DirectXMath.h" />
     <ClInclude Include="GraphicsDirectX.h" />
-    <ClInclude Include="IAIComponent.h" />
+    <ClInclude Include="AIComponent.h" />
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="IInput.h" />
     <ClInclude Include="IDrawable.h" />
