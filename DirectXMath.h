@@ -14,6 +14,8 @@
 #pragma once
 #include <memory>
 #include <directxmath.h>
+#include <d3d11.h>
+
 namespace Indecisive
 {
 	struct Vector4;
@@ -347,6 +349,11 @@ namespace Indecisive
 
 		// Constants
 		static const Matrix Identity;
+	};
+
+	struct Buffer : public ID3D11Buffer
+	{
+		
 	};
 
 	// Binary operators

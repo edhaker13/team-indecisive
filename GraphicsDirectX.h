@@ -7,6 +7,7 @@
 #include <directxcolors.h>
 #include "resource.h"
 #include "IGraphics.h"
+#include "DirectXMath.h"
 
 namespace Indecisive
 {
