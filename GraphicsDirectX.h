@@ -58,8 +58,8 @@ namespace Indecisive
 		ID3D11DepthStencilView* _depthStencilView = nullptr;
 		ID3D11Texture2D* _depthStencilBuffer = nullptr;
 
-		ID3D11ShaderResourceView * _pTextureRV = nullptr;
-		ID3D11SamplerState * _pSamplerLinear = nullptr;
+		ID3D11ShaderResourceView* _pTextureRV = nullptr;
+		ID3D11SamplerState* _pSamplerLinear = nullptr;
 
 		HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
 		HRESULT InitDevice();
@@ -69,8 +69,8 @@ namespace Indecisive
 		HRESULT InitVertexBuffer();
 		HRESULT InitIndexBuffer();
 
-		UINT _WindowHeight;
-		UINT _WindowWidth;
+		UINT _windowHeight;
+		UINT _windowWidth;
 
 		UINT _renderHeight = 1080;
 		UINT _renderWidth = 1920;

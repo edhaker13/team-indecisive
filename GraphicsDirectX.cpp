@@ -56,8 +56,8 @@ namespace Indecisive
 
 		RECT rc;
 		GetClientRect(_hWnd, &rc);
-		_WindowWidth = rc.right - rc.left;
-		_WindowHeight = rc.bottom - rc.top;
+		_windowWidth = rc.right - rc.left;
+		_windowHeight = rc.bottom - rc.top;
 
 		if (FAILED(InitDevice()))
 		{
@@ -77,7 +77,7 @@ namespace Indecisive
 		XMStoreFloat4x4(&_view, XMMatrixLookAtLH(Eye, At, Up));
 
 		// Initialize the projection matrix
-		XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _WindowWidth / (FLOAT)_WindowHeight, 0.01f, 100.0f));
+		XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _windowWidth / (FLOAT)_windowHeight, 0.01f, 100.0f));
 
 		return S_OK;
 	}
@@ -306,8 +306,8 @@ namespace Indecisive
 		DXGI_SWAP_CHAIN_DESC sd;
 		ZeroMemory(&sd, sizeof(sd));
 		sd.BufferCount = 1;
-		sd.BufferDesc.Width = _WindowWidth;
-		sd.BufferDesc.Height = _WindowHeight;
+		sd.BufferDesc.Width = _windowWidth;
+		sd.BufferDesc.Height = _windowHeight;
 		sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		sd.BufferDesc.RefreshRate.Numerator = 60;
 		sd.BufferDesc.RefreshRate.Denominator = 1;
@@ -346,8 +346,8 @@ namespace Indecisive
 
 		// Setup the viewport
 		D3D11_VIEWPORT vp;
-		vp.Width = (FLOAT)_WindowWidth;
-		vp.Height = (FLOAT)_WindowHeight;
+		vp.Width = (FLOAT)_windowWidth;
+		vp.Height = (FLOAT)_windowHeight;
 		vp.MinDepth = 0.0f;
 		vp.MaxDepth = 1.0f;
 		vp.TopLeftX = 0;
