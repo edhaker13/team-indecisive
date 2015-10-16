@@ -89,6 +89,7 @@
     <ClInclude Include="IDrawable.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="MeshComponent.h" />
+    <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="IUpdatable.h" />
     <ClInclude Include="IGraphics.h" />
@@ -100,6 +101,7 @@
     <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="DirectXMath.cpp" />
     <ClCompile Include="GraphicsDirectX.cpp" />
+    <ClCompile Include="OBJLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DX11 Framework.rc" />
