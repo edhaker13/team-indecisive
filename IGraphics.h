@@ -16,5 +16,7 @@ namespace Indecisive
 		virtual Buffer* InitVertexBuffer(Vertex[], unsigned) = 0;
 		virtual Buffer* InitIndexBuffer(unsigned short[], unsigned) = 0;
 		virtual void DrawGeometry(Geometry*) = 0;
+		virtual void Update() = 0;
+		virtual void Draw() = 0;
 	};
 };

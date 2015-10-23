@@ -33,8 +33,8 @@ namespace Indecisive
 		virtual Buffer* InitIndexBuffer(unsigned short indices[], unsigned arraySize) override;
 		virtual void DrawGeometry(Geometry* g) override;
 
-		void Update();
-		void Draw();
+		virtual void Update() override;
+		virtual void Draw() override;
 
 	private:
 		GraphicsDirectX(GraphicsDirectX const&) = delete;
