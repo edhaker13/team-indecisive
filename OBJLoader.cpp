@@ -248,10 +248,7 @@ namespace Indecisive
 
 			//Put data into vertex and index buffers, then pass the relevant data to the MeshData object.
 			//The rest of the code will hopefully look familiar to you, as it's similar to whats in your InitVertexBuffer and InitIndexBuffer methods
-			
-			//-----------------------------------------------------------------------------
-			// * * DX11 specific MUST REMOVE
-			//-----------------------------------------------------------------------------
+
 
 			IGraphics* pGraphics = static_cast<IGraphics*> (ServiceLocator::Instance()->Get("graphics"));
 
@@ -262,10 +259,6 @@ namespace Indecisive
 			geometry.indexBuffer = pGraphics->InitIndexBuffer(indices, numIndices);
 			geometry.indexBufferOffset = 0;
 			geometry.indexBufferSize = numIndices;
-
-			//-----------------------------------------------------------------------------
-			// *
-			//-----------------------------------------------------------------------------
 
 			//This data has now been sent over to the GPU so we can delete this CPU-side stuff
 			delete[] indices;
