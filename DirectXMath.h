@@ -22,6 +22,107 @@ namespace Indecisive
 	struct Matrix;
 	using namespace DirectX;
 
+	struct Vector2 : public XMFLOAT2
+	{
+		Vector2() : XMFLOAT2(0.f, 0.f) {}
+		explicit Vector2(float x) : XMFLOAT2(x, x) {}
+		Vector2(float _x, float _y) : XMFLOAT2(_x, _y) {}
+		explicit Vector2(_In_reads_(2) const float *pArray) : XMFLOAT2(pArray) {}
+		Vector2(FXMVECTOR V) { XMStoreFloat2(this, V); }
+		Vector2(const XMFLOAT2& V) { this->x = V.x; this->y = V.y; }
+
+		operator XMVECTOR() const { return XMLoadFloat2(this); }
+
+		// Comparision operators
+		bool operator == (const Vector2& V) const;
+		bool operator != (const Vector2& V) const;
+
+		// Assignment operators
+		Vector2& operator= (const Vector2& V) { x = V.x; y = V.y; return *this; }
+		Vector2& operator= (const XMFLOAT2& V) { x = V.x; y = V.y; return *this; }
+		Vector2& operator+= (const Vector2& V);
+		Vector2& operator-= (const Vector2& V);
+		Vector2& operator*= (const Vector2& V);
+		Vector2& operator*= (float S);
+		Vector2& operator/= (float S);
+
+		// Urnary operators
+		Vector2 operator+ () const { return *this; }
+		Vector2 operator- () const { return Vector2(-x, -y); }
+
+		// Vector operations
+		bool InBounds(const Vector2& Bounds) const;
+
+		float Length() const;
+		float LengthSquared() const;
+
+		float Dot(const Vector2& V) const;
+		void Cross(const Vector2& V, Vector2& result) const;
+		Vector2 Cross(const Vector2& V) const;
+
+		void Normalize();
+		void Normalize(Vector2& result) const;
+
+		void Clamp(const Vector2& vmin, const Vector2& vmax);
+		void Clamp(const Vector2& vmin, const Vector2& vmax, Vector2& result) const;
+
+		// Static functions
+		static float Distance(const Vector2& v1, const Vector2& v2);
+		static float DistanceSquared(const Vector2& v1, const Vector2& v2);
+
+		static void Min(const Vector2& v1, const Vector2& v2, Vector2& result);
+		static Vector2 Min(const Vector2& v1, const Vector2& v2);
+
+		static void Max(const Vector2& v1, const Vector2& v2, Vector2& result);
+		static Vector2 Max(const Vector2& v1, const Vector2& v2);
+
+		static void Lerp(const Vector2& v1, const Vector2& v2, float t, Vector2& result);
+		static Vector2 Lerp(const Vector2& v1, const Vector2& v2, float t);
+
+		static void SmoothStep(const Vector2& v1, const Vector2& v2, float t, Vector2& result);
+		static Vector2 SmoothStep(const Vector2& v1, const Vector2& v2, float t);
+
+		static void Barycentric(const Vector2& v1, const Vector2& v2, const Vector2& v3, float f, float g, Vector2& result);
+		static Vector2 Barycentric(const Vector2& v1, const Vector2& v2, const Vector2& v3, float f, float g);
+
+		static void CatmullRom(const Vector2& v1, const Vector2& v2, const Vector2& v3, const Vector2& v4, float t, Vector2& result);
+		static Vector2 CatmullRom(const Vector2& v1, const Vector2& v2, const Vector2& v3, const Vector2& v4, float t);
+
+		static void Hermite(const Vector2& v1, const Vector2& t1, const Vector2& v2, const Vector2& t2, float t, Vector2& result);
+		static Vector2 Hermite(const Vector2& v1, const Vector2& t1, const Vector2& v2, const Vector2& t2, float t);
+
+		static void Reflect(const Vector2& ivec, const Vector2& nvec, Vector2& result);
+		static Vector2 Reflect(const Vector2& ivec, const Vector2& nvec);
+
+		static void Refract(const Vector2& ivec, const Vector2& nvec, float refractionIndex, Vector2& result);
+		static Vector2 Refract(const Vector2& ivec, const Vector2& nvec, float refractionIndex);
+
+		static void Transform(const Vector2& v, const Matrix& m, Vector2& result);
+		static Vector2 Transform(const Vector2& v, const Matrix& m);
+		static void Transform(_In_reads_(count) const Vector2* varray, size_t count, const Matrix& m, _Out_writes_(count) Vector2* resultArray);
+
+		static void Transform(const Vector2& v, const Matrix& m, Vector4& result);
+		static void Transform(_In_reads_(count) const Vector2* varray, size_t count, const Matrix& m, _Out_writes_(count) Vector4* resultArray);
+
+		static void TransformNormal(const Vector2& v, const Matrix& m, Vector2& result);
+		static Vector2 TransformNormal(const Vector2& v, const Matrix& m);
+		static void TransformNormal(_In_reads_(count) const Vector2* varray, size_t count, const Matrix& m, _Out_writes_(count) Vector2* resultArray);
+
+		// Constants
+		static const Vector2 Zero;
+		static const Vector2 One;
+		static const Vector2 UnitX;
+		static const Vector2 UnitY;
+	};
+
+	// Binary operators
+	Vector2 operator+ (const Vector2& V1, const Vector2& V2);
+	Vector2 operator- (const Vector2& V1, const Vector2& V2);
+	Vector2 operator* (const Vector2& V1, const Vector2& V2);
+	Vector2 operator* (const Vector2& V, float S);
+	Vector2 operator/ (const Vector2& V1, const Vector2& V2);
+	Vector2 operator* (float S, const Vector2& V);
+
 	struct Vector3 : public XMFLOAT3
 	{
 		Vector3() : XMFLOAT3(0.f, 0.f, 0.f) {}
