@@ -1,7 +1,8 @@
 #pragma once
 #include "IComponent.h"
 #include "IDrawable.h"
-#include "GraphicsDirectX.h"
+#include "IGraphics.h"
+#include "ServiceLocator.h"
 
 namespace Indecisive
 { 
@@ -11,23 +12,26 @@ namespace Indecisive
 	class MeshComponent: public IComponent, public IDrawable
 	{
 	private:
-		Geometry* _geometry;
-		Material* _material;
+		Geometry* _pGeometry;
+		IGraphics* _pGraphics;
+		Material* _pMaterial;
 
 	public:
-		MeshComponent(Geometry* geometry, Material* material) : IComponent("Mesh"), _geometry(geometry), _material(material) {};
+		MeshComponent(Geometry* geometry, Material* material) : IComponent("Mesh"), _pGeometry(geometry), _pMaterial(material) 
+		{
+			_pGraphics = static_cast<IGraphics*> (ServiceLocator::Instance()->Get("graphics"));
+		};
 		~MeshComponent()
 		{
-			delete _geometry;
-			delete _material;
+			delete _pGeometry;
+			delete _pMaterial;
 
-			_geometry = nullptr;
-			_material = nullptr;
+			_pGeometry = nullptr;
+			_pMaterial = nullptr;
 		};
 		virtual void Draw() override
 		{
-			/// TODO:: REMOVE GRAPHICS DEPENDCY !!!!!!
-			GraphicsDirectX::Instance().DrawGeometry(_geometry);
+			_pGraphics->DrawGeometry(_pGeometry);
 		};
 	};
 

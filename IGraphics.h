@@ -1,5 +1,5 @@
 #pragma once
-typedef long HRESULT;
+#include <windows.h>
 
 namespace Indecisive
 {
