@@ -161,6 +161,33 @@ namespace Indecisive
 		return pBuffer;
 	}
 
+	Buffer* GraphicsDirectX::InitVertexBuffer(Vertex vertices[], unsigned arraySize)
+	{
+		HRESULT hr;
+
+		Buffer* pBuffer;
+
+		D3D11_BUFFER_DESC bd;
+		ZeroMemory(&bd, sizeof(bd));
+		bd.Usage = D3D11_USAGE_DEFAULT;
+		bd.ByteWidth = sizeof(Vertex) * arraySize;
+		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		bd.CPUAccessFlags = 0;
+
+		D3D11_SUBRESOURCE_DATA InitData;
+		ZeroMemory(&InitData, sizeof(InitData));
+		InitData.pSysMem = vertices;
+
+		hr = _pd3dDevice->CreateBuffer(&bd, &InitData, (ID3D11Buffer**)&pBuffer);
+
+		if (FAILED(hr))
+		{
+			return nullptr;
+		}
+
+		return pBuffer;
+	}
+
 	Buffer* GraphicsDirectX::InitIndexBuffer(unsigned short indices[], unsigned arraySize)
 	{
 		HRESULT hr;

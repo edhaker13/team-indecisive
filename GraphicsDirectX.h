@@ -28,11 +28,9 @@ namespace Indecisive
 		GraphicsDirectX(): IGraphics() {};
 		~GraphicsDirectX();
 		virtual HRESULT Initialise(HINSTANCE hInstance, int nCmdShow) override;
-		// This method should go in game or other manager
 		virtual Buffer* InitVertexBuffer(SimpleVertex vertices[], unsigned arraySize) override;
-		// This method should go in game or other manager
+		virtual Buffer* InitVertexBuffer(Vertex vertices[], unsigned arraySize) override;
 		virtual Buffer* InitIndexBuffer(unsigned short indices[], unsigned arraySize) override;
-		// This method should go in game or other manager
 		virtual void DrawGeometry(Geometry* g) override;
 
 		void Update();

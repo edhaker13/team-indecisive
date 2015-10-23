@@ -2,7 +2,8 @@
 #include "Structures.h"
 #include <map>
 #include <vector>
-#include "MeshComponent.h"
+#include <string>
+#include <fstream>
 
 namespace Indecisive
 {
@@ -13,7 +14,7 @@ namespace Indecisive
 		~OBJLoader(); 
 
 	private:
-		Geometry Load();
+		Geometry Load(char* filename, bool invertTexCoords = true);
 
 		bool FindSimilarVertex(const Vertex& vertex, std::map<Vertex, unsigned short>& vertToIndexMap, unsigned short& index);
 
