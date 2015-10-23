@@ -35,8 +35,8 @@ namespace Indecisive
 		// This method should go in game or other manager
 		virtual void DrawGeometry(Geometry* g) override;
 
-		void Update();
-		void Draw();
+		virtual void Update() override;
+		virtual void Draw() override;
 
 	private:
 		GraphicsDirectX(GraphicsDirectX const&) = delete;

@@ -1,13 +1,20 @@
 #pragma once
+//#include "resource.h"
+#include "IGraphics.h"
+#include <windows.h>
 
-class GameManager
+namespace Indecisive
 {
-	void Initialise();
+	class GameManager
+	{
+	public:
+		void Initialise(IGraphics*);
 
-	void Draw();
+		void Draw(IGraphics*);
+		void Update(IGraphics*);
 
-	void Update();
+		void SetTimer(IGraphics*);
 
-	void SetTimer();
-};
-
+		//int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow);
+	};
+}
