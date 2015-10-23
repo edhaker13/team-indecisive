@@ -7,7 +7,7 @@ namespace Indecisive
 	{
 		Vector3 Pos;
 		Vector3 Normal;
-		Vector3 TexC;
+		Vector2 TexC;
 
 		bool operator<(const Vertex other) const
 		{
