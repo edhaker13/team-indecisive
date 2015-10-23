@@ -19,6 +19,12 @@ namespace Indecisive
 	{
 		Vector3 Pos;
 		Vector4 Colour;
+
+		//------- LIGHTING TO BE DONE
+
+		//Vector3 Normal;
+
+		//-------
 	};
 
 	struct Geometry

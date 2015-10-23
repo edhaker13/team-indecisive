@@ -99,6 +99,7 @@
     <ClInclude Include="IGraphics.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneGraph.h" />
+    <ClInclude Include="ServiceLocator.h" />
     <ClInclude Include="Structures.h" />
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +116,9 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0_level_9_1</ShaderModel>
       <FileType>Document</FileType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Lighting.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
