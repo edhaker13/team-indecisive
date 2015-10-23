@@ -83,6 +83,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="DirectXMath.h" />
     <ClInclude Include="GraphicsDirectX.h" />
@@ -104,6 +105,7 @@
   <ItemGroup>
     <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="DirectXMath.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GraphicsDirectX.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
   </ItemGroup>
@@ -111,13 +113,10 @@
     <ResourceCompile Include="DX11 Framework.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DX11 Framework.fx">
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0_level_9_1</ShaderModel>
+    <None Include="Lighting.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
       <FileType>Document</FileType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Lighting.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
