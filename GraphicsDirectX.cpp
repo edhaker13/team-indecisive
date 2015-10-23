@@ -1,5 +1,6 @@
 #include "GraphicsDirectX.h"
 #include "ComponentFactory.h"
+#include "ServiceLocator.h"
 
 namespace Indecisive
 {
@@ -530,9 +531,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-	Indecisive::GraphicsDirectX& theApp = Indecisive::GraphicsDirectX::Instance();
+	Indecisive::GraphicsDirectX* theApp = new Indecisive::GraphicsDirectX();
 
-	if (FAILED(theApp.Initialise(hInstance, nCmdShow)))
+	Indecisive::ServiceLocator::Instance()->Add("graphics", theApp);
+
+	if (FAILED(theApp->Initialise(hInstance, nCmdShow)))
 	{
 		return -1;
 	}
@@ -549,8 +552,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		}
 		else
 		{
-			theApp.Update();
-			theApp.Draw();
+			theApp->Update();
+			theApp->Draw();
 		}
 	}
 

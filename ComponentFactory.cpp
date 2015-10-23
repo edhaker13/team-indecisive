@@ -1,5 +1,5 @@
 #include "ComponentFactory.h"
-#include "GraphicsDirectX.h"
+#include "ServiceLocator.h"
 #include "Structures.h"
 
 namespace Indecisive
@@ -20,10 +20,11 @@ namespace Indecisive
 		};
 
 		Geometry* pGeometry = new Geometry();
-		pGeometry->vertexBuffer = GraphicsDirectX::Instance().InitVertexBuffer(vertices, 4);
+		IGraphics* pGraphics = static_cast<IGraphics*> (ServiceLocator::Instance()->Get("graphics"));
+		pGeometry->vertexBuffer = pGraphics->InitVertexBuffer(vertices, 4);
 		pGeometry->vertexBufferStride = sizeof(SimpleVertex);
 		pGeometry->vertexBufferOffset = 0;
-		pGeometry->indexBuffer = GraphicsDirectX::Instance().InitIndexBuffer(indices, 6);
+		pGeometry->indexBuffer = pGraphics->InitIndexBuffer(indices, 6);
 		pGeometry->indexBufferSize = 6;
 		pGeometry->indexBufferOffset = 0;
 

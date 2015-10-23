@@ -12,8 +12,8 @@ namespace Indecisive
 		void operator=(ServiceLocator const&) = delete;
 
 	public:
-		ServiceLocator& Instance(){ static ServiceLocator s; return s; };
-		void AddService(std::string name, void* instance){ serviceMap.emplace(name, instance); };
-		void* GetInstance(std::string service) { if (!serviceMap.empty()) { return serviceMap[service]; } return nullptr; };
+		static ServiceLocator* Instance(){ static ServiceLocator s; return &s; };
+		void Add(std::string name, void* instance){ serviceMap.emplace(name, instance); };
+		void* Get(std::string service) { if (!serviceMap.empty()) { return serviceMap[service]; } return nullptr; };
 	};
 }

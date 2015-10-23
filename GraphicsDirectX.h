@@ -25,9 +25,8 @@ namespace Indecisive
 	class GraphicsDirectX : public IGraphics
 	{
 	public:
+		GraphicsDirectX(): IGraphics() {};
 		~GraphicsDirectX();
-		// This method should go in game or other manager
-		static GraphicsDirectX& Instance() { static GraphicsDirectX instance; return instance; }
 		virtual HRESULT Initialise(HINSTANCE hInstance, int nCmdShow) override;
 		// This method should go in game or other manager
 		virtual Buffer* InitVertexBuffer(SimpleVertex vertices[], unsigned arraySize) override;
@@ -40,7 +39,6 @@ namespace Indecisive
 		void Draw();
 
 	private:
-		GraphicsDirectX(): IGraphics() {};
 		GraphicsDirectX(GraphicsDirectX const&) = delete;
 		void operator=(GraphicsDirectX const&) = delete;
 
