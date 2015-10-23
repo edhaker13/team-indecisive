@@ -100,6 +100,7 @@
     <ClInclude Include="IGraphics.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneGraph.h" />
+    <ClInclude Include="ServiceLocator.h" />
     <ClInclude Include="Structures.h" />
   </ItemGroup>
   <ItemGroup>
