@@ -13,10 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{edb13076-4b26-42cb-9467-77a6b3e6e7cc}</UniqueIdentifier>
-      <Extensions>fx;fxh;hlsl</Extensions>
-    </Filter>
     <Filter Include="Components">
       <UniqueIdentifier>{0a1eeb42-7dc8-4715-a3bd-6f379dd6bf86}</UniqueIdentifier>
     </Filter>
@@ -79,6 +75,9 @@
     <ClInclude Include="ServiceLocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraphicsDirectX.cpp">
@@ -93,6 +92,9 @@
     <ClCompile Include="OBJLoader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GameManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DX11 Framework.rc">
@@ -100,9 +102,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="DX11 Framework.fx">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Lighting.fx">
       <Filter>Resource Files</Filter>
     </None>

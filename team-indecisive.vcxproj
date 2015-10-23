@@ -114,11 +114,6 @@
     <ResourceCompile Include="DX11 Framework.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DX11 Framework.fx">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Lighting.fx">
       <FileType>Document</FileType>
     </None>
