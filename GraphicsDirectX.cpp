@@ -438,7 +438,8 @@ namespace Indecisive
 		*/
 
 		// TODO: ASSET MANAGER
-		_pGameObject = ComponentFactory::MakeTestObject();
+		_pGameObject = ComponentFactory::MakeTestObjectFromObj("car.obj");
+		//_pGameObject = ComponentFactory::MakeTestObject();
 
 
 		// Set primitive topology

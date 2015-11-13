@@ -6,6 +6,6 @@ namespace Indecisive
 	namespace ComponentFactory
 	{
 		GameObject* MakeTestObject();
-		MeshComponent* MakeTestMesh();
+		GameObject* MakeTestObjectFromObj(std::string);
 	}
 }

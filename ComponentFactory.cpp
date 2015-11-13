@@ -1,10 +1,11 @@
 #include "ComponentFactory.h"
+#include "OBJLoader.h"
 #include "ServiceLocator.h"
 #include "Structures.h"
 
 namespace Indecisive
 {
-	MeshComponent* ComponentFactory::MakeTestMesh()
+	GameObject* ComponentFactory::MakeTestObject()
 	{
 		SimpleVertex vertices[] =
 		{
@@ -19,8 +20,8 @@ namespace Indecisive
 			2, 1, 3,
 		};
 
-		Geometry* pGeometry = new Geometry();
-		IGraphics* pGraphics = static_cast<IGraphics*> (ServiceLocator::Instance()->Get("graphics"));
+		auto pGeometry = new Geometry();
+		auto pGraphics = static_cast<IGraphics*>(ServiceLocator::Instance()->Get("graphics"));
 		pGeometry->vertexBuffer = pGraphics->InitVertexBuffer(vertices, 4);
 		pGeometry->vertexBufferStride = sizeof(SimpleVertex);
 		pGeometry->vertexBufferOffset = 0;
@@ -28,13 +29,16 @@ namespace Indecisive
 		pGeometry->indexBufferSize = 6;
 		pGeometry->indexBufferOffset = 0;
 
-		return new MeshComponent(pGeometry, nullptr);
+		auto pGameObject = new GameObject();
+		pGameObject->AddDrawable(new MeshComponent(pGeometry, nullptr));
+		return pGameObject;
 	}
 
-	GameObject* ComponentFactory::MakeTestObject()
+	GameObject* ComponentFactory::MakeTestObjectFromObj(std::string filepath)
 	{
-		GameObject* pGameObject = new GameObject();
-		pGameObject->AddDrawable(MakeTestMesh());
+		auto pGameObject = new GameObject();
+		auto ObjLoader = OBJLoader::OBJLoader();
+		pGameObject->AddDrawable(new MeshComponent(ObjLoader.Load(filepath), nullptr));
 		return pGameObject;
 	}
 }

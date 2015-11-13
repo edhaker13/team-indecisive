@@ -54,21 +54,20 @@ namespace Indecisive
 		}
 	}
 
-	Geometry OBJLoader::Load(char* filename, bool invertTexCoords)
+	Geometry* OBJLoader::Load(const std::string filename, bool invertTexCoords)
 	{
-		std::string binaryFilename = filename;
-		binaryFilename.append("Binary");
+		std::string binaryFilename = ".\\Assets\\" + filename + ".bin";
 		std::ifstream binaryInFile;
 		binaryInFile.open(binaryFilename, std::ios::in | std::ios::binary);
 
 		if (!binaryInFile.good())
 		{
 			std::ifstream inFile;
-			inFile.open(filename);
+			inFile.open(".\\Assets\\" + filename);
 
 			if (!inFile.good())
 			{
-				return Geometry();
+				return nullptr;
 			}
 			else
 			{
@@ -180,9 +179,6 @@ namespace Indecisive
 
 				CreateIndices(expandedVertices, expandedTexCoords, expandedNormals, meshIndices, meshVertices, meshTexCoords, meshNormals);
 
-				Geometry geometry;
-
-				MeshComponent* PracticeMesh;
 
 				IGraphics* pGraphics = static_cast<IGraphics*> (ServiceLocator::Instance()->Get("graphics"));
 
@@ -196,9 +192,10 @@ namespace Indecisive
 					finalVerts[i].TexC = meshTexCoords[i];
 				}
 
-				geometry.vertexBuffer = pGraphics->InitVertexBuffer(finalVerts, numMeshVertices);
-				geometry.vertexBufferOffset = 0;
-				geometry.vertexBufferStride = sizeof(Vertex);
+				auto pGeometry = new Geometry();
+				pGeometry->vertexBuffer = pGraphics->InitVertexBuffer(finalVerts, numMeshVertices);
+				pGeometry->vertexBufferOffset = 0;
+				pGeometry->vertexBufferStride = sizeof(Vertex);
 
 				unsigned short* indicesArray = new unsigned short[meshIndices.size()];
 				unsigned int numMeshIndices = meshIndices.size();
@@ -215,15 +212,15 @@ namespace Indecisive
 				outbin.write((char*)indicesArray, sizeof(unsigned short) * numMeshIndices);
 				outbin.close();
 
-				geometry.indexBuffer = pGraphics->InitIndexBuffer(indicesArray, numMeshIndices);
-				geometry.indexBufferOffset = 0;
-				geometry.indexBufferSize = numMeshIndices;
+				pGeometry->indexBuffer = pGraphics->InitIndexBuffer(indicesArray, numMeshIndices);
+				pGeometry->indexBufferOffset = 0;
+				pGeometry->indexBufferSize = numMeshIndices;
 
 				//This data has now been sent over to the GPU so we can delete this CPU-side stuff
 				delete[] indicesArray;
 				delete[] finalVerts;
 
-				return geometry;
+				return pGeometry;
 			}
 
 			//-----------------------------------------------------------------------------
@@ -232,7 +229,7 @@ namespace Indecisive
 		}
 		else
 		{
-			Geometry geometry;
+			auto pGeometry = new Geometry();
 			unsigned int numVertices;
 			unsigned int numIndices;
 
@@ -249,22 +246,20 @@ namespace Indecisive
 			//Put data into vertex and index buffers, then pass the relevant data to the MeshData object.
 			//The rest of the code will hopefully look familiar to you, as it's similar to whats in your InitVertexBuffer and InitIndexBuffer methods
 
-
 			IGraphics* pGraphics = static_cast<IGraphics*> (ServiceLocator::Instance()->Get("graphics"));
 
-			geometry.vertexBuffer = pGraphics->InitVertexBuffer(finalVerts, numVertices);
-			geometry.vertexBufferOffset = 0;
-			geometry.vertexBufferStride = sizeof(Vertex);
-
-			geometry.indexBuffer = pGraphics->InitIndexBuffer(indices, numIndices);
-			geometry.indexBufferOffset = 0;
-			geometry.indexBufferSize = numIndices;
+			pGeometry->vertexBuffer = pGraphics->InitVertexBuffer(finalVerts, numVertices);
+			pGeometry->vertexBufferOffset = 0;
+			pGeometry->vertexBufferStride = sizeof(Vertex);
+			pGeometry->indexBuffer = pGraphics->InitIndexBuffer(indices, numIndices);
+			pGeometry->indexBufferOffset = 0;
+			pGeometry->indexBufferSize = numIndices;
 
 			//This data has now been sent over to the GPU so we can delete this CPU-side stuff
 			delete[] indices;
 			delete[] finalVerts;
 
-			return geometry;
+			return pGeometry;
 		}
 	}
 

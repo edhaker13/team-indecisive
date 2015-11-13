@@ -10,11 +10,11 @@ namespace Indecisive
 	class OBJLoader
 	{
 	public:
-		OBJLoader();
-		~OBJLoader(); 
+		OBJLoader() {};
+		~OBJLoader() {};
+		Geometry* Load(const std::string filename, bool invertTexCoords = true);
 
 	private:
-		Geometry Load(char* filename, bool invertTexCoords = true);
 
 		bool FindSimilarVertex(const Vertex& vertex, std::map<Vertex, unsigned short>& vertToIndexMap, unsigned short& index);
 
