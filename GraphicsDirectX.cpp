@@ -55,14 +55,14 @@ namespace Indecisive
 		XMStoreFloat4x4(&_world, XMMatrixIdentity());
 
 		// Initialize the view matrix
-		XMVECTOR Eye = XMVectorSet(0.0f, 0.0f, -3.0f, 0.0f);
+		XMVECTOR Eye = XMVectorSet(0.0f, 100.0f, -150.0f, 0.0f);
 		XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
 		XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 
 		XMStoreFloat4x4(&_view, XMMatrixLookAtLH(Eye, At, Up));
 
 		// Initialize the projection matrix
-		XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _windowWidth / (FLOAT)_windowHeight, 0.01f, 100.0f));
+		XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _windowWidth / (FLOAT)_windowHeight, 0.01f, 1000.0f));
 
 
 		return S_OK;
@@ -438,7 +438,7 @@ namespace Indecisive
 		*/
 
 		// TODO: ASSET MANAGER
-		_pGameObject = ComponentFactory::MakeTestObjectFromObj("car.obj");
+		_pGameObject = ComponentFactory::MakeTestObjectFromObj("carBody.obj");
 		//_pGameObject = ComponentFactory::MakeTestObject();
 
 

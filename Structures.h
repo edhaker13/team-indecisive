@@ -42,12 +42,9 @@ namespace Indecisive
 	{
 		Vector4 diffuse;
 		Vector4 ambient;
-
 		//------- LIGHTING NOT YET IMPLEMENTED
-
 		//Vector4 specular;
 		//float specularPower;
-
 		//-------
 	};
 }
