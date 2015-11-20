@@ -1,5 +1,6 @@
-#include "GraphicsDirectX.h"
 #include "ComponentFactory.h"
+#include "DDSTextureLoader.h"
+#include "GraphicsDirectX.h"
 #include "ServiceLocator.h"
 #include "Window.h"
 
@@ -429,8 +430,8 @@ namespace Indecisive
 		// Depth Stencil Stuff
 		D3D11_TEXTURE2D_DESC depthStencilDesc;
 
-		depthStencilDesc.Width = _renderWidth;
-		depthStencilDesc.Height = _renderHeight;
+		depthStencilDesc.Width = _windowWidth;
+		depthStencilDesc.Height = _windowHeight;
 		depthStencilDesc.MipLevels = 1;
 		depthStencilDesc.ArraySize = 1;
 		depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
