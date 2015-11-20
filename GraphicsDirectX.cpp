@@ -1,6 +1,7 @@
 #include "GraphicsDirectX.h"
 #include "ComponentFactory.h"
 #include "ServiceLocator.h"
+#include "DDSTextureLoader.h"
 
 namespace Indecisive
 {
@@ -64,9 +65,11 @@ namespace Indecisive
 		// Initialize the projection matrix
 		XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _windowWidth / (FLOAT)_windowHeight, 0.01f, 1000.0f));
 
-		//lightDir = XMFLOAT3(1.0f, 2.0f, -6.0f);
-		//ambient = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-		//diffuse = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
+		lightDir = XMFLOAT3(0.0f, 100.0f, -150.0f);
+		ambient = XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
+		diffuse = XMFLOAT4(0.3f, 0.3f, 0.2f, 1.0f);
+
+		CreateDDSTextureFromFile(_pd3dDevice, L"carTex.dds", nullptr, &_pTextureRV);
 		
 		// Create the sample state
 		D3D11_SAMPLER_DESC sampDesc;
@@ -146,6 +149,17 @@ namespace Indecisive
 
 		// Set the input layout
 		_pImmediateContext->IASetInputLayout(_pVertexLayout);
+
+		D3D11_SAMPLER_DESC sampDesc;
+		ZeroMemory(&sampDesc, sizeof(sampDesc));
+		sampDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+		sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+		sampDesc.MinLOD = 0;
+		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+		hr = _pd3dDevice->CreateSamplerState(&sampDesc, &_pSamplerLinear);
 
 		return hr;
 	}
@@ -387,6 +401,8 @@ namespace Indecisive
 
 		UINT numFeatureLevels = ARRAYSIZE(featureLevels);
 
+		UINT sampleCount = 4;
+
 		DXGI_SWAP_CHAIN_DESC sd;
 		ZeroMemory(&sd, sizeof(sd));
 		sd.BufferCount = 1;
@@ -397,7 +413,7 @@ namespace Indecisive
 		sd.BufferDesc.RefreshRate.Denominator = 1;
 		sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		sd.OutputWindow = _hWnd;
-		sd.SampleDesc.Count = 1;
+		sd.SampleDesc.Count = sampleCount;
 		sd.SampleDesc.Quality = 0;
 		sd.Windowed = TRUE;
 
@@ -473,6 +489,53 @@ namespace Indecisive
 		if (FAILED(hr))
 			return hr;
 
+		// Depth Stencil Stuff
+		D3D11_TEXTURE2D_DESC depthStencilDesc;
+
+		depthStencilDesc.Width = _renderWidth;
+		depthStencilDesc.Height = _renderHeight;
+		depthStencilDesc.MipLevels = 1;
+		depthStencilDesc.ArraySize = 1;
+		depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthStencilDesc.SampleDesc.Count = sampleCount;
+		depthStencilDesc.SampleDesc.Quality = 0;
+		depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depthStencilDesc.CPUAccessFlags = 0;
+		depthStencilDesc.MiscFlags = 0;
+
+		_pd3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, &_depthStencilBuffer);
+		_pd3dDevice->CreateDepthStencilView(_depthStencilBuffer, nullptr, &_depthStencilView);
+
+		_pImmediateContext->OMSetRenderTargets(1, &_pRenderTargetView, _depthStencilView);
+
+		// Rasterizer
+		D3D11_RASTERIZER_DESC cmdesc;
+
+		ZeroMemory(&cmdesc, sizeof(D3D11_RASTERIZER_DESC));
+		cmdesc.FillMode = D3D11_FILL_SOLID;
+		cmdesc.CullMode = D3D11_CULL_NONE;
+		hr = _pd3dDevice->CreateRasterizerState(&cmdesc, &RSCullNone);
+
+		D3D11_DEPTH_STENCIL_DESC dssDesc;
+		ZeroMemory(&dssDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+		dssDesc.DepthEnable = true;
+		dssDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		dssDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+
+		_pd3dDevice->CreateDepthStencilState(&dssDesc, &DSLessEqual);
+
+		ZeroMemory(&cmdesc, sizeof(D3D11_RASTERIZER_DESC));
+
+		cmdesc.FillMode = D3D11_FILL_SOLID;
+		cmdesc.CullMode = D3D11_CULL_BACK;
+
+		cmdesc.FrontCounterClockwise = true;
+		hr = _pd3dDevice->CreateRasterizerState(&cmdesc, &CCWcullMode);
+
+		cmdesc.FrontCounterClockwise = false;
+		hr = _pd3dDevice->CreateRasterizerState(&cmdesc, &CWcullMode);
+
 		return S_OK;
 	}
 
@@ -489,6 +552,8 @@ namespace Indecisive
 		if (_pSwapChain) _pSwapChain->Release();
 		if (_pImmediateContext) _pImmediateContext->Release();
 		if (_pd3dDevice) _pd3dDevice->Release();
+
+		if (_pTextureRV) _pTextureRV->Release();
 
 		if (_pSamplerLinear) _pSamplerLinear->Release();
 	}
@@ -530,6 +595,7 @@ namespace Indecisive
 		//
 		float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red,green,blue,alpha
 		_pImmediateContext->ClearRenderTargetView(_pRenderTargetView, ClearColor);
+		_pImmediateContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);//clear depth view to depth value 1.0F
 
 		//
 
@@ -537,21 +603,35 @@ namespace Indecisive
 		XMMATRIX view = XMLoadFloat4x4(&_view);
 		XMMATRIX projection = XMLoadFloat4x4(&_projection);
 		
+		//
+		// Renders a triangle
+		//
+		_pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
+		_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
+		_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
+		_pImmediateContext->PSSetShader(_pPixelShader, nullptr, 0);
+
+		_pImmediateContext->PSSetSamplers(0, 1, &_pSamplerLinear);
+
+		_pImmediateContext->PSSetShaderResources(0, 1, &_pTextureRV);
+
 		ConstantBuffer cb;
 		cb.mWorld = XMMatrixTranspose(world);
 		cb.mView = XMMatrixTranspose(view);
 		cb.mProjection = XMMatrixTranspose(projection);
-		
-		//--------
+
+		cb.diffuseMtrl = diffuse;
+		cb.diffuseLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		cb.ambientMtrl = ambient;
+		cb.ambientLight = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+		cb.specularMtrl = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+		cb.specularLight = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+		cb.specularPower = 5.0f;
+
+		cb.eyePos = XMFLOAT3(0.0f, 100.0f, -150.0f);
+		cb.lightVecW = lightDir;
 
 		_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-
-		//
-		// Renders a triangle
-		//
-		_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
-		_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
-		_pImmediateContext->PSSetShader(_pPixelShader, nullptr, 0);
 		
 		//_pImmediateContext->DrawIndexed(6, 0, 0);
 		

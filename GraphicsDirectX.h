@@ -20,6 +20,22 @@ namespace Indecisive
 		XMMATRIX mWorld;
 		XMMATRIX mView;
 		XMMATRIX mProjection;
+
+		XMFLOAT4 diffuseMtrl;
+		XMFLOAT4 diffuseLight;
+
+		XMFLOAT4 ambientMtrl;
+		XMFLOAT4 ambientLight;
+
+		XMFLOAT4 specularMtrl;
+		XMFLOAT4 specularLight;
+		float	 specularPower;
+
+		XMFLOAT3 eyePos;
+
+		XMFLOAT3 lightVecW;
+
+		float HasTexture;
 	};
 
 	class GraphicsDirectX : public IGraphics
@@ -32,6 +48,8 @@ namespace Indecisive
 		virtual Buffer* InitVertexBuffer(Vertex vertices[], unsigned arraySize) override;
 		virtual Buffer* InitIndexBuffer(unsigned short indices[], unsigned arraySize) override;
 		virtual void DrawGeometry(Geometry* g) override;
+
+		//bool HasTexture() const { return _pTextureRV ? true : false; }
 
 		virtual void Update() override;
 		virtual void Draw() override;
@@ -57,6 +75,10 @@ namespace Indecisive
 		XMFLOAT4X4              _world;
 		XMFLOAT4X4              _view;
 		XMFLOAT4X4              _projection;
+
+		XMFLOAT3 lightDir;
+		XMFLOAT4 ambient;
+		XMFLOAT4 diffuse;
 
 		ID3D11DepthStencilView* _depthStencilView = nullptr;
 		ID3D11Texture2D* _depthStencilBuffer = nullptr;
