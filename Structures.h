@@ -18,13 +18,13 @@ namespace Indecisive
 	struct SimpleVertex
 	{
 		Vector3 Pos;
-		Vector4 Colour;
+		Vector3 Normal;
+		Vector2 TexC;
 
-		//------- LIGHTING TO BE DONE
-
-		//Vector3 Normal;
-
-		//-------
+		//bool operator<(const SimpleVertex other) const
+		//{
+		//	return memcmp((void*)this, (void*)&other, sizeof(SimpleVertex)) > 0;
+		//}
 	};
 
 	struct Geometry
@@ -42,9 +42,7 @@ namespace Indecisive
 	{
 		Vector4 diffuse;
 		Vector4 ambient;
-		//------- LIGHTING NOT YET IMPLEMENTED
-		//Vector4 specular;
-		//float specularPower;
-		//-------
+		Vector4 specular;
+		float specularPower;
 	};
 }

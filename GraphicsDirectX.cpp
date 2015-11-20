@@ -64,6 +64,22 @@ namespace Indecisive
 		// Initialize the projection matrix
 		XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _windowWidth / (FLOAT)_windowHeight, 0.01f, 1000.0f));
 
+		//lightDir = XMFLOAT3(1.0f, 2.0f, -6.0f);
+		//ambient = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+		//diffuse = XMFLOAT4(0.3f, 0.3f, 0.3f, 1.0f);
+		
+		// Create the sample state
+		D3D11_SAMPLER_DESC sampDesc;
+		ZeroMemory(&sampDesc, sizeof(sampDesc));
+		sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+		sampDesc.MinLOD = 0;
+		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		_pd3dDevice->CreateSamplerState(&sampDesc, &_pSamplerLinear);
 
 		return S_OK;
 	}
@@ -74,7 +90,7 @@ namespace Indecisive
 
 		// Compile the vertex shader
 		ID3DBlob* pVSBlob = nullptr;
-		hr = CompileShaderFromFile(L"DX11 Framework.fx", "VS", "vs_4_0", &pVSBlob);
+		hr = CompileShaderFromFile(L"Lighting.fx", "VS", "vs_4_0", &pVSBlob);
 
 		if (FAILED(hr))
 		{
@@ -94,7 +110,7 @@ namespace Indecisive
 
 		// Compile the pixel shader
 		ID3DBlob* pPSBlob = nullptr;
-		hr = CompileShaderFromFile(L"DX11 Framework.fx", "PS", "ps_4_0", &pPSBlob);
+		hr = CompileShaderFromFile(L"Lighting.fx", "PS", "ps_4_0", &pPSBlob);
 
 		if (FAILED(hr))
 		{
@@ -114,8 +130,8 @@ namespace Indecisive
 		D3D11_INPUT_ELEMENT_DESC layout[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		  //{ "NORMAL", 0, DXGI_FORMAL_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
 		UINT numElements = ARRAYSIZE(layout);
@@ -222,10 +238,10 @@ namespace Indecisive
 		// Create vertex buffer
 		SimpleVertex vertices[] =
 		{
-			{ XMFLOAT3(-1.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
-			{ XMFLOAT3(1.0f, 1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-			{ XMFLOAT3(-1.0f, -1.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
-			{ XMFLOAT3(1.0f, -1.0f, 0.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+			{ XMFLOAT3(-1.0f,  1.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(0, 0) },
+			{ XMFLOAT3( 1.0f,  1.0f, 0.0f), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1, 0) },
+			{ XMFLOAT3(-1.0f, -1.0f, 0.0f), XMFLOAT3(0.0f, 1.0f, 1.0f), XMFLOAT2(1, 1) },
+			{ XMFLOAT3( 1.0f, -1.0f, 0.0f), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(0, 1) },
 		};
 	
 		D3D11_BUFFER_DESC bd;
@@ -473,6 +489,8 @@ namespace Indecisive
 		if (_pSwapChain) _pSwapChain->Release();
 		if (_pImmediateContext) _pImmediateContext->Release();
 		if (_pd3dDevice) _pd3dDevice->Release();
+
+		if (_pSamplerLinear) _pSamplerLinear->Release();
 	}
 
 	void GraphicsDirectX::Update()
