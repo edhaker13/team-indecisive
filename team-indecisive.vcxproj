@@ -14,6 +14,7 @@
     <ProjectGuid>{D7FAB2BF-0980-4018-B62B-003E08DFE4B2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>teamindecisive</RootNamespace>
+    <ProjectName>TI_Game Engine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
