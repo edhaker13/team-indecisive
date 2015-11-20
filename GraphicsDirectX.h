@@ -27,7 +27,7 @@ namespace Indecisive
 	public:
 		GraphicsDirectX(): IGraphics() {};
 		~GraphicsDirectX();
-		virtual HRESULT Initialise(HINSTANCE hInstance, int nCmdShow) override;
+		virtual HRESULT Initialise(Window*) override;
 		virtual Buffer* InitVertexBuffer(SimpleVertex vertices[], unsigned arraySize) override;
 		virtual Buffer* InitVertexBuffer(Vertex vertices[], unsigned arraySize) override;
 		virtual Buffer* InitIndexBuffer(unsigned short indices[], unsigned arraySize) override;
@@ -40,7 +40,6 @@ namespace Indecisive
 		GraphicsDirectX(GraphicsDirectX const&) = delete;
 		void operator=(GraphicsDirectX const&) = delete;
 
-		HINSTANCE               _hInst = nullptr;
 		HWND                    _hWnd = nullptr;
 		D3D_DRIVER_TYPE         _driverType = D3D_DRIVER_TYPE_NULL;
 		D3D_FEATURE_LEVEL       _featureLevel = D3D_FEATURE_LEVEL_11_0;
@@ -64,7 +63,6 @@ namespace Indecisive
 		ID3D11ShaderResourceView* _pTextureRV = nullptr;
 		ID3D11SamplerState* _pSamplerLinear = nullptr;
 
-		HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow);
 		HRESULT InitDevice();
 		void Cleanup();
 		HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
@@ -74,9 +72,6 @@ namespace Indecisive
 
 		UINT _windowHeight;
 		UINT _windowWidth;
-
-		UINT _renderHeight = 1080;
-		UINT _renderWidth = 1920;
 
 		ID3D11DepthStencilState* DSLessEqual;
 		ID3D11RasterizerState* RSCullNone;
