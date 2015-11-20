@@ -1,22 +1,15 @@
 #include "GameManager.h"
 #include "GraphicsDirectX.h"
 #include "ServiceLocator.h"
+#include "Window.h"
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-	Indecisive::GraphicsDirectX* theApp = new Indecisive::GraphicsDirectX();
-
-	Indecisive::GameManager _gameMngr = Indecisive::GameManager();
-
-	_gameMngr.Initialise(theApp);
-
-	if (FAILED(theApp->Initialise(hInstance, nCmdShow)))
-	{
-		return -1;
-	}
+	auto _gameMngr = Indecisive::GameManager();
+	_gameMngr.Initialise(hInstance, nCmdShow);
 
 	// Main message loop
 	MSG msg = { 0 };
@@ -30,8 +23,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		}
 		else
 		{
-			_gameMngr.Draw(theApp);
-			_gameMngr.Update(theApp);
+			_gameMngr.Draw();
+			_gameMngr.Update();
 		}
 	}
 
@@ -40,23 +33,32 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 namespace Indecisive
 {
-	void GameManager::Initialise(IGraphics* _pGraphics)
+	int GameManager::Initialise(HINSTANCE hInstance, int nCmdShow)
 	{
+		_pGraphics = new GraphicsDirectX();
+		auto pWindow = new Window();
 		ServiceLocator::Instance()->Add("graphics", _pGraphics);
+		//ServiceLocator::Instance()->Add("window", pWindow);
+		
+		if (FAILED(pWindow->Initialise(hInstance, nCmdShow)))
+		{
+			return E_FAIL;
+		}
+		_pGraphics->Initialise(pWindow);
+		return S_OK;
 	};
 
-	void GameManager::Draw(IGraphics* _pGraphics)
+	void GameManager::Draw()
 	{
 		_pGraphics->Draw();
 	};
 
-	void GameManager::Update(IGraphics* _pGraphics)
+	void GameManager::Update()
 	{
 		_pGraphics->Update();
 	};
 
-	void GameManager::SetTimer(IGraphics* _pGraphics)
+	void GameManager::SetTimer()
 	{
-
 	};
 }

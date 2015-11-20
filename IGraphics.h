@@ -7,11 +7,12 @@ namespace Indecisive
 	struct Geometry;
 	struct SimpleVertex;
 	struct Vertex;
+	class Window;
 
 	class IGraphics
 	{
 	public:
-		virtual HRESULT Initialise(HINSTANCE, int) = 0;
+		virtual HRESULT Initialise(Window*) = 0;
 		virtual Buffer* InitVertexBuffer(SimpleVertex[], unsigned) = 0;
 		virtual Buffer* InitVertexBuffer(Vertex[], unsigned) = 0;
 		virtual Buffer* InitIndexBuffer(unsigned short[], unsigned) = 0;

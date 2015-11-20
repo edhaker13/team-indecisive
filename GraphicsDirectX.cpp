@@ -1,7 +1,7 @@
 #include "GraphicsDirectX.h"
 #include "ComponentFactory.h"
 #include "ServiceLocator.h"
-#include "DDSTextureLoader.h"
+#include "Window.h"
 
 namespace Indecisive
 {
@@ -10,40 +10,11 @@ namespace Indecisive
 		Cleanup();
 	}
 
-	LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+	HRESULT GraphicsDirectX::Initialise(Window* pWindow)
 	{
-		PAINTSTRUCT ps;
-		HDC hdc;
-
-		switch (message)
-		{
-		case WM_PAINT:
-			hdc = BeginPaint(hWnd, &ps);
-			EndPaint(hWnd, &ps);
-			break;
-
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			break;
-
-		default:
-			return DefWindowProc(hWnd, message, wParam, lParam);
-		}
-
-		return 0;
-	}
-
-	HRESULT GraphicsDirectX::Initialise(HINSTANCE hInstance, int nCmdShow)
-	{
-		if (FAILED(InitWindow(hInstance, nCmdShow)))
-		{
-			return E_FAIL;
-		}
-
-		RECT rc;
-		GetClientRect(_hWnd, &rc);
-		_windowWidth = rc.right - rc.left;
-		_windowHeight = rc.bottom - rc.top;
+		_hWnd = pWindow->GetHWND();
+		_windowWidth = pWindow->GetWidth();
+		_windowHeight = pWindow->GetHeight();
 
 		if (FAILED(InitDevice()))
 		{
@@ -68,7 +39,7 @@ namespace Indecisive
 		lightDir = XMFLOAT3(0.0f, 100.0f, -150.0f);
 		ambient = XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
 		diffuse = XMFLOAT4(0.3f, 0.3f, 0.2f, 1.0f);
-
+		
 		CreateDDSTextureFromFile(_pd3dDevice, L"carTex.dds", nullptr, &_pTextureRV);
 		
 		// Create the sample state
@@ -304,40 +275,6 @@ namespace Indecisive
 		if (FAILED(hr))
 			return hr;
 	
-		return S_OK;
-	}
-
-	HRESULT GraphicsDirectX::InitWindow(HINSTANCE hInstance, int nCmdShow)
-	{
-		// Register class
-		WNDCLASSEX wcex;
-		wcex.cbSize = sizeof(WNDCLASSEX);
-		wcex.style = CS_HREDRAW | CS_VREDRAW;
-		wcex.lpfnWndProc = WndProc;
-		wcex.cbClsExtra = 0;
-		wcex.cbWndExtra = 0;
-		wcex.hInstance = hInstance;
-		wcex.hIcon = LoadIcon(hInstance, (LPCTSTR)IDI_TUTORIAL1);
-		wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-		wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-		wcex.lpszMenuName = nullptr;
-		wcex.lpszClassName = L"TutorialWindowClass";
-		wcex.hIconSm = LoadIcon(wcex.hInstance, (LPCTSTR)IDI_TUTORIAL1);
-		if (!RegisterClassEx(&wcex))
-			return E_FAIL;
-
-		// Create window
-		_hInst = hInstance;
-		RECT rc = { 0, 0, 640, 480 };
-		AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-		_hWnd = CreateWindow(L"TutorialWindowClass", L"DX11 Framework", WS_OVERLAPPEDWINDOW,
-			CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
-			nullptr);
-		if (!_hWnd)
-			return E_FAIL;
-
-		ShowWindow(_hWnd, nCmdShow);
-
 		return S_OK;
 	}
 
@@ -619,7 +556,7 @@ namespace Indecisive
 		cb.mWorld = XMMatrixTranspose(world);
 		cb.mView = XMMatrixTranspose(view);
 		cb.mProjection = XMMatrixTranspose(projection);
-
+		
 		cb.diffuseMtrl = diffuse;
 		cb.diffuseLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		cb.ambientMtrl = ambient;
@@ -632,7 +569,7 @@ namespace Indecisive
 		cb.lightVecW = lightDir;
 
 		_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-		
+
 		//_pImmediateContext->DrawIndexed(6, 0, 0);
 		
 		// TODO: USE SCENE GRAPH
