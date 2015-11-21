@@ -14,11 +14,11 @@
     <ProjectGuid>{D7FAB2BF-0980-4018-B62B-003E08DFE4B2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>teamindecisive</RootNamespace>
-    <ProjectName>TI_Game Engine</ProjectName>
+    <ProjectName>TI_Engine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -42,6 +42,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -85,11 +86,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DDSTextureLoader.h" />
-    <ClInclude Include="GameManager.h" />
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="DirectXMath.h" />
     <ClInclude Include="GraphicsDirectX.h" />
-    <ClInclude Include="AIComponent.h" />
     <ClInclude Include="I_AI.h" />
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="IGameObject.h" />
@@ -99,7 +98,6 @@
     <ClInclude Include="IPhysics.h" />
     <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="OBJLoader.h" />
-    <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="IUpdatable.h" />
     <ClInclude Include="IGraphics.h" />
     <ClInclude Include="resource.h" />
@@ -112,7 +110,6 @@
     <ClCompile Include="ComponentFactory.cpp" />
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="DirectXMath.cpp" />
-    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GraphicsDirectX.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
   </ItemGroup>

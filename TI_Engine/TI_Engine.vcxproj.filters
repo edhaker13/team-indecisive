@@ -39,12 +39,6 @@
     <ClInclude Include="MeshComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="AIComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="ComponentFactory.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -75,9 +69,6 @@
     <ClInclude Include="ServiceLocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IPhysics.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
@@ -102,9 +93,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OBJLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DDSTextureLoader.cpp">

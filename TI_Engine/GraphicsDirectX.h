@@ -43,7 +43,7 @@ namespace Indecisive
 	public:
 		GraphicsDirectX(): IGraphics() {};
 		~GraphicsDirectX();
-		virtual HRESULT Initialise(Window*) override;
+		virtual bool Initialise(Window*) override;
 		virtual Buffer* InitVertexBuffer(SimpleVertex vertices[], unsigned arraySize) override;
 		virtual Buffer* InitVertexBuffer(Vertex vertices[], unsigned arraySize) override;
 		virtual Buffer* InitIndexBuffer(unsigned short indices[], unsigned arraySize) override;

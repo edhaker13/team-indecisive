@@ -1,5 +1,4 @@
 #pragma once
-#include <windows.h>
 
 namespace Indecisive
 {
@@ -12,7 +11,7 @@ namespace Indecisive
 	class IGraphics
 	{
 	public:
-		virtual HRESULT Initialise(Window*) = 0;
+		virtual bool Initialise(Window*) = 0;
 		virtual Buffer* InitVertexBuffer(SimpleVertex[], unsigned) = 0;
 		virtual Buffer* InitVertexBuffer(Vertex[], unsigned) = 0;
 		virtual Buffer* InitIndexBuffer(unsigned short[], unsigned) = 0;

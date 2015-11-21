@@ -9,7 +9,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
 	auto _gameMngr = Indecisive::GameManager();
-	_gameMngr.Initialise(hInstance, nCmdShow);
+	auto hr = _gameMngr.Initialise(hInstance, nCmdShow);
+
+	if (FAILED(hr))
+	{
+		return hr;
+	}
 
 	// Main message loop
 	MSG msg = { 0 };
@@ -33,7 +38,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 namespace Indecisive
 {
-	int GameManager::Initialise(HINSTANCE hInstance, int nCmdShow)
+	HRESULT GameManager::Initialise(HINSTANCE hInstance, int nCmdShow)
 	{
 		_pGraphics = new GraphicsDirectX();
 		auto pWindow = new Window();
@@ -44,7 +49,10 @@ namespace Indecisive
 		{
 			return E_FAIL;
 		}
-		_pGraphics->Initialise(pWindow);
+		if (!_pGraphics->Initialise(pWindow))
+		{
+			return E_FAIL;
+		}
 		return S_OK;
 	};
 

@@ -11,7 +11,7 @@ namespace Indecisive
 		Cleanup();
 	}
 
-	HRESULT GraphicsDirectX::Initialise(Window* pWindow)
+	bool GraphicsDirectX::Initialise(Window* pWindow)
 	{
 		_hWnd = pWindow->GetHWND();
 		_windowWidth = pWindow->GetWidth();
@@ -21,7 +21,7 @@ namespace Indecisive
 		{
 			Cleanup();
 
-			return E_FAIL;
+			return false;
 		}
 
 		// Initialize the world matrix
@@ -56,7 +56,7 @@ namespace Indecisive
 
 		_pd3dDevice->CreateSamplerState(&sampDesc, &_pSamplerLinear);
 
-		return S_OK;
+		return true;
 	}
 
 	HRESULT GraphicsDirectX::InitShadersAndInputLayout()

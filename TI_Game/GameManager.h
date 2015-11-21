@@ -10,7 +10,7 @@ namespace Indecisive
 		IGraphics* _pGraphics = nullptr;
 
 	public:
-		int Initialise(HINSTANCE hInstance, int nCmdShow);
+		HRESULT Initialise(HINSTANCE hInstance, int nCmdShow);
 		void Draw();
 		void Update();
 		void SetTimer();
