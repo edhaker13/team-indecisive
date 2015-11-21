@@ -1,7 +1,7 @@
 #include "GameManager.h"
-#include "GraphicsDirectX.h"
-#include "ServiceLocator.h"
-#include "Window.h"
+#include "..\TI_Engine\GraphicsDirectX.h"
+#include "..\TI_Engine\ServiceLocator.h"
+#include "..\TI_Engine\Window.h"
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
