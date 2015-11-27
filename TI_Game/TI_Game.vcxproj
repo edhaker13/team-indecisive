@@ -17,7 +17,9 @@
     <ClInclude Include="GameManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Lighting.fx" />
+    <None Include="Lighting.fx">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4C985EF5-1D21-4B8F-B22F-182DAAC2C864}</ProjectGuid>
