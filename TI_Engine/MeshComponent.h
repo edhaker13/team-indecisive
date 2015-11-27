@@ -19,7 +19,7 @@ namespace Indecisive
 	public:
 		MeshComponent(Geometry* geometry, Material* material) : IComponent("Mesh"), _pGeometry(geometry), _pMaterial(material) 
 		{
-			_pGraphics = static_cast<IGraphics*> (ServiceLocator::Instance()->Get("graphics"));
+			_pGraphics = static_cast<IGraphics*> (ServiceLocatorInstance()->Get("graphics"));
 		};
 		~MeshComponent()
 		{

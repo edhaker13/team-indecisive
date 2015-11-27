@@ -21,7 +21,7 @@ namespace Indecisive
 		};
 
 		auto pGeometry = new Geometry();
-		auto pGraphics = static_cast<IGraphics*>(ServiceLocator::Instance()->Get("graphics"));
+		auto pGraphics = static_cast<IGraphics*>(ServiceLocatorInstance()->Get("graphics"));
 		pGeometry->vertexBuffer = pGraphics->InitVertexBuffer(vertices, 4);
 		pGeometry->vertexBufferStride = sizeof(SimpleVertex);
 		pGeometry->vertexBufferOffset = 0;
@@ -36,9 +36,14 @@ namespace Indecisive
 
 	GameObject* ComponentFactory::MakeTestObjectFromObj(std::string filepath)
 	{
-		auto pGameObject = new GameObject();
 		auto ObjLoader = OBJLoader::OBJLoader();
-		pGameObject->AddDrawable(new MeshComponent(ObjLoader.Load(filepath), nullptr));
-		return pGameObject;
+		auto objGeometry = ObjLoader.Load(filepath);
+		if (objGeometry != nullptr)
+		{
+			auto pGameObject = new GameObject();
+			pGameObject->AddDrawable(new MeshComponent(objGeometry, nullptr));
+			return pGameObject;
+		}
+		return nullptr;
 	}
 }

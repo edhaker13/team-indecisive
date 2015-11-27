@@ -1,5 +1,4 @@
 #pragma once
-
 #include <windows.h>
 #include <d3d11_1.h>
 #include <d3dcompiler.h>
@@ -41,18 +40,18 @@ namespace Indecisive
 	class GraphicsDirectX : public IGraphics
 	{
 	public:
-		GraphicsDirectX(): IGraphics() {};
+		LIBRARY_API GraphicsDirectX() : IGraphics() {};
 		~GraphicsDirectX();
-		virtual bool Initialise(Window*) override;
-		virtual Buffer* InitVertexBuffer(SimpleVertex vertices[], unsigned arraySize) override;
-		virtual Buffer* InitVertexBuffer(Vertex vertices[], unsigned arraySize) override;
-		virtual Buffer* InitIndexBuffer(unsigned short indices[], unsigned arraySize) override;
-		virtual void DrawGeometry(Geometry* g) override;
+		LIBRARY_API virtual bool Initialise(Window*) override;
+		LIBRARY_API virtual Buffer* InitVertexBuffer(SimpleVertex vertices[], unsigned arraySize) override;
+		LIBRARY_API virtual Buffer* InitVertexBuffer(Vertex vertices[], unsigned arraySize) override;
+		LIBRARY_API virtual Buffer* InitIndexBuffer(unsigned short indices[], unsigned arraySize) override;
+		LIBRARY_API virtual void DrawGeometry(Geometry* g) override;
 
 		//bool HasTexture() const { return _pTextureRV ? true : false; }
 
-		virtual void Update() override;
-		virtual void Draw() override;
+		LIBRARY_API virtual void Update() override;
+		LIBRARY_API virtual void Draw() override;
 
 	private:
 		GraphicsDirectX(GraphicsDirectX const&) = delete;

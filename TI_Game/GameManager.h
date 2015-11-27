@@ -1,5 +1,6 @@
 #pragma once
-#include "..\TI_Engine\IGraphics.h"
+#include "IGraphics.h"
+#include "ServiceLocator.h"
 #include <windows.h>
 
 namespace Indecisive

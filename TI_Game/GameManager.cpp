@@ -1,7 +1,6 @@
 #include "GameManager.h"
-#include "..\TI_Engine\GraphicsDirectX.h"
-#include "..\TI_Engine\ServiceLocator.h"
-#include "..\TI_Engine\Window.h"
+#include "GraphicsDirectX.h"
+#include "Window.h"
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
@@ -42,8 +41,8 @@ namespace Indecisive
 	{
 		_pGraphics = new GraphicsDirectX();
 		auto pWindow = new Window();
-		ServiceLocator::Instance()->Add("graphics", _pGraphics);
-		//ServiceLocator::Instance()->Add("window", pWindow);
+		ServiceLocatorInstance()->Add("graphics", _pGraphics);
+		//ServiceLocatorInstance()->Add("window", pWindow);
 		
 		if (FAILED(pWindow->Initialise(hInstance, nCmdShow)))
 		{

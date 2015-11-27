@@ -41,7 +41,10 @@ namespace Indecisive
 		ambient = XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
 		diffuse = XMFLOAT4(0.3f, 0.3f, 0.2f, 1.0f);
 		
-		CreateDDSTextureFromFile(_pd3dDevice, L"carTex.dds", nullptr, &_pTextureRV);
+		//TODO: MOVE ASSETS TO MANAGER (OBJLOADER?)
+		CreateDDSTextureFromFile(_pd3dDevice, L".\\Assets\\carTex.dds", nullptr, &_pTextureRV);
+		_pGameObject = ComponentFactory::MakeTestObjectFromObj("carBody.obj");
+		//_pGameObject = ComponentFactory::MakeTestObject();
 		
 		// Create the sample state
 		D3D11_SAMPLER_DESC sampDesc;
@@ -406,11 +409,6 @@ namespace Indecisive
 		// Set index buffer
 		_pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
 		*/
-
-		// TODO: ASSET MANAGER
-		_pGameObject = ComponentFactory::MakeTestObjectFromObj("carBody.obj");
-		//_pGameObject = ComponentFactory::MakeTestObject();
-
 
 		// Set primitive topology
 		_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

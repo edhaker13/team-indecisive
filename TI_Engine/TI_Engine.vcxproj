@@ -18,7 +18,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -65,6 +65,12 @@
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
     </Bscmake>
+    <Lib>
+      <TreatLibWarningAsErrors>true</TreatLibWarningAsErrors>
+    </Lib>
+    <Lib>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -89,6 +95,7 @@
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="DirectXMath.h" />
     <ClInclude Include="GraphicsDirectX.h" />
+    <ClInclude Include="IServiceLocator.h" />
     <ClInclude Include="I_AI.h" />
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="IGameObject.h" />
@@ -96,6 +103,7 @@
     <ClInclude Include="IDrawable.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="IPhysics.h" />
+    <ClInclude Include="LibraryAPI.h" />
     <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="IUpdatable.h" />
@@ -112,17 +120,20 @@
     <ClCompile Include="DirectXMath.cpp" />
     <ClCompile Include="GraphicsDirectX.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
+    <ClCompile Include="ServiceLocator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DX11 Framework.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Lighting.fx">
-      <FileType>Document</FileType>
-    </None>
+    <Image Include="TeamIndecisive.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="TeamIndecisive.ico" />
+    <None Include="Lighting.fx">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

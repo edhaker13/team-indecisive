@@ -180,7 +180,7 @@ namespace Indecisive
 				CreateIndices(expandedVertices, expandedTexCoords, expandedNormals, meshIndices, meshVertices, meshTexCoords, meshNormals);
 
 
-				IGraphics* pGraphics = static_cast<IGraphics*> (ServiceLocator::Instance()->Get("graphics"));
+				IGraphics* pGraphics = static_cast<IGraphics*> (ServiceLocatorInstance()->Get("graphics"));
 
 				//Turn data from vector form to arrays
 				Vertex* finalVerts = new Vertex[meshVertices.size()];
@@ -246,7 +246,7 @@ namespace Indecisive
 			//Put data into vertex and index buffers, then pass the relevant data to the MeshData object.
 			//The rest of the code will hopefully look familiar to you, as it's similar to whats in your InitVertexBuffer and InitIndexBuffer methods
 
-			IGraphics* pGraphics = static_cast<IGraphics*> (ServiceLocator::Instance()->Get("graphics"));
+			IGraphics* pGraphics = static_cast<IGraphics*> (ServiceLocatorInstance()->Get("graphics"));
 
 			pGeometry->vertexBuffer = pGraphics->InitVertexBuffer(finalVerts, numVertices);
 			pGeometry->vertexBufferOffset = 0;
