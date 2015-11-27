@@ -2,33 +2,31 @@
 #include "IComponent.h"
 #include "IDrawable.h"
 #include "IGraphics.h"
-#include "ServiceLocator.h"
+#include "IServiceLocator.h"
 
 namespace Indecisive
 { 
 	struct Geometry;
-	struct Material;
 
 	class MeshComponent: public IComponent, public IDrawable
 	{
 	private:
 		Geometry* _pGeometry;
 		IGraphics* _pGraphics;
-		Material* _pMaterial;
 
 	public:
-		MeshComponent(Geometry* geometry, Material* material) : IComponent("Mesh"), _pGeometry(geometry), _pMaterial(material) 
+		MeshComponent(Geometry* geometry) : IComponent("Mesh"), _pGeometry(geometry)
 		{
 			_pGraphics = static_cast<IGraphics*> (ServiceLocatorInstance()->Get("graphics"));
 		};
-		~MeshComponent()
+		/*~MeshComponent()
 		{
 			delete _pGeometry;
 			delete _pMaterial;
 
 			_pGeometry = nullptr;
 			_pMaterial = nullptr;
-		};
+		};/*need to find a way to delete this properly*/
 		virtual void Draw() override
 		{
 			_pGraphics->DrawGeometry(_pGeometry);

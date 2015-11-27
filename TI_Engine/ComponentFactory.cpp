@@ -30,7 +30,7 @@ namespace Indecisive
 		pGeometry->indexBufferOffset = 0;
 
 		auto pGameObject = new GameObject();
-		pGameObject->AddDrawable(new MeshComponent(pGeometry, nullptr));
+		pGameObject->AddDrawable(new MeshComponent(pGeometry));
 		return pGameObject;
 	}
 
@@ -41,7 +41,7 @@ namespace Indecisive
 		if (objGeometry != nullptr)
 		{
 			auto pGameObject = new GameObject();
-			pGameObject->AddDrawable(new MeshComponent(objGeometry, nullptr));
+			pGameObject->AddDrawable(new MeshComponent(objGeometry));
 			return pGameObject;
 		}
 		return nullptr;
