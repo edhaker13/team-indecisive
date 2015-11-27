@@ -16,6 +16,9 @@
   <ItemGroup>
     <ClInclude Include="GameManager.h" />
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Lighting.fx" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4C985EF5-1D21-4B8F-B22F-182DAAC2C864}</ProjectGuid>
     <RootNamespace>TI_Game</RootNamespace>
