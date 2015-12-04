@@ -580,7 +580,7 @@ namespace Indecisive
 		_pSwapChain->Present(0, 0);
 	}
 
-	void GraphicsDirectX::DrawGeometry(Geometry* g)
+	void GraphicsDirectX::DrawMesh(Mesh* g)
 	{
 		_pImmediateContext->IASetVertexBuffers(0, 1, (ID3D11Buffer**)&g->vertexBuffer, &g->vertexBufferStride, &g->vertexBufferOffset);
 		_pImmediateContext->IASetIndexBuffer((ID3D11Buffer*)g->indexBuffer, DXGI_FORMAT_R16_UINT, g->indexBufferOffset);
