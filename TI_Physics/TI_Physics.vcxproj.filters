@@ -21,9 +21,18 @@
     <ClInclude Include="PhysicsComp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ITransformComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PhysicsComp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
