@@ -5,7 +5,7 @@
 namespace Indecisive
 {
 	
-	bool OBJLoader::FindSimilarVertex(const Vertex& vertex, std::map<Vertex, unsigned short>& vertToIndexMap, unsigned short& index)
+	bool OBJLoader::FindSimilarVertex(const Vertex& vertex, std::map<Vertex, WORD>& vertToIndexMap, WORD& index)
 	{
 		auto it = vertToIndexMap.find(vertex);
 		if (it == vertToIndexMap.end())
@@ -54,7 +54,7 @@ namespace Indecisive
 		}
 	}
 
-	Geometry* OBJLoader::Load(const std::string filename, bool invertTexCoords)
+	Mesh* OBJLoader::Load(const std::string filename, bool invertTexCoords)
 	{
 		std::string binaryFilename = ".\\Assets\\" + filename + ".bin";
 		std::ifstream binaryInFile;
@@ -192,10 +192,10 @@ namespace Indecisive
 					finalVerts[i].TexC = meshTexCoords[i];
 				}
 
-				auto pGeometry = new Geometry();
-				pGeometry->vertexBuffer = pGraphics->InitVertexBuffer(finalVerts, numMeshVertices);
-				pGeometry->vertexBufferOffset = 0;
-				pGeometry->vertexBufferStride = sizeof(Vertex);
+				auto pMesh = new Mesh();
+				pMesh->vertexBuffer = pGraphics->InitVertexBuffer(finalVerts, numMeshVertices);
+				pMesh->vertexBufferOffset = 0;
+				pMesh->vertexBufferStride = sizeof(Vertex);
 
 				unsigned short* indicesArray = new unsigned short[meshIndices.size()];
 				unsigned int numMeshIndices = meshIndices.size();
@@ -212,15 +212,15 @@ namespace Indecisive
 				outbin.write((char*)indicesArray, sizeof(unsigned short) * numMeshIndices);
 				outbin.close();
 
-				pGeometry->indexBuffer = pGraphics->InitIndexBuffer(indicesArray, numMeshIndices);
-				pGeometry->indexBufferOffset = 0;
-				pGeometry->indexBufferSize = numMeshIndices;
+				pMesh->indexBuffer = pGraphics->InitIndexBuffer(indicesArray, numMeshIndices);
+				pMesh->indexBufferOffset = 0;
+				pMesh->indexBufferSize = numMeshIndices;
 
 				//This data has now been sent over to the GPU so we can delete this CPU-side stuff
 				delete[] indicesArray;
 				delete[] finalVerts;
 
-				return pGeometry;
+				return pMesh;
 			}
 
 			//-----------------------------------------------------------------------------
@@ -229,7 +229,7 @@ namespace Indecisive
 		}
 		else
 		{
-			auto pGeometry = new Geometry();
+			auto pMesh = new Mesh();
 			unsigned int numVertices;
 			unsigned int numIndices;
 
@@ -248,18 +248,18 @@ namespace Indecisive
 
 			IGraphics* pGraphics = static_cast<IGraphics*> (ServiceLocatorInstance()->Get("graphics"));
 
-			pGeometry->vertexBuffer = pGraphics->InitVertexBuffer(finalVerts, numVertices);
-			pGeometry->vertexBufferOffset = 0;
-			pGeometry->vertexBufferStride = sizeof(Vertex);
-			pGeometry->indexBuffer = pGraphics->InitIndexBuffer(indices, numIndices);
-			pGeometry->indexBufferOffset = 0;
-			pGeometry->indexBufferSize = numIndices;
+			pMesh->vertexBuffer = pGraphics->InitVertexBuffer(finalVerts, numVertices);
+			pMesh->vertexBufferOffset = 0;
+			pMesh->vertexBufferStride = sizeof(Vertex);
+			pMesh->indexBuffer = pGraphics->InitIndexBuffer(indices, numIndices);
+			pMesh->indexBufferOffset = 0;
+			pMesh->indexBufferSize = numIndices;
 
 			//This data has now been sent over to the GPU so we can delete this CPU-side stuff
 			delete[] indices;
 			delete[] finalVerts;
 
-			return pGeometry;
+			return pMesh;
 		}
 	}
 

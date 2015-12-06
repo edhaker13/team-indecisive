@@ -43,10 +43,10 @@ namespace Indecisive
 		LIBRARY_API GraphicsDirectX() : IGraphics() {};
 		~GraphicsDirectX();
 		LIBRARY_API virtual bool Initialise(Window*) override;
-		LIBRARY_API virtual Buffer* InitVertexBuffer(SimpleVertex vertices[], unsigned arraySize) override;
-		LIBRARY_API virtual Buffer* InitVertexBuffer(Vertex vertices[], unsigned arraySize) override;
-		LIBRARY_API virtual Buffer* InitIndexBuffer(unsigned short indices[], unsigned arraySize) override;
-		LIBRARY_API virtual void DrawGeometry(Geometry* g) override;
+		LIBRARY_API virtual Buffer* InitVertexBuffer(SimpleVertex[], unsigned) override;
+		LIBRARY_API virtual Buffer* InitVertexBuffer(Vertex[], unsigned) override;
+		LIBRARY_API virtual Buffer* InitIndexBuffer(unsigned short[], unsigned) override;
+		LIBRARY_API virtual void DrawMesh(Mesh*) override;
 
 		//bool HasTexture() const { return _pTextureRV ? true : false; }
 

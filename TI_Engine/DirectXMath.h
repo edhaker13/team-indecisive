@@ -452,11 +452,6 @@ namespace Indecisive
 		static const Matrix Identity;
 	};
 
-	struct Buffer : public ID3D11Buffer
-	{
-		
-	};
-
 	// Binary operators
 	Matrix operator+ (const Matrix& M1, const Matrix& M2);
 	Matrix operator- (const Matrix& M1, const Matrix& M2);

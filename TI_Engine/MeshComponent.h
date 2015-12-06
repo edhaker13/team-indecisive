@@ -6,30 +6,30 @@
 
 namespace Indecisive
 { 
-	struct Geometry;
+	struct Mesh;
 
 	class MeshComponent: public IComponent, public IDrawable
 	{
 	private:
-		Geometry* _pGeometry;
+		Mesh* _pMesh;
 		IGraphics* _pGraphics;
 
 	public:
-		MeshComponent(Geometry* geometry) : IComponent("Mesh"), _pGeometry(geometry)
+		MeshComponent(Mesh* mesh) : IComponent("Mesh"), _pMesh(mesh)
 		{
 			_pGraphics = static_cast<IGraphics*> (ServiceLocatorInstance()->Get("graphics"));
 		};
 		/*~MeshComponent()
 		{
-			delete _pGeometry;
+			delete _pMesh;
 			delete _pMaterial;
 
-			_pGeometry = nullptr;
+			_pMesh = nullptr;
 			_pMaterial = nullptr;
 		};/*need to find a way to delete this properly*/
 		virtual void Draw() override
 		{
-			_pGraphics->DrawGeometry(_pGeometry);
+			_pGraphics->DrawMesh(_pMesh);
 		};
 	};
 
