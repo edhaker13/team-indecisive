@@ -1,5 +1,5 @@
 #include "OBJLoader.h"
-#include "MeshComponent.h"
+#include "ResourceManager.h"
 #include "ServiceLocator.h"
 
 namespace Indecisive
@@ -54,7 +54,71 @@ namespace Indecisive
 		}
 	}
 
-	Mesh* OBJLoader::Load(const std::string filename, bool invertTexCoords)
+	MeshComponent* OBJLoader::ConstructFromMesh(const std::string& meshName)
+	{
+		auto mesh = ResourceManagerInstance()->GetMesh(meshName);
+		if (mesh == nullptr)
+		{	// ERROR <Not Found>
+			return nullptr;
+		}
+		auto m = new MeshComponent(mesh);
+		std::vector<int> _transparentGroups;  // Indices of groups, PRIORITY 1
+		std::vector<int> _opaqueGroups; // Indices of groups, PRIORITY 2
+		for (unsigned i = 0; i < _meshSubObjs[meshName].size(); i++)
+		{
+			Material* mat = ResourceManagerInstance()->GetMaterial(_meshSubObjs[meshName][i].useMtl);
+			Texture* none = ResourceManagerInstance()->GetTexture("WhiteTex.dds");
+			Texture* ambi = nullptr;
+			Texture* diff = nullptr;
+			Texture* spec = nullptr;
+
+			if (mat != nullptr)
+			{
+				ambi = ResourceManagerInstance()->GetTexture(mat->ambientTexture);
+				if (ambi == nullptr)
+				{
+					ambi = none;
+				}
+				diff = ResourceManagerInstance()->GetTexture(mat->diffuseTexture);
+				if (diff == nullptr)
+				{
+					diff = none;
+				}
+				spec = ResourceManagerInstance()->GetTexture(mat->specularTexture);
+				if (spec == nullptr)
+				{
+					spec = none;
+				}
+			}
+
+			bool trans = mat->transparency < 1.0f ? true : false;
+			
+			//m->_groups.push_back(new Group(_meshSubObjs[meshName][i].id, trans, _meshSubObjs[meshName][i]._indexEndLocation - _meshSubObjs[meshName][i]._indexStartLocation, 
+			//	_meshSubObjs[meshName][i]._indexStartLocation, _meshSubObjs[meshName][i]._vertexStartLocation, mat, diff, spec));
+			
+
+			if (trans)
+			{
+				_transparentGroups.push_back(i);
+			}
+			else
+			{
+				_opaqueGroups.push_back(i);
+			}
+		}
+		/*for (unsigned i = 0; i < _opaqueGroups.size(); i++)
+		{
+			m->_priorityGroups.push_back(_opaqueGroups[i]);
+		}
+		for (unsigned i = 0; i < _transparentGroups.size(); i++)
+		{
+			m->_priorityGroups.push_back(_transparentGroups[i]);
+		}*/
+
+		return m;
+	}
+
+	Mesh* OBJLoader::Load(const std::string& filename, bool invertTexCoords)
 	{
 		std::string binaryFilename = ".\\Assets\\" + filename + ".bin";
 		std::ifstream binaryInFile;
@@ -263,5 +327,125 @@ namespace Indecisive
 		}
 	}
 
+	void OBJLoader::LoadMaterialLibrary(const std::string& filename)
+	{
+		if (ResourceManagerInstance()->GetMaterial(filename) != nullptr)
+		{
+			return;
+		}
 
+		std::ifstream inFile;
+		inFile.open(".\\Assets\\" + filename);
+
+		if (!inFile.good())
+		{
+			//std::cerr << "ERROR: Cannot find OBJ file '" << fileName << "'\n";
+			return;
+		}
+		else
+		{
+			//std::cerr << "OBJ File '" << fileName << "' found\n";
+
+			std::string input = "";
+			std::string currentMatName = "";
+			Material* currentMat = nullptr;
+			while (!inFile.eof())
+			{
+				inFile >> input; //Get the next input from the file
+
+				//Check what type of input it was, we are only interested in vertex positions, texture coordinates, normals and indices
+				if (input.compare("newmtl") == 0)
+				{
+					if (currentMat != nullptr && currentMatName != "")
+					{
+						if (ResourceManagerInstance()->AddMaterial(currentMatName, currentMat))
+						{
+							currentMat = nullptr;
+							currentMatName.clear();
+						}
+					}
+					inFile >> currentMatName;
+					if (currentMat == nullptr)
+					{
+						currentMat = new Material();
+						currentMat->name = currentMatName;
+					}
+				}
+				else if (input.compare("Ns") == 0)
+				{
+					inFile >> currentMat->specularPower;
+				}
+				else if (input.compare("Ni") == 0)
+				{//Reflective index, unused
+					char dump[128];
+					inFile.getline(dump, 128);
+				}
+				else if (input.compare("d") == 0)
+				{//Alpha, unused
+					inFile >> currentMat->transparency;
+				}
+				else if (input.compare("Tr") == 0)
+				{//Transparency, unused
+					char dump[128];
+					inFile.getline(dump, 128);
+				}
+				else if (input.compare("Tf") == 0)
+				{//Transmission filter, unused
+					char dump[128];
+					inFile.getline(dump, 128);
+				}
+				else if (input.compare("illum") == 0)
+				{//Illumination, unused
+					char dump[128];
+					inFile.getline(dump, 128);
+				}
+				else if (input.compare("Ka") == 0)
+				{
+					inFile >> currentMat->ambient.x;
+					inFile >> currentMat->ambient.y;
+					inFile >> currentMat->ambient.z;
+				}
+				else if (input.compare("Kd") == 0)
+				{
+					inFile >> currentMat->diffuse.x;
+					inFile >> currentMat->diffuse.y;
+					inFile >> currentMat->diffuse.z;
+				}
+				else if (input.compare("Ks") == 0)
+				{
+					inFile >> currentMat->specular.x;
+					inFile >> currentMat->specular.y;
+					inFile >> currentMat->specular.z;
+				}
+				else if (input.compare("Ke") == 0)
+				{
+					char dump[128];
+					inFile.getline(dump, 128);
+				}
+				else if (input.compare("map_Ka") == 0)
+				{
+					std::string filename;
+					inFile >> filename;
+					ResourceManagerInstance()->AddTexture(filename);
+					currentMat->ambientTexture = filename;
+				}
+				else if (input.compare("map_Kd") == 0)
+				{
+					std::string filename;
+					inFile >> filename;
+					ResourceManagerInstance()->AddTexture(filename);
+					currentMat->diffuseTexture = filename;
+				}
+				else if (input.compare("map_Ks") == 0)
+				{
+					std::string filename;
+					inFile >> filename;
+					ResourceManagerInstance()->AddTexture(filename);
+					currentMat->specularTexture = filename;
+				}
+			}
+		}
+
+		//std::cerr << "MTL File '" << fileName << "' loaded\n";
+	}
 }

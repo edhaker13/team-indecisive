@@ -43,10 +43,15 @@ namespace Indecisive
 
 	struct Material
 	{
-		Vector4 diffuse;
+		std::string name;
+		std::string ambientTexture;
+		std::string diffuseTexture;
+		std::string specularTexture;
 		Vector4 ambient;
+		Vector4 diffuse;
 		Vector4 specular;
 		float specularPower;
+		float transparency;
 	};
 
 	struct SubObject
