@@ -8,6 +8,9 @@ namespace Indecisive
 		PhysicsComp();
 		~PhysicsComp();
 
+	protected:
+
+
 	private:
 
 		// float3 netForce;
