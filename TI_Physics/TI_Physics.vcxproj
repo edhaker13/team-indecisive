@@ -64,7 +64,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\PhysicsComponent.h" />
     <ClInclude Include="ITransformComponent.h" />
     <ClInclude Include="PhysicsComp.h" />
     <ClInclude Include="TransformComponent.h" />
