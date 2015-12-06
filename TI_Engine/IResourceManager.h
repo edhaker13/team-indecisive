@@ -10,9 +10,9 @@ namespace Indecisive
 
 	struct IResourceManager
 	{
-		virtual Material* AddMaterial(const std::string&) = 0;
-		virtual Mesh* AddMesh(const std::string&) = 0;
-		virtual Texture* AddTexture(const std::string&) = 0;
+		virtual bool AddMaterial(const std::string& name, const Material*) = 0;
+		virtual bool AddMesh(const std::string& name, const Mesh*) = 0;
+		virtual bool AddTexture(const std::string&) = 0;
 		virtual Material* GetMaterial(const std::string&) = 0;
 		virtual Mesh* GetMesh(const std::string&) = 0;
 		virtual Texture*  GetTexture(const std::string&) = 0;

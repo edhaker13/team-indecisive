@@ -5,12 +5,14 @@ namespace Indecisive
 	struct Buffer;
 	struct Mesh;
 	struct SimpleVertex;
+	struct Texture;
 	struct Vertex;
 	class Window;
 
 	class IGraphics
 	{
 	public:
+		virtual bool CreateTextureFromFile(const wchar_t*, Texture*) = 0;
 		virtual bool Initialise(Window*) = 0;
 		virtual Buffer* InitVertexBuffer(SimpleVertex[], unsigned) = 0;
 		virtual Buffer* InitVertexBuffer(Vertex[], unsigned) = 0;

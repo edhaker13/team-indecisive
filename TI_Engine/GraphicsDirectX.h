@@ -42,6 +42,7 @@ namespace Indecisive
 	public:
 		LIBRARY_API GraphicsDirectX() : IGraphics() {};
 		~GraphicsDirectX();
+		LIBRARY_API virtual bool CreateTextureFromFile(const wchar_t*, Texture*) override;
 		LIBRARY_API virtual bool Initialise(Window*) override;
 		LIBRARY_API virtual Buffer* InitVertexBuffer(SimpleVertex[], unsigned) override;
 		LIBRARY_API virtual Buffer* InitVertexBuffer(Vertex[], unsigned) override;

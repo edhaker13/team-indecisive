@@ -15,6 +15,7 @@ namespace Indecisive
 		Mesh* Load(const std::string filename, bool invertTexCoords = true);
 
 	private:
+		std::map<std::string, std::vector<SubObject>> _meshSubObjs;
 
 		bool FindSimilarVertex(const Vertex& vertex, std::map<Vertex, WORD>& vertToIndexMap, WORD& index);
 		void CreateIndices(

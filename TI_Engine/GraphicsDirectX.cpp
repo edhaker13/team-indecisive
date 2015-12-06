@@ -11,6 +11,18 @@ namespace Indecisive
 		Cleanup();
 	}
 
+	bool GraphicsDirectX::CreateTextureFromFile(const wchar_t* file, Texture* pTexture)
+	{
+		if (FAILED(CreateDDSTextureFromFile(_pd3dDevice, file, nullptr, (ID3D11ShaderResourceView**)&pTexture)))
+		{
+			//TODO: Log Errors?
+			if (pTexture != nullptr) delete pTexture;
+			pTexture = nullptr;
+			return false;
+		}
+		return true;
+	}
+
 	bool GraphicsDirectX::Initialise(Window* pWindow)
 	{
 		_hWnd = pWindow->GetHWND();
