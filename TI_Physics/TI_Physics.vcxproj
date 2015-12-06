@@ -65,6 +65,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\PhysicsComponent.h" />
+    <ClInclude Include="PhysicsComp.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="PhysicsComp.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
