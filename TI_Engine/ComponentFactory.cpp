@@ -1,5 +1,6 @@
 #include "ComponentFactory.h"
 #include "OBJLoader.h"
+#include "ResourceManager.h"
 #include "ServiceLocator.h"
 #include "Structures.h"
 
@@ -21,27 +22,41 @@ namespace Indecisive
 		};
 
 		auto pMesh = new Mesh();
+		auto pSubObject = new SubObject();
+		auto pGameObject = new GameObject();
+		auto pMeshComponent = new MeshComponent(*pMesh);
 		auto pGraphics = static_cast<IGraphics*>(ServiceLocatorInstance()->Get("graphics"));
+		
 		pMesh->vertexBuffer = pGraphics->InitVertexBuffer(vertices, 4);
+		pSubObject->vertexEnd = 4;
 		pMesh->vertexBufferStride = sizeof(SimpleVertex);
-		pMesh->vertexBufferOffset = 0;
+		pMesh->vertexBufferOffset = pSubObject->indexStart = 0;
 		pMesh->indexBuffer = pGraphics->InitIndexBuffer(indices, 6);
-		pMesh->indexBufferSize = 6;
+		pMesh->indexBufferSize = pSubObject->indexSize = 6;
 		pMesh->indexBufferOffset = 0;
 
-		auto pGameObject = new GameObject();
-		pGameObject->AddDrawable(new MeshComponent(pMesh));
+		Texture* none = nullptr;
+		if (ResourceManagerInstance()->AddTexture("WhiteTex.dds"))
+			 none = ResourceManagerInstance()->GetTexture("WhiteTex.dds");
+		pSubObject->ambientTexture = none;
+		pSubObject->diffuseTexture = none;
+		pSubObject->specularTexture= none;
+		pMeshComponent->AddGroup(pSubObject);
+		pGameObject->AddDrawable(pMeshComponent);
 		return pGameObject;
 	}
 
-	GameObject* ComponentFactory::MakeTestObjectFromObj(std::string filepath)
+	GameObject* ComponentFactory::MakeTestObjectFromObj(std::string filename)
 	{
+		if (!ResourceManagerInstance()->AddTexture("WhiteTex.dds"))
+			bool failed = true; //Error <No default texture>
 		auto ObjLoader = OBJLoader::OBJLoader();
-		auto objMesh = ObjLoader.Load(filepath);
-		if (objMesh != nullptr)
+		ObjLoader.Load(filename);
+		auto pMeshComponent = ObjLoader.ConstructFromMesh(filename);
+		if (pMeshComponent != nullptr)
 		{
 			auto pGameObject = new GameObject();
-			pGameObject->AddDrawable(new MeshComponent(objMesh));
+			pGameObject->AddDrawable(pMeshComponent);
 			return pGameObject;
 		}
 		return nullptr;

@@ -32,35 +32,38 @@ namespace Indecisive
 
 	struct Mesh
 	{
-		Buffer* vertexBuffer;
-		Buffer* indexBuffer;
-
-		UINT vertexBufferStride;
-		UINT vertexBufferOffset;
-		UINT indexBufferSize;
-		UINT indexBufferOffset;
+		Buffer* vertexBuffer = nullptr;
+		Buffer* indexBuffer = nullptr;
+		UINT vertexBufferStride = 0;
+		UINT vertexBufferOffset = 0;
+		UINT indexBufferSize = 0;
+		UINT indexBufferOffset = 0;
 	};
 
 	struct Material
 	{
-		std::string name;
-		std::string ambientTexture;
-		std::string diffuseTexture;
-		std::string specularTexture;
+		std::string name = "";
+		std::string ambientTextureName = "";
+		std::string diffuseTextureName = "";
+		std::string specularTextureName = "";
+		float specularPower = 0.0f;
+		float transparency = 0.0f;
 		Vector4 ambient;
 		Vector4 diffuse;
 		Vector4 specular;
-		float specularPower;
-		float transparency;
 	};
 
 	struct SubObject
 	{
-		std::string id;
-		std::string useMtl;
-		INT _vertexStartLocation;//probably dont need this since indices assume a single large vertex list
-		UINT _vertexEndLocation;//same goes for this
-		UINT _indexStartLocation;
-		UINT _indexEndLocation;
+		std::string material = "";
+		std::string name = "";
+		INT  vertexStart = 0; //probably don't need this since indices assume a single large vertex list
+		UINT vertexEnd = 0;  //probably don't need this since indices assume a single large vertex list
+		UINT indexStart = 0;
+		UINT indexEnd = 0;
+		UINT indexSize = 0;
+		ID3D11ShaderResourceView* ambientTexture = nullptr;
+		ID3D11ShaderResourceView* diffuseTexture = nullptr;
+		ID3D11ShaderResourceView* specularTexture = nullptr;
 	};
 }

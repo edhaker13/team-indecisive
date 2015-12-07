@@ -31,7 +31,7 @@ namespace Indecisive
 			Texture* pTexture = nullptr;
 			const std::wstring file = L".\\Assets\\" + std::wstring(name.cbegin(), name.cend());
 			auto pGraphics = static_cast<IGraphics*> (ServiceLocatorInstance()->Get("graphics"));
-			if (!pGraphics->CreateTextureFromFile(file.c_str(), pTexture))
+			if (!pGraphics->CreateTextureFromFile(file.c_str(), &pTexture))
 			{
 				return false;
 			}

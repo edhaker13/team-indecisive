@@ -42,15 +42,12 @@ namespace Indecisive
 	public:
 		LIBRARY_API GraphicsDirectX() : IGraphics() {};
 		~GraphicsDirectX();
-		LIBRARY_API virtual bool CreateTextureFromFile(const wchar_t*, Texture*) override;
+		LIBRARY_API virtual bool CreateTextureFromFile(const wchar_t*, Texture**) override;
 		LIBRARY_API virtual bool Initialise(Window*) override;
 		LIBRARY_API virtual Buffer* InitVertexBuffer(SimpleVertex[], unsigned) override;
 		LIBRARY_API virtual Buffer* InitVertexBuffer(Vertex[], unsigned) override;
 		LIBRARY_API virtual Buffer* InitIndexBuffer(unsigned short[], unsigned) override;
-		LIBRARY_API virtual void DrawMesh(Mesh*) override;
-
-		//bool HasTexture() const { return _pTextureRV ? true : false; }
-
+		LIBRARY_API virtual void DrawMesh(Mesh&, SubObject&) override;
 		LIBRARY_API virtual void Update() override;
 		LIBRARY_API virtual void Draw() override;
 
@@ -82,7 +79,6 @@ namespace Indecisive
 		ID3D11DepthStencilView* _depthStencilView = nullptr;
 		ID3D11Texture2D* _depthStencilBuffer = nullptr;
 
-		ID3D11ShaderResourceView* _pTextureRV = nullptr;
 		ID3D11SamplerState* _pSamplerLinear = nullptr;
 
 		HRESULT InitDevice();
