@@ -11,6 +11,18 @@ namespace Indecisive
 		Cleanup();
 	}
 
+	bool GraphicsDirectX::CreateTextureFromFile(const wchar_t* file, Texture** ppTexture)
+	{
+		if (FAILED(CreateDDSTextureFromFile(_pd3dDevice, file, nullptr, (ID3D11ShaderResourceView**)ppTexture)))
+		{
+			//TODO: Log Errors?
+			if (ppTexture != nullptr) delete *ppTexture;
+			ppTexture = nullptr;
+			return false;
+		}
+		return true;
+	}
+
 	bool GraphicsDirectX::Initialise(Window* pWindow)
 	{
 		_hWnd = pWindow->GetHWND();
@@ -41,9 +53,7 @@ namespace Indecisive
 		ambient = XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
 		diffuse = XMFLOAT4(0.3f, 0.3f, 0.2f, 1.0f);
 		
-		//TODO: MOVE ASSETS TO MANAGER (OBJLOADER?)
-		CreateDDSTextureFromFile(_pd3dDevice, L".\\Assets\\carTex.dds", nullptr, &_pTextureRV);
-		_pGameObject = ComponentFactory::MakeTestObjectFromObj("carBody.obj");
+		_pGameObject = ComponentFactory::MakeTestObjectFromObj("fullcar.obj");
 		//_pGameObject = ComponentFactory::MakeTestObject();
 		
 		// Create the sample state
@@ -488,9 +498,6 @@ namespace Indecisive
 		if (_pSwapChain) _pSwapChain->Release();
 		if (_pImmediateContext) _pImmediateContext->Release();
 		if (_pd3dDevice) _pd3dDevice->Release();
-
-		if (_pTextureRV) _pTextureRV->Release();
-
 		if (_pSamplerLinear) _pSamplerLinear->Release();
 	}
 
@@ -540,7 +547,7 @@ namespace Indecisive
 
 		_pImmediateContext->PSSetSamplers(0, 1, &_pSamplerLinear);
 
-		_pImmediateContext->PSSetShaderResources(0, 1, &_pTextureRV);
+		//_pImmediateContext->PSSetShaderResources(0, 1, &_pTextureRV);
 
 		ConstantBuffer cb;
 		cb.mWorld = XMMatrixTranspose(world);
@@ -571,10 +578,12 @@ namespace Indecisive
 		_pSwapChain->Present(0, 0);
 	}
 
-	void GraphicsDirectX::DrawGeometry(Geometry* g)
+	void GraphicsDirectX::DrawMesh(Mesh& m, SubObject& s)
 	{
-		_pImmediateContext->IASetVertexBuffers(0, 1, (ID3D11Buffer**)&g->vertexBuffer, &g->vertexBufferStride, &g->vertexBufferOffset);
-		_pImmediateContext->IASetIndexBuffer((ID3D11Buffer*)g->indexBuffer, DXGI_FORMAT_R16_UINT, g->indexBufferOffset);
-		_pImmediateContext->DrawIndexed(g->indexBufferSize, 0, 0);
+		_pImmediateContext->IASetVertexBuffers(0, 1, (ID3D11Buffer**)&m.vertexBuffer, &m.vertexBufferStride, &m.vertexBufferOffset);
+		_pImmediateContext->IASetIndexBuffer((ID3D11Buffer*)m.indexBuffer, DXGI_FORMAT_R16_UINT, m.indexBufferOffset);
+		_pImmediateContext->PSSetShaderResources(1, 1, &s.specularTexture);
+		_pImmediateContext->PSSetShaderResources(0, 1, &s.diffuseTexture);
+		_pImmediateContext->DrawIndexed(s.indexSize, s.indexStart, 0);
 	}
 };

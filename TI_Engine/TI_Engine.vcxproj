@@ -40,10 +40,7 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
@@ -95,6 +92,7 @@
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="DirectXMath.h" />
     <ClInclude Include="GraphicsDirectX.h" />
+    <ClInclude Include="IResourceManager.h" />
     <ClInclude Include="IServiceLocator.h" />
     <ClInclude Include="I_AI.h" />
     <ClInclude Include="IComponent.h" />
@@ -109,6 +107,7 @@
     <ClInclude Include="IUpdatable.h" />
     <ClInclude Include="IGraphics.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="ServiceLocator.h" />
     <ClInclude Include="Structures.h" />
@@ -120,6 +119,7 @@
     <ClCompile Include="DirectXMath.cpp" />
     <ClCompile Include="GraphicsDirectX.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="ServiceLocator.cpp" />
   </ItemGroup>
   <ItemGroup>

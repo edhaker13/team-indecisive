@@ -11,7 +11,7 @@ namespace IndecisiveTest
 		
 		TEST_METHOD(TestMethod1)
 		{
-			// TODO: Your test code here
+			Assert::AreEqual(1, 1, L"test", LINE_INFO());
 		}
 
 	};

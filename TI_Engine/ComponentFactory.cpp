@@ -1,5 +1,6 @@
 #include "ComponentFactory.h"
 #include "OBJLoader.h"
+#include "ResourceManager.h"
 #include "ServiceLocator.h"
 #include "Structures.h"
 
@@ -14,34 +15,48 @@ namespace Indecisive
 			{ Vector3(-1.0f, -1.0f, 0.0f), Vector4(0.0f, 1.0f, 1.0f, 1.0f) },
 			{ Vector3(1.0f, -1.0f, 0.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f) },
 		};
-		unsigned short indices[] =
+		WORD indices[] =
 		{
 			0, 1, 2,
 			2, 1, 3,
 		};
 
-		auto pGeometry = new Geometry();
-		auto pGraphics = static_cast<IGraphics*>(ServiceLocatorInstance()->Get("graphics"));
-		pGeometry->vertexBuffer = pGraphics->InitVertexBuffer(vertices, 4);
-		pGeometry->vertexBufferStride = sizeof(SimpleVertex);
-		pGeometry->vertexBufferOffset = 0;
-		pGeometry->indexBuffer = pGraphics->InitIndexBuffer(indices, 6);
-		pGeometry->indexBufferSize = 6;
-		pGeometry->indexBufferOffset = 0;
-
+		auto pMesh = new Mesh();
+		auto pSubObject = new SubObject();
 		auto pGameObject = new GameObject();
-		pGameObject->AddDrawable(new MeshComponent(pGeometry));
+		auto pMeshComponent = new MeshComponent(*pMesh);
+		auto pGraphics = static_cast<IGraphics*>(ServiceLocatorInstance()->Get("graphics"));
+		
+		pMesh->vertexBuffer = pGraphics->InitVertexBuffer(vertices, 4);
+		pSubObject->vertexEnd = 4;
+		pMesh->vertexBufferStride = sizeof(SimpleVertex);
+		pMesh->vertexBufferOffset = pSubObject->indexStart = 0;
+		pMesh->indexBuffer = pGraphics->InitIndexBuffer(indices, 6);
+		pMesh->indexBufferSize = pSubObject->indexSize = 6;
+		pMesh->indexBufferOffset = 0;
+
+		Texture* none = nullptr;
+		if (ResourceManagerInstance()->AddTexture("WhiteTex.dds"))
+			 none = ResourceManagerInstance()->GetTexture("WhiteTex.dds");
+		pSubObject->ambientTexture = none;
+		pSubObject->diffuseTexture = none;
+		pSubObject->specularTexture= none;
+		pMeshComponent->AddGroup(pSubObject);
+		pGameObject->AddDrawable(pMeshComponent);
 		return pGameObject;
 	}
 
-	GameObject* ComponentFactory::MakeTestObjectFromObj(std::string filepath)
+	GameObject* ComponentFactory::MakeTestObjectFromObj(std::string filename)
 	{
+		if (!ResourceManagerInstance()->AddTexture("WhiteTex.dds"))
+			bool failed = true; //Error <No default texture>
 		auto ObjLoader = OBJLoader::OBJLoader();
-		auto objGeometry = ObjLoader.Load(filepath);
-		if (objGeometry != nullptr)
+		ObjLoader.Load(filename);
+		auto pMeshComponent = ObjLoader.ConstructFromMesh(filename);
+		if (pMeshComponent != nullptr)
 		{
 			auto pGameObject = new GameObject();
-			pGameObject->AddDrawable(new MeshComponent(objGeometry));
+			pGameObject->AddDrawable(pMeshComponent);
 			return pGameObject;
 		}
 		return nullptr;

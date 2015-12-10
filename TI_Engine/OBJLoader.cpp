@@ -1,11 +1,11 @@
 #include "OBJLoader.h"
-#include "MeshComponent.h"
+#include "ResourceManager.h"
 #include "ServiceLocator.h"
 
 namespace Indecisive
 {
 	
-	bool OBJLoader::FindSimilarVertex(const Vertex& vertex, std::map<Vertex, unsigned short>& vertToIndexMap, unsigned short& index)
+	bool OBJLoader::FindSimilarVertex(const Vertex& vertex, std::map<Vertex, WORD>& vertToIndexMap, WORD& index)
 	{
 		auto it = vertToIndexMap.find(vertex);
 		if (it == vertToIndexMap.end())
@@ -54,23 +54,82 @@ namespace Indecisive
 		}
 	}
 
-	Geometry* OBJLoader::Load(const std::string filename, bool invertTexCoords)
+	MeshComponent* OBJLoader::ConstructFromMesh(const std::string& meshName)
+	{
+		auto mesh = ResourceManagerInstance()->GetMesh(meshName);
+		if (mesh == nullptr)
+		{	// ERROR <Not Found>
+			return nullptr;
+		}
+		auto m = new MeshComponent(*mesh);
+		auto subObjs = _meshSubObjs[meshName];
+		std::vector<int> _transparentGroups;  // Indices of groups, PRIORITY 1
+		std::vector<int> _opaqueGroups; // Indices of groups, PRIORITY 2
+		for (unsigned i = 0; i < subObjs.size(); i++)
+		{
+			Material* mat = ResourceManagerInstance()->GetMaterial(subObjs[i]->material);
+			Texture* none = ResourceManagerInstance()->GetTexture("WhiteTex.dds");
+			Texture* ambi = nullptr;
+			Texture* diff = nullptr;
+			Texture* spec = nullptr;
+			bool transparent = false;
+			if (mat != nullptr)
+			{
+				transparent = mat->transparency < 1.0f ? true : false;
+				ambi = ResourceManagerInstance()->GetTexture(mat->ambientTextureName);
+				diff = ResourceManagerInstance()->GetTexture(mat->diffuseTextureName);
+				spec = ResourceManagerInstance()->GetTexture(mat->specularTextureName);
+				if (ambi == nullptr) ambi = none;
+				if (diff == nullptr) diff = none;
+				if (spec == nullptr) spec = none;
+			}
+			subObjs[i]->ambientTexture = ambi;
+			subObjs[i]->diffuseTexture = diff;
+			subObjs[i]->specularTexture = spec;
+			subObjs[i]->indexSize = subObjs[i]->indexEnd - subObjs[i]->indexStart;
+			m->AddGroup(subObjs[i]);
+			if (transparent)
+			{
+				_transparentGroups.push_back(i);
+			}
+			else
+			{
+				_opaqueGroups.push_back(i);
+			}
+		}
+		for (unsigned i = 0; i < _opaqueGroups.size(); i++)
+		{
+			m->AddPriorityGroup(_opaqueGroups[i]);
+		}
+		for (unsigned i = 0; i < _transparentGroups.size(); i++)
+		{
+			m->AddPriorityGroup(_transparentGroups[i]);
+		}
+		return m;
+	}
+
+	void OBJLoader::Load(const std::string& filename, bool invertTexCoords)
 	{
 		std::string binaryFilename = ".\\Assets\\" + filename + ".bin";
 		std::ifstream binaryInFile;
 		binaryInFile.open(binaryFilename, std::ios::in | std::ios::binary);
-
-		if (!binaryInFile.good())
+		//TODO: Disabled binary load until it can r/w subobjects and material
+		if (true /*!binaryInFile.good()*/)
 		{
 			std::ifstream inFile;
 			inFile.open(".\\Assets\\" + filename);
 
 			if (!inFile.good())
 			{
-				return nullptr;
+				//ERROR <FILE NOT FOUND>
+				return;
 			}
 			else
 			{
+				//Start new subobject list for this file
+				_meshSubObjs[filename];
+				//Temp subobject
+				SubObject* pSubObject = nullptr;
 				//Vectors to store the vertex positions, normals and texture coordinates. Need to use vectors since they're resizeable and we have
 				//no way of knowing ahead of time how large these meshes will be
 				std::vector<Vector3> verts;
@@ -84,6 +143,7 @@ namespace Indecisive
 				std::vector<unsigned short> textureIndices;
 
 				std::string input;
+				UINT indexCounter = 0;
 
 				Vector3 vert;
 				Vector2 texCoord;
@@ -94,13 +154,29 @@ namespace Indecisive
 				std::string beforeFirstSlash;
 				std::string afterFirstSlash;
 				std::string afterSecondSlash;
+				std::string matLib;
 
 				while (!inFile.eof()) //While we have yet to reach the end of the file...
 				{
 					inFile >> input; //Get the next input from the file
 
-					//Check what type of input it was, we are only interested in vertex positions, texture coordinates, normals and indices, nothing else
-					if (input.compare("v") == 0) //Vertex position
+					//Check what type of input it was, we are only interested in vertex positions, texture coordinates, normals, indices, groups, and materials.
+					if (input.compare("mtllib") == 0)//Material library, calls readMaterial()
+					{
+						inFile >> matLib;
+						LoadMaterialLibrary(matLib);
+					}
+					else if (input.compare("g") == 0)//Group(SubObject) name
+					{
+						if (pSubObject != nullptr) _meshSubObjs[filename].push_back(pSubObject);
+						pSubObject = new SubObject();
+						inFile >> pSubObject->name;
+						pSubObject->vertexEnd = 0;
+						pSubObject->vertexStart = UINT_MAX;
+						pSubObject->indexEnd = 0;
+						pSubObject->indexStart = UINT_MAX;
+					}
+					else if (input.compare("v") == 0) //Vertex position
 					{
 						inFile >> vert.x;
 						inFile >> vert.y;
@@ -143,16 +219,34 @@ namespace Indecisive
 							tInd[i] = (unsigned short)atoi(afterFirstSlash.c_str());
 							nInd[i] = (unsigned short)atoi(afterSecondSlash.c_str());
 						}
-
+						//Sets start to an iterator, iterator position is 1 past the final element of vertindices (could use normals or textures, no matter).
+						if (vertIndices.size() != 0)
+						{
+							pSubObject->vertexStart = vertIndices.back() < pSubObject->vertexStart ? vertIndices.back() : pSubObject->vertexStart;
+						}
+						else
+						{
+							pSubObject->vertexStart = 0;
+						}
+						pSubObject->indexStart = indexCounter < pSubObject->indexStart ? indexCounter :	pSubObject->indexStart;
 						//Place into vectors
 						for (int i = 0; i < 3; ++i)
 						{
 							vertIndices.push_back(vInd[i] - 1);		//Minus 1 from each as these as OBJ indexes start from 1 whereas C++ arrays start from 0
 							textureIndices.push_back(tInd[i] - 1);	//which is really annoying. Apart from Lua and SQL, there's not much else that has indexing 
 							normalIndices.push_back(nInd[i] - 1);	//starting at 1. So many more languages index from 0, the .OBJ people screwed up there.
+							indexCounter++;  //To track indexes in groups.
 						}
+						//sets end to an iterator, iterator position is 1 past the final element of vertices (could use normals or textures, no matter).
+						pSubObject->indexEnd = indexCounter > pSubObject->indexEnd ? indexCounter : pSubObject->indexEnd;
+						pSubObject->vertexEnd = vertIndices.back() > pSubObject->vertexEnd ? vertIndices.back() : pSubObject->vertexEnd;
+					}
+					else if (input.compare("usemtl") == 0)//Use material, changes current set material for faces
+					{
+						inFile >> pSubObject->material;
 					}
 				}
+				if (pSubObject != nullptr) _meshSubObjs[filename].push_back(pSubObject);
 				inFile.close(); //Finished with input file now, all the data we need has now been loaded in
 
 				//Get vectors to be of same size, ready for singular indexing
@@ -179,7 +273,6 @@ namespace Indecisive
 
 				CreateIndices(expandedVertices, expandedTexCoords, expandedNormals, meshIndices, meshVertices, meshTexCoords, meshNormals);
 
-
 				IGraphics* pGraphics = static_cast<IGraphics*> (ServiceLocatorInstance()->Get("graphics"));
 
 				//Turn data from vector form to arrays
@@ -192,10 +285,10 @@ namespace Indecisive
 					finalVerts[i].TexC = meshTexCoords[i];
 				}
 
-				auto pGeometry = new Geometry();
-				pGeometry->vertexBuffer = pGraphics->InitVertexBuffer(finalVerts, numMeshVertices);
-				pGeometry->vertexBufferOffset = 0;
-				pGeometry->vertexBufferStride = sizeof(Vertex);
+				auto pMesh = new Mesh();
+				pMesh->vertexBuffer = pGraphics->InitVertexBuffer(finalVerts, numMeshVertices);
+				pMesh->vertexBufferOffset = 0;
+				pMesh->vertexBufferStride = sizeof(Vertex);
 
 				unsigned short* indicesArray = new unsigned short[meshIndices.size()];
 				unsigned int numMeshIndices = meshIndices.size();
@@ -210,17 +303,20 @@ namespace Indecisive
 				outbin.write((char*)&numMeshIndices, sizeof(unsigned int));
 				outbin.write((char*)finalVerts, sizeof(Vertex) * numMeshVertices);
 				outbin.write((char*)indicesArray, sizeof(unsigned short) * numMeshIndices);
+				//TODO: write subobjects and material to binary
 				outbin.close();
 
-				pGeometry->indexBuffer = pGraphics->InitIndexBuffer(indicesArray, numMeshIndices);
-				pGeometry->indexBufferOffset = 0;
-				pGeometry->indexBufferSize = numMeshIndices;
+				pMesh->indexBuffer = pGraphics->InitIndexBuffer(indicesArray, numMeshIndices);
+				pMesh->indexBufferOffset = 0;
+				pMesh->indexBufferSize = numMeshIndices;
 
 				//This data has now been sent over to the GPU so we can delete this CPU-side stuff
 				delete[] indicesArray;
 				delete[] finalVerts;
 
-				return pGeometry;
+				ResourceManagerInstance()->AddMesh(filename, pMesh);
+				//std::cerr << "OBJ File '" << filename << "' loaded\n";
+				//return pMesh;
 			}
 
 			//-----------------------------------------------------------------------------
@@ -229,7 +325,7 @@ namespace Indecisive
 		}
 		else
 		{
-			auto pGeometry = new Geometry();
+			auto pMesh = new Mesh();
 			unsigned int numVertices;
 			unsigned int numIndices;
 
@@ -243,25 +339,151 @@ namespace Indecisive
 			binaryInFile.read((char*)finalVerts, sizeof(Vertex) * numVertices);
 			binaryInFile.read((char*)indices, sizeof(unsigned short) * numIndices);
 
-			//Put data into vertex and index buffers, then pass the relevant data to the MeshData object.
-			//The rest of the code will hopefully look familiar to you, as it's similar to whats in your InitVertexBuffer and InitIndexBuffer methods
-
 			IGraphics* pGraphics = static_cast<IGraphics*> (ServiceLocatorInstance()->Get("graphics"));
 
-			pGeometry->vertexBuffer = pGraphics->InitVertexBuffer(finalVerts, numVertices);
-			pGeometry->vertexBufferOffset = 0;
-			pGeometry->vertexBufferStride = sizeof(Vertex);
-			pGeometry->indexBuffer = pGraphics->InitIndexBuffer(indices, numIndices);
-			pGeometry->indexBufferOffset = 0;
-			pGeometry->indexBufferSize = numIndices;
+			//Put data into vertex and index buffers, then pass the relevant data to the Mesh object.
+			pMesh->vertexBuffer = pGraphics->InitVertexBuffer(finalVerts, numVertices);
+			pMesh->vertexBufferOffset = 0;
+			pMesh->vertexBufferStride = sizeof(Vertex);
+			pMesh->indexBuffer = pGraphics->InitIndexBuffer(indices, numIndices);
+			pMesh->indexBufferOffset = 0;
+			pMesh->indexBufferSize = numIndices;
 
 			//This data has now been sent over to the GPU so we can delete this CPU-side stuff
 			delete[] indices;
 			delete[] finalVerts;
 
-			return pGeometry;
+			ResourceManagerInstance()->AddMesh(filename, pMesh);
+			//std::cerr << "OBJ File '" << filename << "' loaded\n";
+			//return pMesh;
 		}
 	}
 
+	void OBJLoader::LoadMaterialLibrary(const std::string& filename)
+	{
+		if (ResourceManagerInstance()->GetMaterial(filename) != nullptr)
+		{
+			return;
+		}
 
+		std::ifstream inFile;
+		inFile.open(".\\Assets\\" + filename);
+
+		if (!inFile.good())
+		{
+			//std::cerr << "ERROR: Cannot find OBJ file '" << fileName << "'\n";
+			return;
+		}
+		else
+		{
+			//std::cerr << "OBJ File '" << fileName << "' found\n";
+
+			std::string input = "";
+			std::string currentMatName = "";
+			Material* currentMat = nullptr;
+			while (!inFile.eof())
+			{
+				inFile >> input; //Get the next input from the file
+
+				//Check what type of input it was, we are only interested in vertex positions, texture coordinates, normals and indices
+				if (input.compare("newmtl") == 0)
+				{
+					if (currentMat != nullptr && currentMatName != "")
+					{
+						if (ResourceManagerInstance()->AddMaterial(currentMatName, currentMat))
+						{
+							currentMat = nullptr;
+							currentMatName.clear();
+						}
+					}
+					inFile >> currentMatName;
+					if (currentMat == nullptr)
+					{
+						currentMat = new Material();
+						currentMat->name = currentMatName;
+					}
+				}
+				else if (input.compare("Ns") == 0)
+				{
+					inFile >> currentMat->specularPower;
+				}
+				else if (input.compare("Ni") == 0)
+				{//Reflective index, unused
+					char dump[128];
+					inFile.getline(dump, 128);
+				}
+				else if (input.compare("d") == 0)
+				{//Alpha, unused
+					inFile >> currentMat->transparency;
+				}
+				else if (input.compare("Tr") == 0)
+				{//Transparency, unused
+					char dump[128];
+					inFile.getline(dump, 128);
+				}
+				else if (input.compare("Tf") == 0)
+				{//Transmission filter, unused
+					char dump[128];
+					inFile.getline(dump, 128);
+				}
+				else if (input.compare("illum") == 0)
+				{//Illumination, unused
+					char dump[128];
+					inFile.getline(dump, 128);
+				}
+				else if (input.compare("Ka") == 0)
+				{
+					inFile >> currentMat->ambient.x;
+					inFile >> currentMat->ambient.y;
+					inFile >> currentMat->ambient.z;
+				}
+				else if (input.compare("Kd") == 0)
+				{
+					inFile >> currentMat->diffuse.x;
+					inFile >> currentMat->diffuse.y;
+					inFile >> currentMat->diffuse.z;
+				}
+				else if (input.compare("Ks") == 0)
+				{
+					inFile >> currentMat->specular.x;
+					inFile >> currentMat->specular.y;
+					inFile >> currentMat->specular.z;
+				}
+				else if (input.compare("Ke") == 0)
+				{
+					char dump[128];
+					inFile.getline(dump, 128);
+				}
+				else if (input.compare("map_Ka") == 0)
+				{
+					std::string filename;
+					inFile >> filename;
+					if (ResourceManagerInstance()->AddTexture(filename))
+					{
+						currentMat->ambientTextureName = filename;
+					}
+				}
+				else if (input.compare("map_Kd") == 0)
+				{
+					std::string filename;
+					inFile >> filename;
+					if (ResourceManagerInstance()->AddTexture(filename))
+					{
+						currentMat->diffuseTextureName = filename;
+					}
+				}
+				else if (input.compare("map_Ks") == 0)
+				{
+					std::string filename;
+					inFile >> filename;
+					if (ResourceManagerInstance()->AddTexture(filename))
+					{
+						currentMat->specularTextureName = filename;
+					}
+				}
+			}
+		}
+
+		//std::cerr << "MTL File '" << fileName << "' loaded\n";
+	}
 }

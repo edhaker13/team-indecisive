@@ -2,18 +2,18 @@
 
 namespace Indecisive
 {
-	IServiceLocator* ServiceLocatorInstance(){ static ServiceLocator s; return &s; };
+	IServiceLocator* ServiceLocatorInstance() { static ServiceLocator s; return &s; };
 
 	void ServiceLocator::Add(std::string name, void* instance)
 	{
-		serviceMap.emplace(name, instance);
+		_services.emplace(name, instance);
 	};
 
 	void* ServiceLocator::Get(std::string service)
 	{
-		if (!serviceMap.empty())
+		if (!_services.empty())
 		{
-			return serviceMap[service];
+			return _services[service];
 		}
 		return nullptr;
 	};

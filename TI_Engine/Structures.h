@@ -3,6 +3,9 @@
 
 namespace Indecisive
 {
+	struct Buffer : public ID3D11Buffer {};
+	struct Texture : public ID3D11ShaderResourceView {};
+
 	struct Vertex
 	{
 		Vector3 Pos;
@@ -21,28 +24,46 @@ namespace Indecisive
 		Vector3 Normal;
 		Vector2 TexC;
 
-		//bool operator<(const SimpleVertex other) const
-		//{
-		//	return memcmp((void*)this, (void*)&other, sizeof(SimpleVertex)) > 0;
-		//}
+		bool operator<(const SimpleVertex other) const
+		{
+			return memcmp((void*)this, (void*)&other, sizeof(SimpleVertex)) > 0;
+		}
 	};
 
-	struct Geometry
+	struct Mesh
 	{
-		Buffer* vertexBuffer;
-		Buffer* indexBuffer;
-
-		unsigned vertexBufferStride;
-		unsigned vertexBufferOffset;
-		unsigned indexBufferSize;
-		unsigned indexBufferOffset;
+		Buffer* vertexBuffer = nullptr;
+		Buffer* indexBuffer = nullptr;
+		UINT vertexBufferStride = 0;
+		UINT vertexBufferOffset = 0;
+		UINT indexBufferSize = 0;
+		UINT indexBufferOffset = 0;
 	};
 
 	struct Material
 	{
-		Vector4 diffuse;
+		std::string name = "";
+		std::string ambientTextureName = "";
+		std::string diffuseTextureName = "";
+		std::string specularTextureName = "";
+		float specularPower = 0.0f;
+		float transparency = 0.0f;
 		Vector4 ambient;
+		Vector4 diffuse;
 		Vector4 specular;
-		float specularPower;
+	};
+
+	struct SubObject
+	{
+		std::string material = "";
+		std::string name = "";
+		INT  vertexStart = 0; //probably don't need this since indices assume a single large vertex list
+		UINT vertexEnd = 0;  //probably don't need this since indices assume a single large vertex list
+		UINT indexStart = 0;
+		UINT indexEnd = 0;
+		UINT indexSize = 0;
+		ID3D11ShaderResourceView* ambientTexture = nullptr;
+		ID3D11ShaderResourceView* diffuseTexture = nullptr;
+		ID3D11ShaderResourceView* specularTexture = nullptr;
 	};
 }
