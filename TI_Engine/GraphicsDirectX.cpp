@@ -516,32 +516,23 @@ namespace Indecisive
 
 			t = (dwTimeCur - dwTimeStart) / 1000.0f;
 		}
-		//------
 
-		//
 		// Animate the cube
-		//
 		XMStoreFloat4x4(&_world, XMMatrixRotationZ(t));
 	}
 
 	void GraphicsDirectX::Draw()
 	{
-		//
 		// Clear the back buffer
-		//
 		float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red,green,blue,alpha
 		_pImmediateContext->ClearRenderTargetView(_pRenderTargetView, ClearColor);
 		_pImmediateContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);//clear depth view to depth value 1.0F
-
-		//
 
 		XMMATRIX world = XMLoadFloat4x4(&_world);
 		XMMATRIX view = XMLoadFloat4x4(&_view);
 		XMMATRIX projection = XMLoadFloat4x4(&_projection);
 		
-		//
 		// Renders a triangle
-		//
 		_pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
 		_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
 		_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
@@ -559,7 +550,7 @@ namespace Indecisive
 		cb.diffuseMtrl = diffuse;
 		cb.diffuseLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		cb.ambientMtrl = ambient;
-		cb.ambientLight = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+		cb.ambientLight = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
 		cb.specularMtrl = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 		cb.specularLight = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 		cb.specularPower = 5.0f;
