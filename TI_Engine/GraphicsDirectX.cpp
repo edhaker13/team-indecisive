@@ -1,6 +1,7 @@
 #include "ComponentFactory.h"
 #include "DDSTextureLoader.h"
 #include "GraphicsDirectX.h"
+#include "SceneGraph.h"
 #include "ServiceLocator.h"
 #include "Window.h"
 
@@ -39,11 +40,13 @@ namespace Indecisive
 		// Initialize the world matrix
 		XMStoreFloat4x4(&_world, XMMatrixIdentity());
 
-		// Initialize the view matrix
-		XMVECTOR Eye = XMVectorSet(0.0f, 100.0f, -150.0f, 0.0f);
-		XMVECTOR At = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-		XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+		// Initialize the camera node
+		Vector3 Eye(0.0f, 100.0f, -150.0f);
+		Vector3 At(0.0f, 0.0f, 0.0f);
+		Vector3 Up(0.0f, 1.0f, 0.0f);
+		_pCamera = new CameraNode("cam", At, Eye, Up);
 
+		// Initialize the view matrix
 		XMStoreFloat4x4(&_view, XMMatrixLookAtLH(Eye, At, Up));
 
 		// Initialize the projection matrix
@@ -53,8 +56,10 @@ namespace Indecisive
 		ambient = XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
 		diffuse = XMFLOAT4(0.3f, 0.3f, 0.2f, 1.0f);
 		
-		_pGameObject = ComponentFactory::MakeTestObjectFromObj("fullcar.obj");
-		//_pGameObject = ComponentFactory::MakeTestObject();
+		auto n = new PositionNode("move", Vector3(0.0f, 0.0f, 1000.0f));
+		auto go = ComponentFactory::MakeTestObjectFromObj("fullcar.obj");
+		n->Append(new ObjectNode("car", *go));
+		_pCamera->Append(n);
 		
 		// Create the sample state
 		D3D11_SAMPLER_DESC sampDesc;
@@ -525,7 +530,9 @@ namespace Indecisive
 		}
 
 		// Animate the cube
-		XMStoreFloat4x4(&_world, XMMatrixRotationZ(t));
+		//XMStoreFloat4x4(&_world, XMMatrixRotationZ(t));
+
+		_pCamera->Update(t);
 	}
 
 	void GraphicsDirectX::Draw()
@@ -543,44 +550,19 @@ namespace Indecisive
 
 		_pImmediateContext->PSSetSamplers(0, 1, &_pSamplerLinear);
 
-		//_pImmediateContext->PSSetShaderResources(0, 1, &_pTextureRV);
-		/*
-		XMMATRIX world = XMLoadFloat4x4(&_world);
-		XMMATRIX view = XMLoadFloat4x4(&_view);
-		XMMATRIX projection = XMLoadFloat4x4(&_projection);
-		ConstantBuffer cb;
-		cb.mWorld = XMMatrixTranspose(world);
-		cb.mView = XMMatrixTranspose(view);
-		cb.mProjection = XMMatrixTranspose(projection);
-		
-		cb.diffuseMtrl = diffuse;
-		cb.diffuseLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-		cb.ambientMtrl = ambient;
-		cb.ambientLight = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
-		cb.specularMtrl = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-		cb.specularLight = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
-		cb.specularPower = 5.0f;
-
-		cb.eyePos = XMFLOAT3(0.0f, 100.0f, -150.0f);
-		cb.lightVecW = lightDir;
-
-		_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-		*/
-		UpdateConstantBuffer(*_pGameObject);
-		// TODO: USE SCENE GRAPH
-		_pGameObject->Draw();
+		UpdateConstantBuffer(*_pCamera);
+		// TODO: LOAD SCENE GRAPH FROM FILE
+		_pCamera->Draw();
 		
 		// Present our back buffer to our front buffer
 		_pSwapChain->Present(0, 0);
 	}
 
-	void GraphicsDirectX::UpdateConstantBuffer(IGameObject& gameObj)
+	void GraphicsDirectX::UpdateConstantBuffer(TreeNode& n)
 	{
-		// World Matrix update
-		auto objWorld = gameObj.GetWorld();
 		//Constant Buffer Update
 		ConstantBuffer cb;
-		cb.mWorld = XMMatrixTranspose(objWorld * XMLoadFloat4x4(&_world));
+		cb.mWorld = XMMatrixTranspose(n.GetWorld() * XMLoadFloat4x4(&_world));
 		cb.mView = XMMatrixTranspose(XMLoadFloat4x4(&_view));
 		cb.mProjection = XMMatrixTranspose(XMLoadFloat4x4(&_projection));
 

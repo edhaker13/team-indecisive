@@ -14,7 +14,7 @@ namespace Indecisive
 	private:
 		Mesh& _mesh;
 		IGraphics& _graphics;
-		std::vector<SubObject*> _groups;//Since graphs arent needed within a model we'll just hold everything on the game level
+		std::vector<SubObject*> _groups;
 		std::vector<int> _priorityGroups;
 
 	public:
@@ -34,7 +34,18 @@ namespace Indecisive
 		
 		virtual void Draw() override
 		{
-			for (auto g : _groups) _graphics.DrawMesh(_mesh, *g);
+			for (auto i : _priorityGroups)
+			{
+				auto g = _groups[i];
+
+				/*cb->diffuseMaterial = currentGroup->mat->diffuse;
+				cb->ambientMaterial = currentGroup->mat->ambient;
+				cb->specularMtrl = currentGroup->mat->specular;
+				cb->spec = currentGroup->mat->specularExponent;
+				cb->transparency = XMFLOAT4(currentGroup->mat->transparency, 1.0f, 1.0f, 1.0f);
+				_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, cb, 0, 0);*/
+				_graphics.DrawMesh(_mesh, *g);
+			}
 		};
 	};
 
