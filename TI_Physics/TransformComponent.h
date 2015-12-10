@@ -1,6 +1,6 @@
 #pragma once
 #include "ITransformComponent.h"
-//#include "Structures.h"
+#include "Structures.h"
 
 namespace Indecisive
 {
@@ -13,31 +13,31 @@ namespace Indecisive
 
 		//Setters and Getters for Pos/Scal/Rotat
 
-		//void SetPosition(float3 position) { _prevPos = _position; _position = position; }
-		//void SetPosition(float x, float y, float z) { _position.x = x; _position.y = y; _position.z = z; }
-		//float3 GetPrevPosition() const { return _prevPos; }
-		//Vector3 GetPosition() const { return _position; }
+		void SetPosition(const Vector3& position) override { _prevPos = _position; _position = position; }
+		void SetPosition(float x, float y, float z) override { _position.x = x; _position.y = y; _position.z = z; }
+		Vector3 GetPrevPosition() const { return _prevPos; }
+		Vector3 GetPosition() const { return _position; }
 
-		//void SetScale(float3 scale) { _scale = scale; }
-		//void SetScale(float x, float y, float z) {_scale.x = x; _scale.y = y; _scale.z = z;}
-		//float3 GetScale() const { return _scale }
+		void SetScale(const Vector3& scale) override { _scale = scale; }
+		void SetScale(float x, float y, float z) override {_scale.x = x; _scale.y = y; _scale.z = z;}
+		Vector3 GetScale() const { return _scale; }
 
-		//void SetRotation(float3 rotation) {_rotation = rotation;)
-		//void SetRotation(float x, float y, float z) {_rotation.x = x; _rotation.y = y; _rotation.z = z;}
-		//float3 GetRotation() const { return _rotation }
+		void SetRotation(const Vector3& rotation) override { _rotation = rotation; }
+		void SetRotation(float x, float y, float z) override {_rotation.x = x; _rotation.y = y; _rotation.z = z;}
+		Vector3 GetRotation() const { return _rotation; }
 
-		void Update(float t);
+		void Update() {};
 
 	private:
-		/*float3 _position;
-		float3 _rotation;
-		float3 _scale;
-		float3 _prevPos;
+		Vector3 _position;
+		Vector3 _rotation;
+		Vector3 _scale;
+		Vector3 _prevPos;
 
-		XMFLOAT4X4 _world;
+		Matrix _world;
 		float restitution;
 
-		Transform* _parent;*/
+		TransformComponent* _parent;
 
 	};
 
