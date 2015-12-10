@@ -523,32 +523,19 @@ namespace Indecisive
 
 			t = (dwTimeCur - dwTimeStart) / 1000.0f;
 		}
-		//------
 
-		//
 		// Animate the cube
-		//
 		XMStoreFloat4x4(&_world, XMMatrixRotationZ(t));
 	}
 
 	void GraphicsDirectX::Draw()
 	{
-		//
 		// Clear the back buffer
-		//
 		float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red,green,blue,alpha
 		_pImmediateContext->ClearRenderTargetView(_pRenderTargetView, ClearColor);
 		_pImmediateContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);//clear depth view to depth value 1.0F
 
-		//
-
-		XMMATRIX world = XMLoadFloat4x4(&_world);
-		XMMATRIX view = XMLoadFloat4x4(&_view);
-		XMMATRIX projection = XMLoadFloat4x4(&_projection);
-		
-		//
 		// Renders a triangle
-		//
 		_pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
 		_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
 		_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
@@ -557,7 +544,10 @@ namespace Indecisive
 		_pImmediateContext->PSSetSamplers(0, 1, &_pSamplerLinear);
 
 		//_pImmediateContext->PSSetShaderResources(0, 1, &_pTextureRV);
-
+		/*
+		XMMATRIX world = XMLoadFloat4x4(&_world);
+		XMMATRIX view = XMLoadFloat4x4(&_view);
+		XMMATRIX projection = XMLoadFloat4x4(&_projection);
 		ConstantBuffer cb;
 		cb.mWorld = XMMatrixTranspose(world);
 		cb.mView = XMMatrixTranspose(view);
@@ -566,7 +556,7 @@ namespace Indecisive
 		cb.diffuseMtrl = diffuse;
 		cb.diffuseLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		cb.ambientMtrl = ambient;
-		cb.ambientLight = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+		cb.ambientLight = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
 		cb.specularMtrl = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 		cb.specularLight = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 		cb.specularPower = 5.0f;
@@ -575,16 +565,36 @@ namespace Indecisive
 		cb.lightVecW = lightDir;
 
 		_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-
-		//_pImmediateContext->DrawIndexed(6, 0, 0);
-		
+		*/
+		UpdateConstantBuffer(*_pGameObject);
 		// TODO: USE SCENE GRAPH
 		_pGameObject->Draw();
 		
-		//
 		// Present our back buffer to our front buffer
-		//
 		_pSwapChain->Present(0, 0);
+	}
+
+	void GraphicsDirectX::UpdateConstantBuffer(IGameObject& gameObj)
+	{
+		// World Matrix update
+		auto objWorld = gameObj.GetWorld();
+		//Constant Buffer Update
+		ConstantBuffer cb;
+		cb.mWorld = XMMatrixTranspose(objWorld * XMLoadFloat4x4(&_world));
+		cb.mView = XMMatrixTranspose(XMLoadFloat4x4(&_view));
+		cb.mProjection = XMMatrixTranspose(XMLoadFloat4x4(&_projection));
+
+		cb.diffuseMtrl = diffuse;
+		cb.diffuseLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
+		cb.ambientMtrl = ambient;
+		cb.ambientLight = XMFLOAT4(0.6f, 0.6f, 0.6f, 1.0f);
+		cb.specularMtrl = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+		cb.specularLight = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
+		cb.specularPower = 5.0f;
+
+		cb.eyePos = XMFLOAT3(0.0f, 100.0f, -150.0f);
+		cb.lightVecW = lightDir;
+		_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 	}
 
 	void GraphicsDirectX::DrawMesh(Mesh& m, SubObject& s)
