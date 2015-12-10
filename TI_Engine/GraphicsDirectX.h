@@ -12,7 +12,7 @@ namespace Indecisive
 {
 	using namespace DirectX;
 
-	class GameObject;
+	class IGameObject;
 
 	struct ConstantBuffer
 	{
@@ -87,6 +87,7 @@ namespace Indecisive
 		HRESULT InitShadersAndInputLayout();
 		HRESULT InitVertexBuffer();
 		HRESULT InitIndexBuffer();
+		void UpdateConstantBuffer(IGameObject&);
 
 		UINT _windowHeight;
 		UINT _windowWidth;
@@ -97,6 +98,6 @@ namespace Indecisive
 		ID3D11RasterizerState* CCWcullMode;
 		ID3D11RasterizerState* CWcullMode;
 
-		GameObject* _pGameObject = nullptr;
+		IGameObject* _pGameObject = nullptr;
 	};
 };
