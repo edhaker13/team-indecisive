@@ -1,5 +1,6 @@
 #pragma once
 #include "ITransformComponent.h"
+//#include "Structures.h"
 
 namespace Indecisive
 {
@@ -15,7 +16,7 @@ namespace Indecisive
 		//void SetPosition(float3 position) { _prevPos = _position; _position = position; }
 		//void SetPosition(float x, float y, float z) { _position.x = x; _position.y = y; _position.z = z; }
 		//float3 GetPrevPosition() const { return _prevPos; }
-		//float3 GetPosition() const { return _position; }
+		//Vector3 GetPosition() const { return _position; }
 
 		//void SetScale(float3 scale) { _scale = scale; }
 		//void SetScale(float x, float y, float z) {_scale.x = x; _scale.y = y; _scale.z = z;}
