@@ -26,7 +26,7 @@ namespace Indecisive
 		void SetRotation(float x, float y, float z) override {_rotation.x = x; _rotation.y = y; _rotation.z = z;}
 		Vector3 GetRotation() const { return _rotation; }
 
-		void Update() {};
+		void Update(float t);
 
 	private:
 		Vector3 _position;

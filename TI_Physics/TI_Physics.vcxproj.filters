@@ -29,7 +29,7 @@
     <ClCompile Include="PhysicsComp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TransformHandler.cpp">
+    <ClCompile Include="TransformComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
