@@ -75,25 +75,20 @@ namespace Indecisive
 			for(const auto& pair: children)
 			{
 				(pair.second)->Update(elapsedTime);
-				(pair.second)->world = (pair.second)->world * (pair.second)->GetParentWorld();
 			}
-			world = world * GetParentWorld();
+			world *= GetParentWorld();
 		};
 
 		/// <summary> Recursively check collision on children </summary>
 		//virtual void Selection(std::vector<ObjectNode*>& hits, const float3& rStart, const float3& rEnd);
 
 		// <summary> Return this node's transformation matrix </summary>
-		virtual Matrix GetWorld() { return world; };
+		virtual const Matrix GetWorld() { return world; };
 
 		// <summary> Return parent node's transformation matrix </summary>
-		virtual Matrix GetParentWorld()
+		virtual const Matrix GetParentWorld()
 		{
-			if (parent != nullptr)
-			{
-				return parent->GetWorld();
-			}
-			return Matrix::Identity;
+			return parent != nullptr ? parent->GetWorld() : Matrix::Identity;
 		}
 	};
 
@@ -107,6 +102,7 @@ namespace Indecisive
 		virtual void Update(float elapsedTime) override
 		{
 			_object.Update(elapsedTime);
+			world = _object.GetWorld();
 			TreeNode::Update(elapsedTime); 
 		};
 		//virtual void Selection(std::vector<ObjectNode*>& hits, const float3& rStart, const float3& rEnd);
@@ -158,15 +154,13 @@ namespace Indecisive
 	struct CameraNode : public TreeNode
 	{
 		Vector3 eye, up, distance;
+		float nearZ, farZ;
 
 		///<summary> Reference to position to follow as the center of the camera</summary>
 		Vector3& center;
 
-		CameraNode(std::string key, Vector3& center, const Vector3& eye, const Vector3& up) :
-			TreeNode(key), center(center), eye(eye), up(up)
-		{
-			distance = center - eye;
-		};
+		CameraNode(std::string key, Vector3& center, const Vector3& eye, const Vector3& up, float nearZ, float farZ) :
+			TreeNode(key), center(center), eye(eye), up(up), distance(center - eye), nearZ(nearZ), farZ(farZ) {};
 
 		/// <summary> Loop around eye x and y if outside limits </summary>
 		void ClampEye()

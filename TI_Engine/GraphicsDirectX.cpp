@@ -44,19 +44,20 @@ namespace Indecisive
 		Vector3 Eye(0.0f, 100.0f, -150.0f);
 		Vector3 At(0.0f, 0.0f, 0.0f);
 		Vector3 Up(0.0f, 1.0f, 0.0f);
-		_pCamera = new CameraNode("cam", At, Eye, Up);
+		// TODO: Initialize camera in Game?
+		_pCamera = new CameraNode("cam", At, Eye, Up, 10.0f, 1000.0f);
 
 		// Initialize the view matrix
 		XMStoreFloat4x4(&_view, XMMatrixLookAtLH(Eye, At, Up));
 
 		// Initialize the projection matrix
-		XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _windowWidth / (FLOAT)_windowHeight, 0.01f, 1000.0f));
+		XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _windowWidth / (FLOAT)_windowHeight, _pCamera->nearZ, _pCamera->farZ));
 
 		lightDir = XMFLOAT3(0.0f, 100.0f, -150.0f);
 		ambient = XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
 		diffuse = XMFLOAT4(0.3f, 0.3f, 0.2f, 1.0f);
-		
-		auto n = new PositionNode("move", Vector3(0.0f, 0.0f, 1000.0f));
+		// TODO: Load objects from file in game project
+		auto n = new PositionNode("move", Vector3(0.0f, 0.0f, 50.0f));
 		auto go = ComponentFactory::MakeTestObjectFromObj("fullcar.obj");
 		n->Append(new ObjectNode("car", *go));
 		_pCamera->Append(n);
@@ -533,6 +534,7 @@ namespace Indecisive
 		//XMStoreFloat4x4(&_world, XMMatrixRotationZ(t));
 
 		_pCamera->Update(t);
+		UpdateConstantBuffer(*_pCamera);
 	}
 
 	void GraphicsDirectX::Draw()
@@ -550,19 +552,20 @@ namespace Indecisive
 
 		_pImmediateContext->PSSetSamplers(0, 1, &_pSamplerLinear);
 
-		UpdateConstantBuffer(*_pCamera);
-		// TODO: LOAD SCENE GRAPH FROM FILE
+		// TODO: LOAD SCENE GRAPH FROM FILE IN PROJECT
 		_pCamera->Draw();
 		
 		// Present our back buffer to our front buffer
 		_pSwapChain->Present(0, 0);
 	}
 
-	void GraphicsDirectX::UpdateConstantBuffer(TreeNode& n)
+	void GraphicsDirectX::UpdateConstantBuffer(const TreeNode& n)
 	{
+		//World Matrices
+		auto world = n.world * (n.parent != nullptr ? n.parent->world : _world);
 		//Constant Buffer Update
 		ConstantBuffer cb;
-		cb.mWorld = XMMatrixTranspose(n.GetWorld() * XMLoadFloat4x4(&_world));
+		cb.mWorld = XMMatrixTranspose(world);
 		cb.mView = XMMatrixTranspose(XMLoadFloat4x4(&_view));
 		cb.mProjection = XMMatrixTranspose(XMLoadFloat4x4(&_projection));
 
@@ -577,6 +580,8 @@ namespace Indecisive
 		cb.eyePos = XMFLOAT3(0.0f, 100.0f, -150.0f);
 		cb.lightVecW = lightDir;
 		_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+
+		for (auto pair : n.children) UpdateConstantBuffer(*pair.second);
 	}
 
 	void GraphicsDirectX::DrawMesh(Mesh& m, SubObject& s)

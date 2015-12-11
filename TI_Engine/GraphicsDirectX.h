@@ -88,7 +88,7 @@ namespace Indecisive
 		HRESULT InitShadersAndInputLayout();
 		HRESULT InitVertexBuffer();
 		HRESULT InitIndexBuffer();
-		void UpdateConstantBuffer(TreeNode&);
+		void UpdateConstantBuffer(const TreeNode&);
 
 		UINT _windowHeight;
 		UINT _windowWidth;
