@@ -29,6 +29,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		{
 			_gameMngr.Draw();
 			_gameMngr.Update();
+			// Cam Movement
 		}
 	}
 
