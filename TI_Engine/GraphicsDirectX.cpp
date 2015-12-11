@@ -40,15 +40,19 @@ namespace Indecisive
 		// Initialize the world matrix
 		XMStoreFloat4x4(&_world, XMMatrixIdentity());
 
-		// Initialize the camera node
-		Vector3 Eye(0.0f, 100.0f, -150.0f);
-		Vector3 At(0.0f, 0.0f, 0.0f);
-		Vector3 Up(0.0f, 1.0f, 0.0f);
-		// TODO: Initialize camera in Game?
-		_pCamera = new CameraNode("cam", At, Eye, Up, 10.0f, 1000.0f);
+		_pCamera = static_cast<CameraNode*>(ServiceLocatorInstance()->Get("camera"));
+		if (_pCamera == nullptr)
+		{
+			// Initialize a default camera node
+			Vector3 Eye(0.0f, 100.0f, -150.0f);
+			Vector3 At(0.0f, 0.0f, 0.0f);
+			Vector3 Up(0.0f, 1.0f, 0.0f);
+			// TODO: Initialize camera in Game?
+			_pCamera = new CameraNode("cam", At, Eye, Up, 10.0f, 1000.0f);
+		}
 
 		// Initialize the view matrix
-		XMStoreFloat4x4(&_view, XMMatrixLookAtLH(Eye, At, Up));
+		XMStoreFloat4x4(&_view, XMMatrixLookAtLH(_pCamera->eye, _pCamera->center, _pCamera->up));
 
 		// Initialize the projection matrix
 		XMStoreFloat4x4(&_projection, XMMatrixPerspectiveFovLH(XM_PIDIV2, _windowWidth / (FLOAT)_windowHeight, _pCamera->nearZ, _pCamera->farZ));
@@ -56,11 +60,6 @@ namespace Indecisive
 		lightDir = XMFLOAT3(0.0f, 100.0f, -150.0f);
 		ambient = XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
 		diffuse = XMFLOAT4(0.3f, 0.3f, 0.2f, 1.0f);
-		// TODO: Load objects from file in game project
-		auto n = new PositionNode("move", Vector3(0.0f, 0.0f, 50.0f));
-		auto go = ComponentFactory::MakeTestObjectFromObj("fullcar.obj");
-		n->Append(new ObjectNode("car", *go));
-		_pCamera->Append(n);
 		
 		// Create the sample state
 		D3D11_SAMPLER_DESC sampDesc;

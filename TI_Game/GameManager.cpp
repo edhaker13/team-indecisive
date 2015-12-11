@@ -1,5 +1,7 @@
+#include "ComponentFactory.h"
 #include "GameManager.h"
 #include "GraphicsDirectX.h"
+#include "SceneGraph.h"
 #include "Window.h"
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
@@ -42,7 +44,10 @@ namespace Indecisive
 		_pGraphics = new GraphicsDirectX();
 		auto pWindow = new Window();
 		ServiceLocatorInstance()->Add("graphics", _pGraphics);
-		//ServiceLocatorInstance()->Add("window", pWindow);
+		// Initialize the camera node
+		auto cam = new CameraNode("camera", 
+			Vector3(0.0f, 100.0f, -150.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), 10.0f, 1000.0f);
+		ServiceLocatorInstance()->Add("camera", cam);
 		
 		if (FAILED(pWindow->Initialise(hInstance, nCmdShow)))
 		{
@@ -52,6 +57,14 @@ namespace Indecisive
 		{
 			return E_FAIL;
 		}
+		// Initialise objects
+
+		// TODO: Load objects from file in game project
+		auto n = new PositionNode("move", Vector3(0.0f, 0.0f, 50.0f));
+		auto go = ComponentFactory::MakeTestObjectFromObj("fullcar.obj");
+		n->Append(new ObjectNode("car", *go));
+		cam->Append(n);
+
 		return S_OK;
 	};
 
