@@ -60,7 +60,7 @@ namespace Indecisive
 		}
 		// Initialise objects
 
-		// TODO: Load objects from file in game project
+		// TODO: Load objects from file
 		auto n = new PositionNode("move", Vector3(0.0f, 0.0f, 50.0f));
 		auto go = ComponentFactory::MakeTestObjectFromObj("fullcar.obj");
 		n->Append(new ObjectNode("car", *go));

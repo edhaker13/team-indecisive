@@ -159,7 +159,7 @@ namespace Indecisive
 		///<summary> Reference to position to follow as the center of the camera</summary>
 		Vector3& center;
 
-		CameraNode(std::string key, Vector3& center, const Vector3& eye, const Vector3& up, float nearZ, float farZ) :
+		LIBRARY_API CameraNode(std::string key, Vector3& center, const Vector3& eye, const Vector3& up, float nearZ, float farZ) :
 			TreeNode(key), center(center), eye(eye), up(up), distance(center - eye), nearZ(nearZ), farZ(farZ) {};
 
 		/// <summary> Loop around eye x and y if outside limits </summary>

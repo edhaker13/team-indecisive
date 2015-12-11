@@ -51,6 +51,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(IncludePath);$(SolutionDir)TI_Engine</IncludePath>
+    <SourcePath>$(VC_SourcePath);$(SolutionDir)TI_Engine</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

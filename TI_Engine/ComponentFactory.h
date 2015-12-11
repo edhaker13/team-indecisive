@@ -1,11 +1,12 @@
-#include "MeshComponent.h"
 #include "GameObject.h"
+#include "LibraryAPI.h"
+#include "MeshComponent.h"
 
 namespace Indecisive
 {
 	namespace ComponentFactory
 	{
 		GameObject* MakeTestObject();
-		GameObject* MakeTestObjectFromObj(std::string);
+		LIBRARY_API GameObject* MakeTestObjectFromObj(std::string);
 	}
 }

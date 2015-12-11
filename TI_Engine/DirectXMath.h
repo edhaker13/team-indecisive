@@ -137,7 +137,7 @@ namespace Indecisive
 
 		// Comparision operators
 		bool operator == (const Vector3& V) const;
-		bool operator != (const Vector3& V) const;
+		LIBRARY_API bool operator != (const Vector3& V) const;
 
 		// Assignment operators
 		Vector3& operator= (const Vector3& V) { x = V.x; y = V.y; z = V.z; return *this; }
@@ -225,8 +225,8 @@ namespace Indecisive
 	};
 
 	// Binary operators
-	Vector3 operator+ (const Vector3& V1, const Vector3& V2);
-	Vector3 operator- (const Vector3& V1, const Vector3& V2);
+	LIBRARY_API Vector3 operator+ (const Vector3& V1, const Vector3& V2);
+	LIBRARY_API Vector3 operator- (const Vector3& V1, const Vector3& V2);
 	Vector3 operator* (const Vector3& V1, const Vector3& V2);
 	Vector3 operator* (const Vector3& V, float S);
 	Vector3 operator/ (const Vector3& V1, const Vector3& V2);
@@ -332,7 +332,7 @@ namespace Indecisive
 
 	//------------------------------------------------------------------------------
 	// 4x4 Matrix (assumes right-handed cooordinates)
-	 struct Matrix : public XMFLOAT4X4
+	struct Matrix : public XMFLOAT4X4
 	{
 		Matrix() : XMFLOAT4X4(
 			1.f, 0, 0, 0,
@@ -374,7 +374,7 @@ namespace Indecisive
 		Matrix& operator= (const XMFLOAT4X4& M) { memcpy_s(this, sizeof(float) * 16, &M, sizeof(XMFLOAT4X4)); return *this; }
 		Matrix& operator+= (const Matrix& M);
 		Matrix& operator-= (const Matrix& M);
-		Matrix& operator*= (const Matrix& M);
+		LIBRARY_API Matrix& operator*= (const Matrix& M);
 		Matrix& operator*= (float S);
 		Matrix& operator/= (float S);
 
@@ -450,7 +450,7 @@ namespace Indecisive
 		static Matrix Lerp(const Matrix& M1, const Matrix& M2, float t);
 
 		// Constants
-		static const Matrix Identity;
+		LIBRARY_API static const Matrix Identity;
 	};
 
 	// Binary operators
