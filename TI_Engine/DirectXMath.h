@@ -15,6 +15,7 @@
 #include <memory>
 #include <directxmath.h>
 #include <d3d11.h>
+#include "LibraryAPI.h"
 
 namespace Indecisive
 {
@@ -331,7 +332,7 @@ namespace Indecisive
 
 	//------------------------------------------------------------------------------
 	// 4x4 Matrix (assumes right-handed cooordinates)
-	struct Matrix : public XMFLOAT4X4
+	 struct Matrix : public XMFLOAT4X4
 	{
 		Matrix() : XMFLOAT4X4(
 			1.f, 0, 0, 0,
@@ -421,16 +422,16 @@ namespace Indecisive
 		static Matrix CreateConstrainedBillboard(const Vector3& object, const Vector3& cameraPosition, const Vector3& rotateAxis,
 			_In_opt_ const Vector3* cameraForward = nullptr, _In_opt_ const Vector3* objectForward = nullptr);
 
-		static Matrix CreateTranslation(const Vector3& position);
-		static Matrix CreateTranslation(float x, float y, float z);
+		LIBRARY_API static Matrix CreateTranslation(const Vector3& position);
+		LIBRARY_API static Matrix CreateTranslation(float x, float y, float z);
 
-		static Matrix CreateScale(const Vector3& scales);
-		static Matrix CreateScale(float xs, float ys, float zs);
-		static Matrix CreateScale(float scale);
+		LIBRARY_API static Matrix CreateScale(const Vector3& scales);
+		LIBRARY_API static Matrix CreateScale(float xs, float ys, float zs);
+		LIBRARY_API static Matrix CreateScale(float scale);
 
-		static Matrix CreateRotationX(float radians);
-		static Matrix CreateRotationY(float radians);
-		static Matrix CreateRotationZ(float radians);
+		LIBRARY_API static Matrix CreateRotationX(float radians);
+		LIBRARY_API static Matrix CreateRotationY(float radians);
+		LIBRARY_API static Matrix CreateRotationZ(float radians);
 
 		static Matrix CreateFromAxisAngle(const Vector3& axis, float angle);
 
@@ -455,7 +456,7 @@ namespace Indecisive
 	// Binary operators
 	Matrix operator+ (const Matrix& M1, const Matrix& M2);
 	Matrix operator- (const Matrix& M1, const Matrix& M2);
-	Matrix operator* (const Matrix& M1, const Matrix& M2);
+	LIBRARY_API Matrix operator* (const Matrix& M1, const Matrix& M2);
 	Matrix operator* (const Matrix& M, float S);
 	Matrix operator/ (const Matrix& M, float S);
 	Matrix operator/ (const Matrix& M1, const Matrix& M2);

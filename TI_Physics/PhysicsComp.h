@@ -1,75 +1,81 @@
 #pragma once
-#include "ITransformComponent.h"
 #include "TransformComponent.h"
+#include <string>
+
 
 namespace Indecisive
 {
 	class PhysicsComp
 	{
 	public:
-		PhysicsComp(ITransformComponent* _transform);
+		PhysicsComp(ITransformComponent* Itransform);
 		~PhysicsComp();
 
 		void MoveConstVel(float t);
 		void MoveConstAcc(float t);
 		void Move(float newX, float newY, float newZ);
 
-		//void SetVel(float3 _velocity) { velocity = _velocity; }
+		Vector3 GetVel() const { return velocity; }
+		void GetVelocity(Vector3 _velocity) { velocity = _velocity; }
 
-		//float GetMass() const { return mass; };
-		//void SetMass(float _mass) { mass = _mass; }
+		void SetVel(Vector3 _velocity) { velocity = _velocity; }
 
-		//void UpdateNetForce();
-		//void UpdateAccel();
-		//void UpdateState();
-		//virtual void Update(float t);
+		float GetMass() const { return mass; };
+		void SetMass(float _mass) { mass = _mass; }
 
-		//void SlidingMotion();
-		//void SlidingForce(float theta, float frCoef);
+		void UpdateNetForce();
+		void UpdateAccel();
+		void UpdateState();
+		virtual void Update(float t);
 
-		//void MotionInFluid(float t);
-		//void DragForce();
-		//void dragLamFlow();
-		//void TurbulantFlow();
+		void SlidingMotion();
+		void SlidingForce(float theta, float frCoef);
 
-		////Collision
-		//float GetCollisionRadius() const { return radius; }
-		//void SetCollisionRadius(float _radius) { radius = _radius; }
+		void MotionInFluid(float t);
+		void DragForce();
+		void dragLamFlow();
+		void TurbulantFlow();
 
-		//bool CubeCollisionCheck(float3 position, float radius);
-		//void FloorCollisionCheck(float3 position);
-		//void ResolveCollision(ParticleModel* particleModel1, ParticleModel* particleModel2, float restitution);
+		//Collision
+		float GetCollisionRadius() const { return radius; }
+		void SetCollisionRadius(float _radius) { radius = _radius; }
 
-		//void SetSlidingForce();
+		bool CubeCollisionCheck(Vector3 position, float radius);
+		void FloorCollisionCheck(Vector3 position);
+		void ResolveCollision(PhysicsComp* particleModel1, PhysicsComp* particleModel2, float restitution);
 
-		//void GetDirection();
+		void SetSlidingForce();
+
+		void GetDirection();
 
 	protected:
-		/*float3 velocity;
-		float3 Acceleration;
-		ITransformComponent* _transform;*/
-
+		Vector3 velocity;
+		Vector3 Acceleration;
+		ITransformComponent* _transform;
 
 	private:
 
-		// float3 netForce;
-		// float3 force;
-		// float3 prevPosition;
-		// float previous;
+		Vector3 netForce;
+		Vector3 force;
+		Vector3 prevPosition;
+		float previous;
 		float forceMag;
 		float mass;
 
-		//float3 prevVelocity;
-		//float dragFactor;
-		//bool sForce;
-		//bool useConstAcc;
+		Vector3 prevVelocity;
+		float dragFactor;
+		bool useConstAcc;
+		bool boolsForce;
 		
-		//bool collisionCheck;
-		//float radius;
+		bool collisionCheck;
+		float radius;
 		
-		//float gravity;
-		//float3 sForce;
-		//float3 dragForce;
-		//bool laminarFlow;
+	
+
+		float gravity;
+		Vector3 sForce;
+		Vector3 drag;
+		bool laminar;
+
 	};
 }
