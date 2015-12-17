@@ -12,8 +12,7 @@
 
 // TODO: reference additional headers your program requires here
 #include "..\TI_Engine\LibraryAPI.h"
-#include "..\TI_Engine\OBJLoader.h"
-//#include "..\TI_Engine\MeshComponent.h"
-//#include "MeshComponent.h"
-//#include "..\TI_Game\LibraryAPI.h"
 #include "..\TI_Engine\GraphicsDirectX.h"
+#include "..\TI_Engine\ComponentFactory.h"
+#include "..\TI_Engine\OBJLoader.h"
+
