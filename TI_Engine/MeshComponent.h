@@ -9,7 +9,7 @@ namespace Indecisive
 { 
 	struct Mesh;
 
-	class MeshComponent: public IComponent, public IDrawable
+	 class LIBRARY_API MeshComponent : public IComponent, public IDrawable
 	{
 	private:
 		Mesh& _mesh;
@@ -20,6 +20,7 @@ namespace Indecisive
 	public:
 		MeshComponent(Mesh& mesh) : IComponent("Mesh"), _mesh(mesh), _graphics(* static_cast<IGraphics*> (ServiceLocatorInstance()->Get("graphics")))
 		{
+
 		};
 
 		~MeshComponent()

@@ -3,6 +3,7 @@
 #include "ServiceLocator.h"
 #include <windows.h>
 
+
 namespace Indecisive
 {
 	class GameManager

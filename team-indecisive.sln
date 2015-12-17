@@ -23,6 +23,11 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TI_Engine", "TI_Engine\TI_Engine.vcxproj", "{D7FAB2BF-0980-4018-B62B-003E08DFE4B2}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "IndecisiveTest", "IndecisiveTest\IndecisiveTest.vcxproj", "{1F4E1FCD-132B-4036-AFFE-8C07EA55F781}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D7FAB2BF-0980-4018-B62B-003E08DFE4B2} = {D7FAB2BF-0980-4018-B62B-003E08DFE4B2}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RandomTest", "RandomTest\RandomTest.vcxproj", "{B4C3E8A0-333D-4C75-A88A-4CD757285737}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,6 +63,10 @@ Global
 		{1F4E1FCD-132B-4036-AFFE-8C07EA55F781}.Debug|Win32.Build.0 = Debug|Win32
 		{1F4E1FCD-132B-4036-AFFE-8C07EA55F781}.Release|Win32.ActiveCfg = Release|Win32
 		{1F4E1FCD-132B-4036-AFFE-8C07EA55F781}.Release|Win32.Build.0 = Release|Win32
+		{B4C3E8A0-333D-4C75-A88A-4CD757285737}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B4C3E8A0-333D-4C75-A88A-4CD757285737}.Debug|Win32.Build.0 = Debug|Win32
+		{B4C3E8A0-333D-4C75-A88A-4CD757285737}.Release|Win32.ActiveCfg = Release|Win32
+		{B4C3E8A0-333D-4C75-A88A-4CD757285737}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,7 +8,7 @@
 
 namespace Indecisive
 {
-	class OBJLoader
+	 class LIBRARY_API OBJLoader
 	{
 	public:
 		OBJLoader() {};
