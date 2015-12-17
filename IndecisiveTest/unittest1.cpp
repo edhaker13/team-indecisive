@@ -9,7 +9,7 @@ namespace IndecisiveTest
 	{
 	public:
 		
-		TEST_METHOD(TestMethod1)
+		TEST_METHOD(ObjectTest)
 		{
 			Assert::AreEqual(1, 1, L"test", LINE_INFO());
 		}
