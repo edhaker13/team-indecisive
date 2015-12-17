@@ -42,12 +42,13 @@ namespace Indecisive
 {
 	HRESULT GameManager::Initialise(HINSTANCE hInstance, int nCmdShow)
 	{
+		// TODO: Load details from file
 		_pGraphics = new GraphicsDirectX();
-		auto pWindow = new Window();
+		auto pWindow = new Window(1280, 720, L"Team Indecisive");
 		ServiceLocatorInstance()->Add("graphics", _pGraphics);
 		// Initialize the camera node
-		auto cam = new CameraNode("camera", 
-			Vector3(0.0f, 100.0f, -150.0f), Vector3(0.0f, 0.0f, 0.0f), Vector3(0.0f, 1.0f, 0.0f), 10.0f, 1000.0f);
+		auto pos = new PositionNode("move", Vector3(0.0f, 0.0f, 50.0f));
+		auto cam = new CameraNode("camera", Vector3(0.0f, 100.0f, -150.0f), Vector3::Zero, Vector3::Up, 10.0f, 1000.0f);
 		ServiceLocatorInstance()->Add("camera", cam);
 		
 		if (FAILED(pWindow->Initialise(hInstance, nCmdShow)))
@@ -58,13 +59,12 @@ namespace Indecisive
 		{
 			return E_FAIL;
 		}
-		// Initialise objects
+		// Initialise game objects (OBJLoader makes uses of graphics so it needs to be done after it)
+		auto obj = ComponentFactory::MakeTestObjectFromObj("fullcar.obj");
 
-		// TODO: Load objects from file
-		auto n = new PositionNode("move", Vector3(0.0f, 0.0f, 50.0f));
-		auto go = ComponentFactory::MakeTestObjectFromObj("fullcar.obj");
-		n->Append(new ObjectNode("car", *go));
-		cam->Append(n);
+		// Construct tree. Cam -> Pos -> Obj
+		pos->Append(new ObjectNode("car", *obj));
+		cam->Append(pos);
 
 		return S_OK;
 	};

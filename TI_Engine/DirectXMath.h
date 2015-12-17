@@ -211,17 +211,17 @@ namespace Indecisive
 		static void TransformNormal(_In_reads_(count) const Vector3* varray, size_t count, const Matrix& m, _Out_writes_(count) Vector3* resultArray);
 
 		// Constants
-		static const Vector3 Zero;
-		static const Vector3 One;
-		static const Vector3 UnitX;
-		static const Vector3 UnitY;
-		static const Vector3 UnitZ;
-		static const Vector3 Up;
-		static const Vector3 Down;
-		static const Vector3 Right;
-		static const Vector3 Left;
-		static const Vector3 Forward;
-		static const Vector3 Backward;
+		LIBRARY_API static const Vector3 Zero;
+		LIBRARY_API static const Vector3 One;
+		LIBRARY_API static const Vector3 UnitX;
+		LIBRARY_API static const Vector3 UnitY;
+		LIBRARY_API static const Vector3 UnitZ;
+		LIBRARY_API static const Vector3 Up;
+		LIBRARY_API static const Vector3 Down;
+		LIBRARY_API static const Vector3 Right;
+		LIBRARY_API static const Vector3 Left;
+		LIBRARY_API static const Vector3 Forward;
+		LIBRARY_API static const Vector3 Backward;
 	};
 
 	// Binary operators

@@ -120,6 +120,7 @@
     <ClCompile Include="GraphicsDirectX.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="SceneGraph.cpp" />
     <ClCompile Include="ServiceLocator.cpp" />
   </ItemGroup>
   <ItemGroup>

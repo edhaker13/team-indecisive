@@ -1,5 +1,4 @@
 #pragma once
-
 #include <windows.h>
 #include "resource.h"
 
@@ -31,11 +30,12 @@ namespace Indecisive
 	class Window
 	{
 	private:
-		HINSTANCE _hInst = nullptr;
 		HWND _hWnd = nullptr;
 		UINT _windowWidth = 720;
 		UINT _windowHeight = 540;
+		LPWSTR _windowName = L"Team Indecisve";
 	public:
+		Window(UINT width, UINT height, LPWSTR name) : _windowWidth(width), _windowHeight(height), _windowName(name) {};
 		HRESULT Initialise(HINSTANCE hInstance, int nCmdShow)
 		{
 			// Register class
@@ -50,7 +50,7 @@ namespace Indecisive
 			wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
 			wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 			wcex.lpszMenuName = nullptr;
-			wcex.lpszClassName = L"TeamIndecisive";
+			wcex.lpszClassName = _windowName;
 			wcex.hIconSm = LoadIcon(wcex.hInstance, (LPCTSTR)IDC_TUTORIAL1);
 			if (!RegisterClassEx(&wcex))
 				return E_FAIL;
@@ -59,7 +59,7 @@ namespace Indecisive
 			//_hInst = hInstance;
 			RECT rc = { 0, 0, _windowWidth, _windowHeight };
 			AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-			_hWnd = CreateWindow(L"TeamIndecisive", L"Team Indecisive", WS_OVERLAPPEDWINDOW,
+			_hWnd = CreateWindow(_windowName, _windowName, WS_OVERLAPPEDWINDOW,
 				CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
 				nullptr);
 			if (!_hWnd)
@@ -70,8 +70,8 @@ namespace Indecisive
 			return S_OK;
 		};
 
-		HWND GetHWND() { return _hWnd; }
-		UINT GetWidth() { return _windowWidth; }
-		UINT GetHeight() { return _windowHeight; }
+		const HWND GetHWND() { return _hWnd; }
+		const UINT GetWidth() { return _windowWidth; }
+		const UINT GetHeight() { return _windowHeight; }
 	};
 }
