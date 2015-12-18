@@ -1,4 +1,3 @@
-#include <windows.h>
 #include "ComponentFactory.h"
 #include "GameManager.h"
 #include "GraphicsDirectX.h"

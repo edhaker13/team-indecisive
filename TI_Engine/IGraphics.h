@@ -15,7 +15,6 @@ namespace Indecisive
 	public:
 		virtual bool CreateTextureFromFile(const wchar_t*, Texture**) = 0;
 		virtual bool Initialise(Window*) = 0;
-		virtual Buffer* InitVertexBuffer(SimpleVertex[], unsigned) = 0;
 		virtual Buffer* InitVertexBuffer(Vertex[], unsigned) = 0;
 		virtual Buffer* InitIndexBuffer(unsigned short[], unsigned) = 0;
 		virtual void DrawMesh(Mesh&, SubObject&) = 0;

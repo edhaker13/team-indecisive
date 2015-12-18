@@ -10,10 +10,10 @@ namespace Indecisive
 	{
 		Vertex vertices[] =
 		{
-			{ Vector3(-1.0f, 1.0f, 0.0f), Vector3(0.333333, 0.666667, -0.666667), Vector2(-1.0f, 1.0f) },
-			{ Vector3(1.0f, 1.0f, 0.0f), Vector3(-0.816497, 0.408248, -0.408248), Vector2(1.0f, 1.0f) },
-			{ Vector3(-1.0f, -1.0f, 0.0f), Vector3(-0.333333, 0.666667, 0.666667), Vector2(-1.0f, -1.0f) },
-			{ Vector3(1.0f, -1.0f, 0.0f), Vector3(0.816497, 0.408248, 0.408248), Vector2(1.0f, -1.0f) },
+			{ Vector3(-1.0f, 1.0f, 0.0f), Vector3(0.333333f, 0.666667f, -0.666667f), Vector2(-1.0f, 1.0f) },
+			{ Vector3(1.0f, 1.0f, 0.0f), Vector3(-0.816497f, 0.408248f, -0.408248f), Vector2(1.0f, 1.0f) },
+			{ Vector3(-1.0f, -1.0f, 0.0f), Vector3(-0.333333f, 0.666667f, 0.666667f), Vector2(-1.0f, -1.0f) },
+			{ Vector3(1.0f, -1.0f, 0.0f), Vector3(0.816497f, 0.408248f, 0.408248f), Vector2(1.0f, -1.0f) },
 		};
 		WORD indices[] =
 		{

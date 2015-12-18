@@ -1,7 +1,7 @@
 #pragma once
+#include <windows.h>
 #include "IGraphics.h"
 
-typedef long HINSTANCE;
 namespace Indecisive
 {
 	class GameManager

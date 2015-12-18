@@ -69,7 +69,13 @@ namespace Indecisive
 				return false;
 			}
 
-			return ShowWindow(_hWnd, nCmdShow);
+			if (ShowWindow(_hWnd, nCmdShow) < 0)
+			{
+				// TODO: Error Handling
+				return false;
+			}
+			return true;
+
 		};
 
 		const HWND GetHWND() { return _hWnd; }
