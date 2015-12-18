@@ -4,7 +4,7 @@
 
 namespace Indecisive
 {
-	
+
 	bool OBJLoader::FindSimilarVertex(const Vertex& vertex, std::map<Vertex, WORD>& vertToIndexMap, WORD& index)
 	{
 		auto it = vertToIndexMap.find(vertex);
@@ -58,7 +58,8 @@ namespace Indecisive
 	{
 		auto mesh = ResourceManagerInstance()->GetMesh(meshName);
 		if (mesh == nullptr)
-		{	// ERROR <Not Found>
+		{	
+			// TODO: Error Handling
 			return nullptr;
 		}
 		auto m = new MeshComponent(*mesh);
@@ -113,7 +114,7 @@ namespace Indecisive
 		std::string binaryFilename = ".\\Assets\\" + filename + ".bin";
 		std::ifstream binaryInFile;
 		binaryInFile.open(binaryFilename, std::ios::in | std::ios::binary);
-		//TODO: Disabled binary load until it can r/w subobjects and material
+		// TODO: Disabled binary load until it can r/w subobjects and material
 		if (true /*!binaryInFile.good()*/)
 		{
 			std::ifstream inFile;
@@ -121,7 +122,7 @@ namespace Indecisive
 
 			if (!inFile.good())
 			{
-				//ERROR <FILE NOT FOUND>
+				// TODO: Error Handling
 				return;
 			}
 			else
@@ -228,7 +229,7 @@ namespace Indecisive
 						{
 							pSubObject->vertexStart = 0;
 						}
-						pSubObject->indexStart = indexCounter < pSubObject->indexStart ? indexCounter :	pSubObject->indexStart;
+						pSubObject->indexStart = indexCounter < pSubObject->indexStart ? indexCounter : pSubObject->indexStart;
 						//Place into vectors
 						for (int i = 0; i < 3; ++i)
 						{
@@ -273,7 +274,7 @@ namespace Indecisive
 
 				CreateIndices(expandedVertices, expandedTexCoords, expandedNormals, meshIndices, meshVertices, meshTexCoords, meshNormals);
 
-				IGraphics* pGraphics = static_cast<IGraphics*> (ServiceLocatorInstance()->Get("graphics"));
+				IGraphics* pGraphics = static_cast<IGraphics*>(ServiceLocatorInstance()->Get("graphics"));
 
 				//Turn data from vector form to arrays
 				Vertex* finalVerts = new Vertex[meshVertices.size()];
@@ -315,8 +316,6 @@ namespace Indecisive
 				delete[] finalVerts;
 
 				ResourceManagerInstance()->AddMesh(filename, pMesh);
-				//std::cerr << "OBJ File '" << filename << "' loaded\n";
-				//return pMesh;
 			}
 
 			//-----------------------------------------------------------------------------
@@ -339,7 +338,7 @@ namespace Indecisive
 			binaryInFile.read((char*)finalVerts, sizeof(Vertex) * numVertices);
 			binaryInFile.read((char*)indices, sizeof(unsigned short) * numIndices);
 
-			IGraphics* pGraphics = static_cast<IGraphics*> (ServiceLocatorInstance()->Get("graphics"));
+			IGraphics* pGraphics = static_cast<IGraphics*>(ServiceLocatorInstance()->Get("graphics"));
 
 			//Put data into vertex and index buffers, then pass the relevant data to the Mesh object.
 			pMesh->vertexBuffer = pGraphics->InitVertexBuffer(finalVerts, numVertices);
@@ -354,8 +353,6 @@ namespace Indecisive
 			delete[] finalVerts;
 
 			ResourceManagerInstance()->AddMesh(filename, pMesh);
-			//std::cerr << "OBJ File '" << filename << "' loaded\n";
-			//return pMesh;
 		}
 	}
 
@@ -371,12 +368,12 @@ namespace Indecisive
 
 		if (!inFile.good())
 		{
-			//std::cerr << "ERROR: Cannot find OBJ file '" << fileName << "'\n";
+			// TODO: Error Handling
 			return;
 		}
 		else
 		{
-			//std::cerr << "OBJ File '" << fileName << "' found\n";
+			// TODO: Error Handling
 
 			std::string input = "";
 			std::string currentMatName = "";
@@ -394,6 +391,10 @@ namespace Indecisive
 						{
 							currentMat = nullptr;
 							currentMatName.clear();
+						}
+						else
+						{
+							// TODO: Error Handling
 						}
 					}
 					inFile >> currentMatName;
@@ -462,6 +463,10 @@ namespace Indecisive
 					{
 						currentMat->ambientTextureName = filename;
 					}
+					else
+					{
+						// TODO: Error Handling
+					}
 				}
 				else if (input.compare("map_Kd") == 0)
 				{
@@ -470,6 +475,10 @@ namespace Indecisive
 					if (ResourceManagerInstance()->AddTexture(filename))
 					{
 						currentMat->diffuseTextureName = filename;
+					}
+					else
+					{
+						// TODO: Error Handling
 					}
 				}
 				else if (input.compare("map_Ks") == 0)
@@ -480,10 +489,12 @@ namespace Indecisive
 					{
 						currentMat->specularTextureName = filename;
 					}
+					else
+					{
+						// TODO: Error Handling
+					}
 				}
 			}
 		}
-
-		//std::cerr << "MTL File '" << fileName << "' loaded\n";
 	}
 }

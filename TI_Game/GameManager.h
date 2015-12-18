@@ -1,9 +1,7 @@
 #pragma once
 #include "IGraphics.h"
-#include "ServiceLocator.h"
-#include <windows.h>
 
-
+typedef long HINSTANCE;
 namespace Indecisive
 {
 	class GameManager
@@ -12,7 +10,7 @@ namespace Indecisive
 		IGraphics* _pGraphics = nullptr;
 
 	public:
-		HRESULT Initialise(HINSTANCE hInstance, int nCmdShow);
+		GameManager(HINSTANCE hInstance, int nCmdShow);
 		void Draw();
 		void Update();
 		void SetTimer();

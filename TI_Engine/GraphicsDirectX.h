@@ -66,8 +66,6 @@ namespace Indecisive
 		ID3D11VertexShader*     _pVertexShader = nullptr;
 		ID3D11PixelShader*      _pPixelShader = nullptr;
 		ID3D11InputLayout*      _pVertexLayout = nullptr;
-		ID3D11Buffer*           _pVertexBuffer = nullptr;
-		ID3D11Buffer*           _pIndexBuffer = nullptr;
 		ID3D11Buffer*           _pConstantBuffer = nullptr;
 		XMFLOAT4X4              _world;
 		XMFLOAT4X4              _view;
@@ -86,8 +84,6 @@ namespace Indecisive
 		void Cleanup();
 		HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
 		HRESULT InitShadersAndInputLayout();
-		HRESULT InitVertexBuffer();
-		HRESULT InitIndexBuffer();
 		void UpdateConstantBuffer(const TreeNode&);
 
 		UINT _windowHeight;

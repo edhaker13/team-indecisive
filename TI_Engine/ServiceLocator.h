@@ -4,7 +4,7 @@
 
 namespace Indecisive
 {
-	class ServiceLocator: public IServiceLocator
+	class ServiceLocator : public IServiceLocator
 	{
 	private:
 		std::map<std::string, void*> _services;

@@ -6,10 +6,10 @@
 #include "IServiceLocator.h"
 
 namespace Indecisive
-{ 
+{
 	struct Mesh;
 
-	 class LIBRARY_API MeshComponent : public IComponent, public IDrawable
+	class MeshComponent : public IComponent, public IDrawable
 	{
 	private:
 		Mesh& _mesh;
@@ -18,10 +18,9 @@ namespace Indecisive
 		std::vector<int> _priorityGroups;
 
 	public:
-		MeshComponent(Mesh& mesh) : IComponent("Mesh"), _mesh(mesh), _graphics(* static_cast<IGraphics*> (ServiceLocatorInstance()->Get("graphics")))
-		{
-
-		};
+		MeshComponent(Mesh& mesh) :
+			IComponent("Mesh"), _mesh(mesh), _graphics(*static_cast<IGraphics*>(ServiceLocatorInstance()->Get("graphics")))
+		{};
 
 		~MeshComponent()
 		{
@@ -32,12 +31,13 @@ namespace Indecisive
 		void AddPriorityGroup(int index) { _priorityGroups.push_back(index); }
 
 		void AddGroup(SubObject* group) { _groups.push_back(group); }
-		
+
 		virtual void Draw() override
 		{
+			auto g = _groups[0];
 			for (auto i : _priorityGroups)
 			{
-				auto g = _groups[i];
+				g = _groups[i];
 
 				/*cb->diffuseMaterial = currentGroup->mat->diffuse;
 				cb->ambientMaterial = currentGroup->mat->ambient;

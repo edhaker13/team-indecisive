@@ -36,7 +36,7 @@ namespace Indecisive
 		LPWSTR _windowName = L"Team Indecisve";
 	public:
 		Window(UINT width, UINT height, LPWSTR name) : _windowWidth(width), _windowHeight(height), _windowName(name) {};
-		HRESULT Initialise(HINSTANCE hInstance, int nCmdShow)
+		bool Initialise(HINSTANCE hInstance, int nCmdShow)
 		{
 			// Register class
 			WNDCLASSEX wcex;
@@ -53,21 +53,23 @@ namespace Indecisive
 			wcex.lpszClassName = _windowName;
 			wcex.hIconSm = LoadIcon(wcex.hInstance, (LPCTSTR)IDC_TUTORIAL1);
 			if (!RegisterClassEx(&wcex))
-				return E_FAIL;
+			{
+				// TODO: Error Handling
+				return false;
+			}
 
 			// Create window
-			//_hInst = hInstance;
 			RECT rc = { 0, 0, _windowWidth, _windowHeight };
 			AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 			_hWnd = CreateWindow(_windowName, _windowName, WS_OVERLAPPEDWINDOW,
-				CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
-				nullptr);
+				CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance, nullptr);
 			if (!_hWnd)
-				return E_FAIL;
+			{
+				// TODO: Error Handling
+				return false;
+			}
 
-			ShowWindow(_hWnd, nCmdShow);
-
-			return S_OK;
+			return ShowWindow(_hWnd, nCmdShow);
 		};
 
 		const HWND GetHWND() { return _hWnd; }

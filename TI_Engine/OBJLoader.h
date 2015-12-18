@@ -8,13 +8,13 @@
 
 namespace Indecisive
 {
-	 class LIBRARY_API OBJLoader
+	class OBJLoader
 	{
 	public:
-		OBJLoader() {};
+		LIBRARY_API OBJLoader() {};
 		~OBJLoader() {};
-		void Load(const std::string& filename, bool invertTexCoords = true);
-		MeshComponent* ConstructFromMesh(const std::string& meshName);
+		LIBRARY_API void Load(const std::string& filename, bool invertTexCoords = true);
+		LIBRARY_API MeshComponent* ConstructFromMesh(const std::string& meshName);
 
 	private:
 		std::map<std::string, std::vector<SubObject*>> _meshSubObjs;

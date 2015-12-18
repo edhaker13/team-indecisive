@@ -6,7 +6,7 @@ namespace Indecisive
 {
 	namespace ComponentFactory
 	{
-		GameObject* MakeTestObject();
-		LIBRARY_API GameObject* MakeTestObjectFromObj(std::string);
+		LIBRARY_API GameObject* MakeTestObject();
+		LIBRARY_API GameObject* MakeObjectFromObj(std::string);
 	}
 }

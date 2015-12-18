@@ -16,7 +16,7 @@ namespace Indecisive
 	{
 		if (FAILED(CreateDDSTextureFromFile(_pd3dDevice, file, nullptr, (ID3D11ShaderResourceView**)ppTexture)))
 		{
-			//TODO: Log Errors?
+			// TODO: Error Handling
 			if (ppTexture != nullptr) delete *ppTexture;
 			ppTexture = nullptr;
 			return false;
@@ -43,12 +43,8 @@ namespace Indecisive
 		_pCamera = static_cast<CameraNode*>(ServiceLocatorInstance()->Get("camera"));
 		if (_pCamera == nullptr)
 		{
-			// Initialize a default camera node
-			Vector3 Eye(0.0f, 100.0f, -150.0f);
-			Vector3 At(0.0f, 0.0f, 0.0f);
-			Vector3 Up(0.0f, 1.0f, 0.0f);
-			// TODO: Initialize camera in Game?
-			_pCamera = new CameraNode("cam", At, Eye, Up, 10.0f, 1000.0f);
+			// TODO: Error Handling
+			return false;
 		}
 
 		// Initialize the view matrix
@@ -60,7 +56,7 @@ namespace Indecisive
 		lightDir = XMFLOAT3(0.0f, 100.0f, -150.0f);
 		ambient = XMFLOAT4(0.9f, 0.9f, 0.9f, 1.0f);
 		diffuse = XMFLOAT4(0.3f, 0.3f, 0.2f, 1.0f);
-		
+
 		// Create the sample state
 		D3D11_SAMPLER_DESC sampDesc;
 		ZeroMemory(&sampDesc, sizeof(sampDesc));
@@ -87,6 +83,7 @@ namespace Indecisive
 
 		if (FAILED(hr))
 		{
+			// TODO: Error Handling
 			MessageBox(nullptr,
 				L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
 			return hr;
@@ -97,6 +94,7 @@ namespace Indecisive
 
 		if (FAILED(hr))
 		{
+			// TODO: Error Handling
 			pVSBlob->Release();
 			return hr;
 		}
@@ -107,6 +105,7 @@ namespace Indecisive
 
 		if (FAILED(hr))
 		{
+			// TODO: Error Handling
 			MessageBox(nullptr,
 				L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
 			return hr;
@@ -117,7 +116,10 @@ namespace Indecisive
 		pPSBlob->Release();
 
 		if (FAILED(hr))
+		{
+			// TODO: Error Handling
 			return hr;
+		}
 
 		// Define the input layout
 		D3D11_INPUT_ELEMENT_DESC layout[] =
@@ -135,7 +137,10 @@ namespace Indecisive
 		pVSBlob->Release();
 
 		if (FAILED(hr))
+		{
+			// TODO: Error Handling
 			return hr;
+		}
 
 		// Set the input layout
 		_pImmediateContext->IASetInputLayout(_pVertexLayout);
@@ -151,34 +156,13 @@ namespace Indecisive
 		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 		hr = _pd3dDevice->CreateSamplerState(&sampDesc, &_pSamplerLinear);
 
-		return hr;
-	}
-
-	Buffer* GraphicsDirectX::InitVertexBuffer(SimpleVertex vertices[], unsigned arraySize)
-	{
-		HRESULT hr;
-
-		Buffer* pBuffer;
-
-		D3D11_BUFFER_DESC bd;
-		ZeroMemory(&bd, sizeof(bd));
-		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof(SimpleVertex) * arraySize;
-		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bd.CPUAccessFlags = 0;
-
-		D3D11_SUBRESOURCE_DATA InitData;
-		ZeroMemory(&InitData, sizeof(InitData));
-		InitData.pSysMem = vertices;
-
-		hr = _pd3dDevice->CreateBuffer(&bd, &InitData, (ID3D11Buffer**)&pBuffer);
-
 		if (FAILED(hr))
 		{
-			return nullptr;
+			// TODO: Error Handling
+			return hr;
 		}
 
-		return pBuffer;
+		return hr;
 	}
 
 	Buffer* GraphicsDirectX::InitVertexBuffer(Vertex vertices[], unsigned arraySize)
@@ -202,6 +186,7 @@ namespace Indecisive
 
 		if (FAILED(hr))
 		{
+			// TODO: Error Handling
 			return nullptr;
 		}
 
@@ -229,77 +214,16 @@ namespace Indecisive
 
 		if (FAILED(hr))
 		{
+			// TODO: Error Handling
 			return nullptr;
 		}
 
 		return pBuffer;
 	}
 
-	HRESULT GraphicsDirectX::InitVertexBuffer()
-	{
-		HRESULT hr;
-	
-		// Create vertex buffer
-		SimpleVertex vertices[] =
-		{
-			{ XMFLOAT3(-1.0f,  1.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT2(0, 0) },
-			{ XMFLOAT3( 1.0f,  1.0f, 0.0f), XMFLOAT3(0.0f, 1.0f, 0.0f), XMFLOAT2(1, 0) },
-			{ XMFLOAT3(-1.0f, -1.0f, 0.0f), XMFLOAT3(0.0f, 1.0f, 1.0f), XMFLOAT2(1, 1) },
-			{ XMFLOAT3( 1.0f, -1.0f, 0.0f), XMFLOAT3(1.0f, 0.0f, 0.0f), XMFLOAT2(0, 1) },
-		};
-	
-		D3D11_BUFFER_DESC bd;
-		ZeroMemory(&bd, sizeof(bd));
-		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof(SimpleVertex) * 4;
-		bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bd.CPUAccessFlags = 0;
-	
-		D3D11_SUBRESOURCE_DATA InitData;
-		ZeroMemory(&InitData, sizeof(InitData));
-		InitData.pSysMem = vertices;
-	
-		hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pVertexBuffer);
-	
-		if (FAILED(hr))
-			return hr;
-	
-		return S_OK;
-	}
-	
-	HRESULT GraphicsDirectX::InitIndexBuffer()
-	{
-		HRESULT hr;
-	
-		// Create index buffer
-		WORD indices[] =
-		{
-			0, 1, 2,
-			2, 1, 3,
-		};
-	
-		D3D11_BUFFER_DESC bd;
-		ZeroMemory(&bd, sizeof(bd));
-	
-		bd.Usage = D3D11_USAGE_DEFAULT;
-		bd.ByteWidth = sizeof(WORD) * 6;
-		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		bd.CPUAccessFlags = 0;
-	
-		D3D11_SUBRESOURCE_DATA InitData;
-		ZeroMemory(&InitData, sizeof(InitData));
-		InitData.pSysMem = indices;
-		hr = _pd3dDevice->CreateBuffer(&bd, &InitData, &_pIndexBuffer);
-	
-		if (FAILED(hr))
-			return hr;
-	
-		return S_OK;
-	}
-
 	HRESULT GraphicsDirectX::CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut)
 	{
-		HRESULT hr = S_OK;
+		HRESULT hr;
 
 		DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined(DEBUG) || defined(_DEBUG)
@@ -320,18 +244,17 @@ namespace Indecisive
 				OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
 
 			if (pErrorBlob) pErrorBlob->Release();
-
+			// TODO: Error Handling
 			return hr;
 		}
 
 		if (pErrorBlob) pErrorBlob->Release();
-
-		return S_OK;
+		return hr;
 	}
 
 	HRESULT GraphicsDirectX::InitDevice()
 	{
-		HRESULT hr = S_OK;
+		HRESULT hr;
 
 		UINT createDeviceFlags = 0;
 
@@ -383,14 +306,20 @@ namespace Indecisive
 		}
 
 		if (FAILED(hr))
+		{
+			// TODO: Error Handling
 			return hr;
+		}
 
 		// Create a render target view
 		ID3D11Texture2D* pBackBuffer = nullptr;
 		hr = _pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
 
 		if (FAILED(hr))
+		{
+			// TODO: Error Handling
 			return hr;
+		}
 
 		hr = _pd3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &_pRenderTargetView);
 		pBackBuffer->Release();
@@ -412,19 +341,6 @@ namespace Indecisive
 
 		InitShadersAndInputLayout();
 
-		/*InitVertexBuffer();
-
-		// Set vertex buffer
-		UINT stride = sizeof(SimpleVertex);
-		UINT offset = 0;
-		_pImmediateContext->IASetVertexBuffers(0, 1, &_pVertexBuffer, &stride, &offset);
-
-		InitIndexBuffer();
-
-		// Set index buffer
-		_pImmediateContext->IASetIndexBuffer(_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-		*/
-
 		// Set primitive topology
 		_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -438,7 +354,10 @@ namespace Indecisive
 		hr = _pd3dDevice->CreateBuffer(&bd, nullptr, &_pConstantBuffer);
 
 		if (FAILED(hr))
+		{
+			// TODO: Error Handling
 			return hr;
+		}
 
 		// Depth Stencil Stuff
 		D3D11_TEXTURE2D_DESC depthStencilDesc;
@@ -455,8 +374,21 @@ namespace Indecisive
 		depthStencilDesc.CPUAccessFlags = 0;
 		depthStencilDesc.MiscFlags = 0;
 
-		_pd3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, &_depthStencilBuffer);
-		_pd3dDevice->CreateDepthStencilView(_depthStencilBuffer, nullptr, &_depthStencilView);
+		hr = _pd3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, &_depthStencilBuffer);
+		
+		if (FAILED(hr))
+		{
+			// TODO: Error Handling
+			return hr;
+		}
+
+		hr = _pd3dDevice->CreateDepthStencilView(_depthStencilBuffer, nullptr, &_depthStencilView);
+
+		if (FAILED(hr))
+		{
+			// TODO: Error Handling
+			return hr;
+		}
 
 		_pImmediateContext->OMSetRenderTargets(1, &_pRenderTargetView, _depthStencilView);
 
@@ -468,13 +400,25 @@ namespace Indecisive
 		cmdesc.CullMode = D3D11_CULL_NONE;
 		hr = _pd3dDevice->CreateRasterizerState(&cmdesc, &RSCullNone);
 
+		if (FAILED(hr))
+		{
+			// TODO: Error Handling
+			return hr;
+		}
+
 		D3D11_DEPTH_STENCIL_DESC dssDesc;
 		ZeroMemory(&dssDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
 		dssDesc.DepthEnable = true;
 		dssDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 		dssDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 
-		_pd3dDevice->CreateDepthStencilState(&dssDesc, &DSLessEqual);
+		hr = _pd3dDevice->CreateDepthStencilState(&dssDesc, &DSLessEqual);
+
+		if (FAILED(hr))
+		{
+			// TODO: Error Handling
+			return hr;
+		}
 
 		ZeroMemory(&cmdesc, sizeof(D3D11_RASTERIZER_DESC));
 
@@ -484,18 +428,28 @@ namespace Indecisive
 		cmdesc.FrontCounterClockwise = true;
 		hr = _pd3dDevice->CreateRasterizerState(&cmdesc, &CCWcullMode);
 
+		if (FAILED(hr))
+		{
+			// TODO: Error Handling
+			return hr;
+		}
+
 		cmdesc.FrontCounterClockwise = false;
 		hr = _pd3dDevice->CreateRasterizerState(&cmdesc, &CWcullMode);
 
-		return S_OK;
+		if (FAILED(hr))
+		{
+			// TODO: Error Handling
+			return hr;
+		}
+
+		return hr;
 	}
 
 	void GraphicsDirectX::Cleanup()
 	{
 		if (_pImmediateContext) _pImmediateContext->ClearState();
 		if (_pConstantBuffer) _pConstantBuffer->Release();
-		if (_pVertexBuffer) _pVertexBuffer->Release();
-		if (_pIndexBuffer) _pIndexBuffer->Release();
 		if (_pVertexLayout) _pVertexLayout->Release();
 		if (_pVertexShader) _pVertexShader->Release();
 		if (_pPixelShader) _pPixelShader->Release();
@@ -511,9 +465,7 @@ namespace Indecisive
 		// Update our time
 		static float t = 0.0f;
 
-		//
 		//To be removed (placed in game loop)
-		//
 		if (_driverType == D3D_DRIVER_TYPE_REFERENCE)
 		{
 			t += (float)XM_PI * 0.0125f;
@@ -541,33 +493,35 @@ namespace Indecisive
 		// Clear the back buffer
 		float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red,green,blue,alpha
 		_pImmediateContext->ClearRenderTargetView(_pRenderTargetView, ClearColor);
-		_pImmediateContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);//clear depth view to depth value 1.0F
+		// Clear depth view to depth value 1.0f
+		_pImmediateContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-		// Renders a triangle
-		_pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
+		// Set shaders, samplers, and constant buffers
 		_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);
-		_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
 		_pImmediateContext->PSSetShader(_pPixelShader, nullptr, 0);
-
 		_pImmediateContext->PSSetSamplers(0, 1, &_pSamplerLinear);
+		_pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
+		_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
 
-		// TODO: LOAD SCENE GRAPH FROM FILE IN PROJECT
+		// Draws the scene graph starting from the camera
 		_pCamera->Draw();
-		
+
 		// Present our back buffer to our front buffer
 		_pSwapChain->Present(0, 0);
 	}
-
+	// TODO: Call this for each node and subobject somehow. Possible solution method DrawNode: Updates CB, DrawsMesh. Alt: Method takes subobject, grabs current cb, updates.
+	// Alt Alt: Node::Draw doesnt do recursion, DrawNode sets initial cb, calls DrawNode on children, updates world for all, updates lighting for subobjects.
+	// Alt^3: UpdateCB(SubObject){ _cb; set lighting from mat; update cb; } SetCB(Node){ _cb->World = world; set lighting; update cb; }
 	void GraphicsDirectX::UpdateConstantBuffer(const TreeNode& n)
 	{
-		//World Matrices
+		// World Matrices
 		auto world = n.world * (n.parent != nullptr ? n.parent->world : _world);
-		//Constant Buffer Update
 		ConstantBuffer cb;
+		// Set matrices
 		cb.mWorld = XMMatrixTranspose(world);
 		cb.mView = XMMatrixTranspose(XMLoadFloat4x4(&_view));
 		cb.mProjection = XMMatrixTranspose(XMLoadFloat4x4(&_projection));
-
+		// Set lighting
 		cb.diffuseMtrl = diffuse;
 		cb.diffuseLight = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 		cb.ambientMtrl = ambient;
@@ -575,12 +529,13 @@ namespace Indecisive
 		cb.specularMtrl = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 		cb.specularLight = XMFLOAT4(0.2f, 0.2f, 0.2f, 1.0f);
 		cb.specularPower = 5.0f;
-
-		cb.eyePos = XMFLOAT3(0.0f, 100.0f, -150.0f);
 		cb.lightVecW = lightDir;
+		// Set camera position
+		cb.eyePos = XMFLOAT3(0.0f, 100.0f, -150.0f);
+		// Update constant buffer
 		_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
-
-		for (auto pair : n.children) UpdateConstantBuffer(*pair.second);
+		// Call for all children
+		for (const auto& pair : n.children) UpdateConstantBuffer(*pair.second);
 	}
 
 	void GraphicsDirectX::DrawMesh(Mesh& m, SubObject& s)

@@ -7,7 +7,7 @@
 
 namespace Indecisive
 {
-	class ResourceManager: public IResourceManager
+	class ResourceManager : public IResourceManager
 	{
 	private:
 		std::map<std::string, Material*> _materials;
