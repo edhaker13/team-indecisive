@@ -13,7 +13,7 @@ namespace Indecisive
 
 	public:
 		ServiceLocator() {};
-		virtual void Add(std::string, void*) override;
-		virtual void* Get(std::string) override;
+		virtual void Add(const std::string&, void*) override;
+		virtual void* Get(const std::string&) override;
 	};
 }
