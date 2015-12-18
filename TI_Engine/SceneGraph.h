@@ -5,7 +5,8 @@
 namespace Indecisive
 {
 	class IGameObject;
-	/// <summary> Self contained n-ary tree. Expects a Matrix </summary> Polymorphism and recursion idea from http://www.andresilaghi.com/curious-projects/opengl-scene-graph-in-c/
+	// Polymorphism and recursion idea from http://www.andresilaghi.com/curious-projects/opengl-scene-graph-in-c/
+	/// <summary> Self contained n-ary tree </summary>
 	struct TreeNode
 	{
 		std::map<std::string, TreeNode*> children;
@@ -33,31 +34,39 @@ namespace Indecisive
 	private:
 		IGameObject& _object;
 	public:
-		LIBRARY_API ObjectNode(const std::string& key, IGameObject& object) : TreeNode(key), _object(object) {};
+		LIBRARY_API ObjectNode(const std::string& key, IGameObject& object) :
+			TreeNode(key), _object(object)
+		{};
 		LIBRARY_API virtual void Draw() override;
 		LIBRARY_API virtual void Update(float) override;
 	};
 	/// <summary> Node with a rotation to apply to all child objects </summary>
 	struct RotationNode : public TreeNode
 	{
-		const float yaw, pitch, roll;
-		LIBRARY_API RotationNode(const std::string& key, float yaw, float pitch, float roll) : TreeNode(key), yaw(yaw), pitch(pitch), roll(roll) {};
-		LIBRARY_API virtual void Update(float) override;
+		LIBRARY_API RotationNode(const std::string& key, float yaw, float pitch, float roll) :
+			TreeNode(key)
+		{
+			world = Matrix::CreateFromYawPitchRoll(yaw, pitch, roll);
+		};
 	};
 	/// <summary> Node with position to translate all child objects </summary>
 	struct PositionNode : public TreeNode
 	{
-		Vector3 position;
-		LIBRARY_API PositionNode(const std::string& key, const Vector3& position) : TreeNode(key), position(position) {};
-		LIBRARY_API virtual void Update(float) override;
+		LIBRARY_API PositionNode(const std::string& key, const Vector3& position) :
+			TreeNode(key)
+		{
+			world = Matrix::CreateTranslation(position);
+		};
 	};
-	/// <summary> Node with position that will stay within the offsets of cameraEye </summary>
-	struct ClampedPositionNode : public PositionNode
+	/// <summary> Node with position that will stay within the bounds of reference position </summary>
+	struct ClampedPositionNode : public TreeNode
 	{
-		const Vector3& cameraEye;
-		const float lowerBound, upperBound;
-		LIBRARY_API ClampedPositionNode(const std::string& key, const Vector3& position, const Vector3& cameraEye, float lowerBound, float upperBound) :
-			PositionNode(key, position), cameraEye(cameraEye), lowerBound(lowerBound), upperBound(upperBound) {};
+		const Vector3& reference;
+		const Vector3 upperBounds, lowerBounds, midPoints;
+		Vector3 position;
+		LIBRARY_API ClampedPositionNode(const std::string& key, const Vector3& position, const Vector3& reference, const Vector3& upperBounds, const Vector3& lowerBounds) :
+			TreeNode(key), position(position), reference(reference), upperBounds(upperBounds), lowerBounds(lowerBounds), midPoints((upperBounds - lowerBounds) / 2)
+		{};
 		LIBRARY_API virtual void Update(float) override;
 	};
 	/// <summary> Node with camera eye, center, and up positions. Will follow center position </summary>
@@ -69,7 +78,8 @@ namespace Indecisive
 		Vector3 eye;
 		const float nearZ, farZ;
 		LIBRARY_API CameraNode(std::string key, const Vector3& eye, const Vector3& center, const Vector3& up, float nearZ, float farZ) :
-			TreeNode(key), eye(eye), center(center), up(up), distance(center - eye), nearZ(nearZ), farZ(farZ) {};
+			TreeNode(key), eye(eye), center(center), up(up), distance(center - eye), nearZ(nearZ), farZ(farZ)
+		{};
 		/// <summary> Update eye position if the center has moved </summary>
 		LIBRARY_API virtual void Update(float) override;
 	};

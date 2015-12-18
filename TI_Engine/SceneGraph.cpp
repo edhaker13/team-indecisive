@@ -87,24 +87,13 @@ namespace Indecisive
 		TreeNode::Update(elapsedTime);
 	};
 
-	void RotationNode::Update(float elapsedTime)
-	{
-		world = Matrix::CreateFromYawPitchRoll(yaw, pitch, roll);
-		TreeNode::Update(elapsedTime);
-	};
-
-	void PositionNode::Update(float elapsedTime)
-	{
-		world = Matrix::CreateTranslation(position);
-		TreeNode::Update(elapsedTime);
-	};
-
 	void ClampedPositionNode::Update(float elapsedTime)
 	{
-		if (position.z < lowerBound && position.z > upperBound)
+		if (position.z < lowerBounds.z && position.z > upperBounds.z)
 		{
-			position.z = (upperBound - lowerBound) / 2;
+			position.z = midPoints.z;
 		}
+		world = Matrix::CreateTranslation(position);
 		TreeNode::Update(elapsedTime);
 	};
 
