@@ -33,7 +33,7 @@ namespace Indecisive
 		if (FAILED(InitDevice()))
 		{
 			Cleanup();
-
+			// TODO: Error Handling
 			return false;
 		}
 
@@ -325,7 +325,10 @@ namespace Indecisive
 		pBackBuffer->Release();
 
 		if (FAILED(hr))
+		{
+			// TODO: Error Handling
 			return hr;
+		}
 
 		_pImmediateContext->OMSetRenderTargets(1, &_pRenderTargetView, nullptr);
 
@@ -532,6 +535,7 @@ namespace Indecisive
 		cb.lightVecW = lightDir;
 		// Set camera position
 		cb.eyePos = XMFLOAT3(0.0f, 100.0f, -150.0f);
+		cb.hasTexture = 0.0f;
 		// Update constant buffer
 		_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 		// Call for all children

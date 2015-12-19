@@ -17,12 +17,10 @@ cbuffer cbData
 	float4 gSpecularLight;
 	float  gSpecPow;
 
-	float4 gEyePosW;
+	float3 gEyePosW;
 	float3 gLightVecW;
 
-	float HasTexture;
-
-
+	float hasTexture;
 };
 
 struct VS_IN

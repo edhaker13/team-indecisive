@@ -35,7 +35,7 @@ namespace Indecisive
 
 		XMFLOAT3 lightVecW;
 
-		float HasTexture;
+		float hasTexture;
 	};
 
 	class GraphicsDirectX : public IGraphics
