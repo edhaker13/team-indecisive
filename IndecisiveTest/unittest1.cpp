@@ -13,7 +13,7 @@ namespace Indecisive
 
 			TEST_METHOD(ObjectMeshTest)
 			{
-				auto go = ComponentFactory::MakeTestObjectFromObj("fullcar.obj");
+				auto go = ComponentFactory::MakeObjectFromObj("fullcar.obj");
 	
 				Assert::IsNotNull(go);
 			}
@@ -21,7 +21,7 @@ namespace Indecisive
 			TEST_METHOD(TextureLoadTest)
 			{
 				auto ObjLoader = OBJLoader::OBJLoader();
-				auto go = ComponentFactory::MakeTestObjectFromObj("fullcar.obj");
+				auto go = ComponentFactory::MakeObjectFromObj("fullcar.obj");
 				
 			}
 		
