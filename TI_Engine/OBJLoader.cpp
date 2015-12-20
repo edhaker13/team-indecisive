@@ -1,6 +1,5 @@
 #include "OBJLoader.h"
-#include "ResourceManager.h"
-#include "ServiceLocator.h"
+#include "IResourceManager.h"
 
 namespace Indecisive
 {
@@ -111,14 +110,19 @@ namespace Indecisive
 
 	void OBJLoader::Load(const std::string& filename, bool invertTexCoords)
 	{
-		std::string binaryFilename = ".\\Assets\\" + filename + ".bin";
+		assert(!filename.empty());
+		std::string binaryFilename = ".\\/Assets\\/" + filename + ".bin";
 		std::ifstream binaryInFile;
 		binaryInFile.open(binaryFilename, std::ios::in | std::ios::binary);
+
+		auto pGraphics = static_cast<IGraphics*>(ResourceManagerInstance()->GetService("graphics"));
+		assert(pGraphics != nullptr);
+
 		// TODO: Disabled binary load until it can r/w subobjects and material
 		if (true /*!binaryInFile.good()*/)
 		{
 			std::ifstream inFile;
-			inFile.open(".\\Assets\\" + filename);
+			inFile.open(".\\/Assets\\/" + filename);
 
 			if (!inFile.good())
 			{
@@ -274,8 +278,6 @@ namespace Indecisive
 
 				CreateIndices(expandedVertices, expandedTexCoords, expandedNormals, meshIndices, meshVertices, meshTexCoords, meshNormals);
 
-				IGraphics* pGraphics = static_cast<IGraphics*>(ServiceLocatorInstance()->Get("graphics"));
-
 				//Turn data from vector form to arrays
 				Vertex* finalVerts = new Vertex[meshVertices.size()];
 				unsigned int numMeshVertices = meshVertices.size();
@@ -338,8 +340,6 @@ namespace Indecisive
 			binaryInFile.read((char*)finalVerts, sizeof(Vertex) * numVertices);
 			binaryInFile.read((char*)indices, sizeof(unsigned short) * numIndices);
 
-			IGraphics* pGraphics = static_cast<IGraphics*>(ServiceLocatorInstance()->Get("graphics"));
-
 			//Put data into vertex and index buffers, then pass the relevant data to the Mesh object.
 			pMesh->vertexBuffer = pGraphics->InitVertexBuffer(finalVerts, numVertices);
 			pMesh->vertexBufferOffset = 0;
@@ -364,7 +364,7 @@ namespace Indecisive
 		}
 
 		std::ifstream inFile;
-		inFile.open(".\\Assets\\" + filename);
+		inFile.open(".\\/Assets\\/" + filename);
 
 		if (!inFile.good())
 		{

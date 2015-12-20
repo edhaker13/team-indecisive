@@ -3,7 +3,7 @@
 #include "IComponent.h"
 #include "IDrawable.h"
 #include "IGraphics.h"
-#include "IServiceLocator.h"
+#include "IResourceManager.h"
 
 namespace Indecisive
 {
@@ -19,7 +19,7 @@ namespace Indecisive
 
 	public:
 		MeshComponent(Mesh& mesh) :
-			IComponent("Mesh"), _mesh(mesh), _graphics(*static_cast<IGraphics*>(ServiceLocatorInstance()->Get("graphics")))
+			IComponent("Mesh"), _mesh(mesh), _graphics(*static_cast<IGraphics*>(ResourceManagerInstance()->GetService("graphics")))
 		{};
 
 		~MeshComponent()

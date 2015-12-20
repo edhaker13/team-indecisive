@@ -2,7 +2,7 @@
 #include "ComponentFactory.h"
 #include "GraphicsDirectX.h"
 #include "SceneGraph.h"
-#include "ServiceLocator.h"
+#include "IResourceManager.h"
 #include "Window.h"
 
 namespace Indecisive
@@ -79,7 +79,7 @@ namespace Indecisive
 		TreeNode* parent = new TreeNode("root");
 		TreeNode* last = parent;
 		Vector3 v, v1, v2;
-		ServiceLocatorInstance()->Add("root", parent);
+		ResourceManagerInstance()->AddService("root", parent);
 
 		while (!stream.eof())
 		{
@@ -92,7 +92,7 @@ namespace Indecisive
 				if (input.compare("directx") == 0)
 				{
 					_pGraphics = new GraphicsDirectX();
-					ServiceLocatorInstance()->Add("graphics", _pGraphics);
+					ResourceManagerInstance()->AddService("graphics", _pGraphics);
 				}
 			}
 			else if (input.compare("camera") == 0)
@@ -107,7 +107,7 @@ namespace Indecisive
 				// Initialize the camera node
 				last = new CameraNode(input, v, v1, v2, nearZ, farZ);
 				// Camera needs to be used in graphics initialise, so add to locator
-				ServiceLocatorInstance()->Add(input, last);
+				ResourceManagerInstance()->AddService(input, last);
 				parent->Append(last);
 
 				if (!initialised)

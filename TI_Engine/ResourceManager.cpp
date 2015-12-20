@@ -1,5 +1,4 @@
 #include "ResourceManager.h"
-#include "ServiceLocator.h"
 #include "IGraphics.h"
 
 namespace Indecisive
@@ -8,65 +7,52 @@ namespace Indecisive
 
 	bool ResourceManager::AddMaterial(const std::string& name, const Material* pMaterial)
 	{
-		if (_materials.find(name) == _materials.end())
-		{
-			_materials[name] = const_cast<Material*>(pMaterial);
-			return true;
-		}
-		return false;
+		return _materials.emplace(name, pMaterial).second;
 	}
 
 	bool ResourceManager::AddMesh(const std::string& name, const Mesh* pMesh)
 	{
-		if (_meshes.find(name) == _meshes.end())
-		{
-			_meshes[name] = const_cast<Mesh*>(pMesh);
-			return true;
-		}
-		return false;
+		return _meshes.emplace(name, pMesh).second;
 	}
+
+	bool ResourceManager::AddService(const std::string& name, const void* instance)
+	{
+		return _services.emplace(name, instance).second;
+	};
 
 	bool ResourceManager::AddTexture(const std::string& name)
 	{
 		if (_textures.find(name) == _textures.end())
 		{
 			Texture* pTexture = nullptr;
-			const std::wstring file = L".\\Assets\\" + std::wstring(name.cbegin(), name.cend());
-			auto pGraphics = static_cast<IGraphics*>(ServiceLocatorInstance()->Get("graphics"));
+			auto pGraphics = static_cast<IGraphics*>(GetService("graphics"));
+			const std::wstring file = L".\\/Assets\\/" + std::wstring(name.cbegin(), name.cend());
 			if (pGraphics == nullptr || !pGraphics->CreateTextureFromFile(file.c_str(), &pTexture))
 			{
 				return false;
 			}
-			_textures[name] = pTexture;
-			return true;
+			return _textures.emplace(name, pTexture).second;
 		}
 		return false;
 	}
 
 	Material* ResourceManager::GetMaterial(const std::string& name)
 	{
-		if (_materials.find(name) != _materials.end())
-		{
-			return _materials[name];
-		}
-		return nullptr;
+		return MapGet<Material>(_materials, name);
 	}
 
 	Mesh* ResourceManager::GetMesh(const std::string& name)
 	{
-		if (_meshes.find(name) != _meshes.end())
-		{
-			return _meshes[name];
-		}
-		return nullptr;
+		return MapGet<Mesh>(_meshes, name);
 	}
 
-	Texture*  ResourceManager::GetTexture(const std::string& name)
+	void* ResourceManager::GetService(const std::string& name)
 	{
-		if (_textures.find(name) != _textures.end())
-		{
-			return _textures[name];
-		}
-		return nullptr;
+		return MapGet<void>(_services, name);
+	};
+
+	Texture* ResourceManager::GetTexture(const std::string& name)
+	{
+		return MapGet<Texture>(_textures, name);
 	}
 }

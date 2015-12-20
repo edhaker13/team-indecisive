@@ -39,12 +39,12 @@ namespace Indecisive
 {
 	GameManager::GameManager(HINSTANCE hInstance, int nCmdShow)
 	{
-		LevelLoader lvlLoader;
+		auto lvlLoader = LevelLoader();
 		static const std::string level = "dummy.lvl";
 
 		if (!lvlLoader.CanRead(level))
 		{
-			throw std::invalid_argument("Can't read level file:" + level);
+			throw std::invalid_argument("Can't read level file: " + level);
 		}
 
 		lvlLoader.GetWindow(level)->Initialise(hInstance, nCmdShow);

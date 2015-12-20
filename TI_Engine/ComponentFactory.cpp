@@ -1,12 +1,12 @@
 #include "ComponentFactory.h"
+#include "GameObject.h"
 #include "OBJLoader.h"
-#include "ResourceManager.h"
-#include "ServiceLocator.h"
+#include "IResourceManager.h"
 #include "Structures.h"
 
 namespace Indecisive
 {
-	GameObject* ComponentFactory::MakeTestObject()
+	IGameObject* ComponentFactory::MakeTestObject()
 	{
 		Vertex vertices[] =
 		{
@@ -26,7 +26,7 @@ namespace Indecisive
 		auto pGameObject = new GameObject();
 		auto pMeshComponent = new MeshComponent(*pMesh);
 		// Load graphics from locator
-		auto pGraphics = static_cast<IGraphics*>(ServiceLocatorInstance()->Get("graphics"));
+		auto pGraphics = static_cast<IGraphics*>(ResourceManagerInstance()->GetService("graphics"));
 
 		if (pGraphics == nullptr)
 		{
@@ -59,14 +59,14 @@ namespace Indecisive
 		return pGameObject;
 	}
 
-	GameObject* ComponentFactory::MakeObjectFromObj(std::string filename)
+	IGameObject* ComponentFactory::MakeObjectFromObj(std::string filename)
 	{
 		// Load default `none` texture
 		if (!ResourceManagerInstance()->AddTexture("WhiteTex.dds"))
 		{
 			// TODO: Error Handling
 		}
-		auto ObjLoader = OBJLoader::OBJLoader();
+		auto ObjLoader = OBJLoader();
 		ObjLoader.Load(filename);
 		auto pMeshComponent = ObjLoader.ConstructFromMesh(filename);
 		if (pMeshComponent != nullptr)

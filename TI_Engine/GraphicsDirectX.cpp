@@ -2,7 +2,7 @@
 #include "DDSTextureLoader.h"
 #include "GraphicsDirectX.h"
 #include "SceneGraph.h"
-#include "ServiceLocator.h"
+#include "IResourceManager.h"
 #include "Window.h"
 
 namespace Indecisive
@@ -41,8 +41,8 @@ namespace Indecisive
 		// Initialize the world matrix
 		XMStoreFloat4x4(&_world, XMMatrixIdentity());
 
-		_pCamera = static_cast<CameraNode*>(ServiceLocatorInstance()->Get("camera"));
-		_pRoot = static_cast<TreeNode*>(ServiceLocatorInstance()->Get("root"));
+		_pCamera = static_cast<CameraNode*>(ResourceManagerInstance()->GetService("camera"));
+		_pRoot = static_cast<TreeNode*>(ResourceManagerInstance()->GetService("root"));
 		if (_pCamera == nullptr || _pRoot == nullptr)
 		{
 			// TODO: Error Handling
@@ -380,7 +380,7 @@ namespace Indecisive
 		depthStencilDesc.CPUAccessFlags = 0;
 		depthStencilDesc.MiscFlags = 0;
 
-		hr = _pd3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, &_depthStencilBuffer);
+		hr = _pd3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, &_pDepthStencilBuffer);
 
 		if (FAILED(hr))
 		{
@@ -388,7 +388,7 @@ namespace Indecisive
 			return hr;
 		}
 
-		hr = _pd3dDevice->CreateDepthStencilView(_depthStencilBuffer, nullptr, &_depthStencilView);
+		hr = _pd3dDevice->CreateDepthStencilView(_pDepthStencilBuffer, nullptr, &_pDepthStencilView);
 
 		if (FAILED(hr))
 		{
@@ -396,7 +396,7 @@ namespace Indecisive
 			return hr;
 		}
 
-		_pImmediateContext->OMSetRenderTargets(1, &_pRenderTargetView, _depthStencilView);
+		_pImmediateContext->OMSetRenderTargets(1, &_pRenderTargetView, _pDepthStencilView);
 
 		// Rasterizer
 		D3D11_RASTERIZER_DESC cmdesc;
@@ -404,7 +404,7 @@ namespace Indecisive
 		ZeroMemory(&cmdesc, sizeof(D3D11_RASTERIZER_DESC));
 		cmdesc.FillMode = D3D11_FILL_SOLID;
 		cmdesc.CullMode = D3D11_CULL_NONE;
-		hr = _pd3dDevice->CreateRasterizerState(&cmdesc, &RSCullNone);
+		hr = _pd3dDevice->CreateRasterizerState(&cmdesc, &_pRSCullNone);
 
 		if (FAILED(hr))
 		{
@@ -418,7 +418,7 @@ namespace Indecisive
 		dssDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 		dssDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
 
-		hr = _pd3dDevice->CreateDepthStencilState(&dssDesc, &DSLessEqual);
+		hr = _pd3dDevice->CreateDepthStencilState(&dssDesc, &_pDSLessEqual);
 
 		if (FAILED(hr))
 		{
@@ -432,7 +432,7 @@ namespace Indecisive
 		cmdesc.CullMode = D3D11_CULL_BACK;
 
 		cmdesc.FrontCounterClockwise = true;
-		hr = _pd3dDevice->CreateRasterizerState(&cmdesc, &CCWcullMode);
+		hr = _pd3dDevice->CreateRasterizerState(&cmdesc, &_pCCWcullMode);
 
 		if (FAILED(hr))
 		{
@@ -441,7 +441,7 @@ namespace Indecisive
 		}
 
 		cmdesc.FrontCounterClockwise = false;
-		hr = _pd3dDevice->CreateRasterizerState(&cmdesc, &CWcullMode);
+		hr = _pd3dDevice->CreateRasterizerState(&cmdesc, &_pCWcullMode);
 
 		if (FAILED(hr))
 		{
@@ -507,7 +507,7 @@ namespace Indecisive
 		float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red,green,blue,alpha
 		_pImmediateContext->ClearRenderTargetView(_pRenderTargetView, ClearColor);
 		// Clear depth view to depth value 1.0f
-		_pImmediateContext->ClearDepthStencilView(_depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		_pImmediateContext->ClearDepthStencilView(_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		// Set shaders, samplers, and constant buffers
 		_pImmediateContext->VSSetShader(_pVertexShader, nullptr, 0);

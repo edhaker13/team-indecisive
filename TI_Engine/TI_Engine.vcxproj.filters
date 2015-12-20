@@ -59,9 +59,6 @@
     <ClInclude Include="OBJLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ServiceLocator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="IPhysics.h">
       <Filter>Interfaces</Filter>
     </ClInclude>
@@ -82,9 +79,6 @@
     </ClInclude>
     <ClInclude Include="LibraryAPI.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="IServiceLocator.h">
-      <Filter>Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
       <Filter>Header Files</Filter>
@@ -113,9 +107,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DDSTextureLoader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ServiceLocator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">

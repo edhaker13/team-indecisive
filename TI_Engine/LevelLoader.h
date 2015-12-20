@@ -9,7 +9,9 @@ namespace Indecisive
 	class LevelLoader : public IReadable
 	{
 	private:
+		// Win32 window class. Allocated after constructor, so no reference.
 		Window* _pWindow = nullptr;
+		// Graphics interface. Allocated after constructor, so no reference.
 		IGraphics* _pGraphics = nullptr;
 	protected:
 		LIBRARY_API void _Open(const std::string&, std::ifstream&) override;
