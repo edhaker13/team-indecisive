@@ -12,7 +12,7 @@ namespace Indecisive
 		Cleanup();
 	}
 
-	bool GraphicsDirectX::CreateTextureFromFile(const wchar_t* file, Texture** ppTexture)
+	bool GraphicsDirectX::CreateTextureFromFile(const wchar_t* file, Texture** ppTexture) const
 	{
 		assert(file != nullptr);
 		if (FAILED(CreateDDSTextureFromFile(_pd3dDevice, file, nullptr, (ID3D11ShaderResourceView**)ppTexture)))
@@ -25,7 +25,7 @@ namespace Indecisive
 		return true;
 	}
 
-	bool GraphicsDirectX::Initialise(Window* pWindow)
+	bool GraphicsDirectX::Initialise(const Window* pWindow)
 	{
 		_hWnd = pWindow->GetHWND();
 		_windowWidth = pWindow->GetWidth();
@@ -168,7 +168,7 @@ namespace Indecisive
 		return hr;
 	}
 
-	Buffer* GraphicsDirectX::InitVertexBuffer(Vertex vertices[], unsigned arraySize)
+	Buffer* GraphicsDirectX::InitVertexBuffer(const Vertex vertices[], unsigned arraySize) const
 	{
 		HRESULT hr;
 
@@ -196,7 +196,7 @@ namespace Indecisive
 		return pBuffer;
 	}
 
-	Buffer* GraphicsDirectX::InitIndexBuffer(unsigned short indices[], unsigned arraySize)
+	Buffer* GraphicsDirectX::InitIndexBuffer(const unsigned short indices[], unsigned arraySize) const
 	{
 		HRESULT hr;
 
@@ -501,7 +501,7 @@ namespace Indecisive
 		UpdateConstantBuffer(*_pRoot);
 	}
 
-	void GraphicsDirectX::Draw()
+	void GraphicsDirectX::Draw() const
 	{
 		// Clear the back buffer
 		float ClearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f }; // red,green,blue,alpha
@@ -528,7 +528,7 @@ namespace Indecisive
 	void GraphicsDirectX::UpdateConstantBuffer(const TreeNode& n)
 	{
 		// World Matrices
-		auto world = n.world * (n.parent != nullptr ? n.parent->world : _world);
+		auto world = n.GetWorld() * (n.parent != nullptr ? n.GetParentWorld() : _world);
 		ConstantBuffer cb;
 		// Set matrices
 		cb.mWorld = XMMatrixTranspose(world);
@@ -552,7 +552,7 @@ namespace Indecisive
 		for (const auto& pair : n.children) UpdateConstantBuffer(*pair.second);
 	}
 
-	void GraphicsDirectX::DrawMesh(Mesh& m, SubObject& s)
+	void GraphicsDirectX::DrawMesh(const Mesh& m, const SubObject& s) const
 	{
 		_pImmediateContext->IASetVertexBuffers(0, 1, (ID3D11Buffer**)&m.vertexBuffer, &m.vertexBufferStride, &m.vertexBufferOffset);
 		_pImmediateContext->IASetIndexBuffer((ID3D11Buffer*)m.indexBuffer, DXGI_FORMAT_R16_UINT, m.indexBufferOffset);

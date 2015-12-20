@@ -53,8 +53,9 @@ namespace Indecisive
 		}
 	}
 
-	MeshComponent* OBJLoader::ConstructFromMesh(const std::string& meshName)
+	MeshComponent* OBJLoader::ConstructFromMesh(const std::string& meshName) const
 	{
+		assert(!meshName.empty());
 		auto mesh = ResourceManagerInstance()->GetMesh(meshName);
 		if (mesh == nullptr)
 		{	
@@ -62,7 +63,9 @@ namespace Indecisive
 			return nullptr;
 		}
 		auto m = new MeshComponent(*mesh);
-		auto subObjs = _meshSubObjs[meshName];
+		auto it = _meshSubObjs.find(meshName);
+		assert(it != _meshSubObjs.end());
+		auto subObjs = it->second;
 		std::vector<int> _transparentGroups;  // Indices of groups, PRIORITY 1
 		std::vector<int> _opaqueGroups; // Indices of groups, PRIORITY 2
 		for (unsigned i = 0; i < subObjs.size(); i++)

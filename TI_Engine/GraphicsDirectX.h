@@ -43,13 +43,13 @@ namespace Indecisive
 	public:
 		LIBRARY_API GraphicsDirectX() : IGraphics() {};
 		~GraphicsDirectX();
-		LIBRARY_API virtual bool CreateTextureFromFile(const wchar_t*, Texture**) override;
-		LIBRARY_API virtual bool Initialise(Window*) override;
-		LIBRARY_API virtual Buffer* InitVertexBuffer(Vertex[], unsigned) override;
-		LIBRARY_API virtual Buffer* InitIndexBuffer(unsigned short[], unsigned) override;
-		LIBRARY_API virtual void DrawMesh(Mesh&, SubObject&) override;
+		LIBRARY_API virtual bool CreateTextureFromFile(const wchar_t*, Texture**) const override;
+		LIBRARY_API virtual bool Initialise(const Window*) override;
+		LIBRARY_API virtual Buffer* InitVertexBuffer(const Vertex[], unsigned) const override;
+		LIBRARY_API virtual Buffer* InitIndexBuffer(const unsigned short[], unsigned) const override;
+		LIBRARY_API virtual void DrawMesh(const Mesh&, const SubObject&) const override;
 		LIBRARY_API virtual void Update() override;
-		LIBRARY_API virtual void Draw() override;
+		LIBRARY_API virtual void Draw() const override;
 
 	private:
 		GraphicsDirectX(GraphicsDirectX const&) = delete;
@@ -93,7 +93,6 @@ namespace Indecisive
 
 		UINT _windowHeight;
 		UINT _windowWidth;
-
 
 		HRESULT InitDevice();
 		void Cleanup();

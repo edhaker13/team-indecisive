@@ -20,13 +20,13 @@ namespace Indecisive
 		/// <summary> Searches in all siblings first </summary>
 		static const TreeNode* Find(const TreeNode*, const std::string&);
 		/// <summary> Recursively draw children </summary>
-		LIBRARY_API virtual void Draw();
+		LIBRARY_API virtual void Draw() const;
 		/// <summary> Recursively update children </summary>
 		LIBRARY_API virtual void Update(float);
 		/// <summary> Return this node's transformation matrix </summary>
-		LIBRARY_API virtual const Matrix GetWorld();
+		LIBRARY_API virtual const Matrix GetWorld() const;
 		/// <summary> Return parent node's transformation matrix </summary>
-		LIBRARY_API virtual const Matrix GetParentWorld();
+		LIBRARY_API virtual const Matrix GetParentWorld() const;
 	};
 	/// <summary> Node containing a game object to use </summary>
 	struct ObjectNode : public TreeNode
@@ -37,7 +37,7 @@ namespace Indecisive
 		LIBRARY_API ObjectNode(const std::string& key, IGameObject& object) :
 			TreeNode(key), _object(object)
 		{};
-		LIBRARY_API virtual void Draw() override;
+		LIBRARY_API virtual void Draw() const override;
 		LIBRARY_API virtual void Update(float) override;
 	};
 	/// <summary> Node with a rotation to apply to all child objects </summary>
@@ -77,7 +77,7 @@ namespace Indecisive
 		const Vector3 up, distance;
 		Vector3 eye;
 		const float nearZ, farZ;
-		LIBRARY_API CameraNode(std::string key, const Vector3& eye, const Vector3& center, const Vector3& up, float nearZ, float farZ) :
+		LIBRARY_API CameraNode(const std::string& key, const Vector3& eye, const Vector3& center, const Vector3& up, float nearZ, float farZ) :
 			TreeNode(key), eye(eye), center(center), up(up), distance(center - eye), nearZ(nearZ), farZ(farZ)
 		{};
 		/// <summary> Update eye position if the center has moved </summary>

@@ -59,7 +59,7 @@ namespace Indecisive
 		return pGameObject;
 	}
 
-	IGameObject* ComponentFactory::MakeObjectFromObj(std::string filename)
+	IGameObject* ComponentFactory::MakeObjectFromObj(const std::string& filename)
 	{
 		// Load default `none` texture
 		if (!ResourceManagerInstance()->AddTexture("WhiteTex.dds"))

@@ -47,7 +47,7 @@ namespace Indecisive
 		return nullptr;
 	};
 
-	void TreeNode::Draw()
+	void TreeNode::Draw() const
 	{
 		for (const auto& pair : children)
 		{
@@ -64,17 +64,17 @@ namespace Indecisive
 		world *= GetParentWorld();
 	};
 
-	const Matrix TreeNode::GetWorld()
+	const Matrix TreeNode::GetWorld() const
 	{
 		return world;
 	};
 
-	const Matrix TreeNode::GetParentWorld()
+	const Matrix TreeNode::GetParentWorld() const
 	{
 		return parent != nullptr ? parent->GetWorld() : Matrix::Identity;
 	};
 
-	void ObjectNode::Draw()
+	void ObjectNode::Draw() const
 	{
 		_object.Draw();
 		TreeNode::Draw();

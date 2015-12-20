@@ -32,7 +32,7 @@ namespace Indecisive
 
 		void AddGroup(SubObject* group) { _groups.push_back(group); }
 
-		virtual void Draw() override
+		virtual void Draw() const override
 		{
 			auto g = _groups[0];
 			for (auto i : _priorityGroups)

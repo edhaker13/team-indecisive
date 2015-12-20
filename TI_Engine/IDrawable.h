@@ -5,6 +5,6 @@ namespace Indecisive
 	class IDrawable
 	{
 	public:
-		virtual void Draw() = 0;
+		virtual void Draw() const = 0;
 	};
 };

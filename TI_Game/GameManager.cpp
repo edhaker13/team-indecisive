@@ -1,12 +1,7 @@
 #include "GameManager.h"
 #include "LevelLoader.h"
 #include "Window.h"
-/*
-#include "ComponentFactory.h"
-#include "GraphicsDirectX.h"
-#include "SceneGraph.h"
-#include "ServiceLocator.h"
-*/
+
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
@@ -46,14 +41,14 @@ namespace Indecisive
 		{
 			throw std::invalid_argument("Can't read level file: " + level);
 		}
-
-		lvlLoader.GetWindow(level)->Initialise(hInstance, nCmdShow);
+		lvlLoader.ReadWindow(level);
+		lvlLoader.GetWindow()->Initialise(hInstance, nCmdShow);
 		lvlLoader.Read(level);
 
 		_pGraphics = lvlLoader.GetGraphics();
 	};
 
-	void GameManager::Draw()
+	void GameManager::Draw() const
 	{
 		_pGraphics->Draw();
 	};

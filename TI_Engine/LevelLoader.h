@@ -17,11 +17,12 @@ namespace Indecisive
 		LIBRARY_API void _Open(const std::string&, std::ifstream&) override;
 	public:
 		~LevelLoader() {};
-		LIBRARY_API void Read(const std::string&) override;
 		LIBRARY_API LevelLoader() {};
-		LIBRARY_API IGraphics* GetGraphics();
-		LIBRARY_API Window* GetWindow(const std::string&);
+		LIBRARY_API void Read(const std::string&) override;
 		LIBRARY_API bool CanRead(const std::string&) const override;
+		LIBRARY_API IGraphics* GetGraphics() const;
 		LIBRARY_API const std::string GetInfo() const override;
+		LIBRARY_API Window* GetWindow() const;
+		LIBRARY_API void ReadWindow(const std::string&);
 	};
 };

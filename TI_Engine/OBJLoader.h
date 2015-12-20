@@ -14,7 +14,7 @@ namespace Indecisive
 		LIBRARY_API OBJLoader() {};
 		~OBJLoader() {};
 		LIBRARY_API void Load(const std::string& filename, bool invertTexCoords = true);
-		LIBRARY_API MeshComponent* ConstructFromMesh(const std::string& meshName);
+		LIBRARY_API MeshComponent* ConstructFromMesh(const std::string& meshName) const;
 
 	private:
 		std::map<std::string, std::vector<SubObject*>> _meshSubObjs;

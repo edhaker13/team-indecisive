@@ -9,6 +9,6 @@ namespace Indecisive
 		std::string _type;
 	public:
 		IComponent(std::string type) : _type(type) {};
-		std::string GetType() { return _type; }
+		const std::string& GetType() const { return _type; };
 	};
 }

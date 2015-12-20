@@ -32,12 +32,7 @@ namespace Indecisive
 		return ext.compare("lvl") == 0;
 	}
 
-	const std::string LevelLoader::GetInfo() const
-	{
-		return "Reads a game level .lvl";
-	}
-
-	Window* LevelLoader::GetWindow(const std::string& filename)
+	void LevelLoader::ReadWindow(const std::string& filename)
 	{
 		std::ifstream stream;
 		UINT width, height;
@@ -54,15 +49,24 @@ namespace Indecisive
 			std::wstring w_name(name.begin(), name.end());
 			_pWindow = new Window(width, height, w_name);
 			assert(_pWindow != nullptr);
-			return _pWindow;
 		}
-		return nullptr;
 	}
 
-	IGraphics* LevelLoader::GetGraphics()
+	IGraphics* LevelLoader::GetGraphics() const
 	{
 		assert(_pGraphics != nullptr);
 		return _pGraphics;
+	}
+
+	const std::string LevelLoader::GetInfo() const
+	{
+		return "Reads a game level .lvl";
+	}
+
+	Window* LevelLoader::GetWindow() const
+	{
+		assert(_pWindow != nullptr);
+		return _pWindow;
 	}
 
 	void LevelLoader::Read(const std::string& filename)

@@ -24,10 +24,10 @@ namespace Indecisive
 		virtual bool AddMesh(const std::string& name, const Mesh*) override;
 		virtual bool AddService(const std::string& name, const void*) override;
 		virtual bool AddTexture(const std::string&) override;
-		virtual Material* GetMaterial(const std::string&) override;
-		virtual Mesh* GetMesh(const std::string&) override;
-		virtual void* GetService(const std::string&) override;
-		virtual Texture* GetTexture(const std::string&) override;
+		virtual Material* GetMaterial(const std::string&) const override;
+		virtual Mesh* GetMesh(const std::string&) const override;
+		virtual void* GetService(const std::string&) const override;
+		virtual Texture* GetTexture(const std::string&) const override;
 	};
 
 	template <class T>

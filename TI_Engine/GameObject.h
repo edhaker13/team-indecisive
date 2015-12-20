@@ -9,12 +9,12 @@ namespace Indecisive
 	class GameObject : public IGameObject
 	{
 	private:
-		std::list<IDrawable*> _drawableComponents;
+		std::list<const IDrawable*> _drawableComponents;
 		std::list<IUpdatable*> _updatableComponents;
 		Matrix _world;
 
 	public:
-		virtual void AddDrawable(IDrawable* pComponent)
+		virtual void AddDrawable(const IDrawable* pComponent) override
 		{
 			if (pComponent != nullptr)
 			{
@@ -22,7 +22,7 @@ namespace Indecisive
 			}
 		}
 
-		virtual void AddUpdatable(IUpdatable* pComponent)
+		virtual void AddUpdatable(IUpdatable* pComponent) override
 		{
 			if (pComponent != nullptr)
 			{
@@ -30,23 +30,23 @@ namespace Indecisive
 			}
 		}
 
-		virtual void Draw() override
+		virtual void Draw() const override
 		{
-			for (IDrawable* pComponent : _drawableComponents)
+			for (const auto* p : _drawableComponents)
 			{
-				pComponent->Draw();
+				p->Draw();
 			}
 		}
 
 		virtual void Update(float elapsedTime) override
 		{
-			for (IUpdatable* pComponent : _updatableComponents)
+			for (auto* p : _updatableComponents)
 			{
-				pComponent->Update(elapsedTime);
-				_world = pComponent->GetWorld() * _world;
+				p->Update(elapsedTime);
+				_world = p->GetWorld() * _world;
 			}
 		}
 
-		virtual Matrix GetWorld() override { return _world; }
+		virtual const Matrix& GetWorld() const override { return _world; }
 	};
 };

@@ -36,22 +36,22 @@ namespace Indecisive
 		return false;
 	}
 
-	Material* ResourceManager::GetMaterial(const std::string& name)
+	Material* ResourceManager::GetMaterial(const std::string& name) const
 	{
 		return MapGet<Material>(_materials, name);
 	}
 
-	Mesh* ResourceManager::GetMesh(const std::string& name)
+	Mesh* ResourceManager::GetMesh(const std::string& name) const
 	{
 		return MapGet<Mesh>(_meshes, name);
 	}
 
-	void* ResourceManager::GetService(const std::string& name)
+	void* ResourceManager::GetService(const std::string& name) const
 	{
 		return MapGet<void>(_services, name);
 	};
 
-	Texture* ResourceManager::GetTexture(const std::string& name)
+	Texture* ResourceManager::GetTexture(const std::string& name) const
 	{
 		return MapGet<Texture>(_textures, name);
 	}

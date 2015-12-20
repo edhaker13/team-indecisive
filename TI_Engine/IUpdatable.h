@@ -7,6 +7,6 @@ namespace Indecisive
 	{
 	public:
 		virtual void Update(float elapsedTime) = 0;
-		virtual Matrix GetWorld() = 0;
+		virtual const Matrix& GetWorld() const = 0;
 	};
 };
