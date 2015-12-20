@@ -41,7 +41,8 @@ namespace Indecisive
 		XMStoreFloat4x4(&_world, XMMatrixIdentity());
 
 		_pCamera = static_cast<CameraNode*>(ServiceLocatorInstance()->Get("camera"));
-		if (_pCamera == nullptr)
+		_pRoot = static_cast<TreeNode*>(ServiceLocatorInstance()->Get("root"));
+		if (_pCamera == nullptr || _pRoot == nullptr)
 		{
 			// TODO: Error Handling
 			return false;
@@ -487,8 +488,8 @@ namespace Indecisive
 		// Animate the cube
 		//XMStoreFloat4x4(&_world, XMMatrixRotationZ(t));
 
-		_pCamera->Update(t);
-		UpdateConstantBuffer(*_pCamera);
+		_pRoot->Update(t);
+		UpdateConstantBuffer(*_pRoot);
 	}
 
 	void GraphicsDirectX::Draw()
@@ -506,8 +507,8 @@ namespace Indecisive
 		_pImmediateContext->PSSetConstantBuffers(0, 1, &_pConstantBuffer);
 		_pImmediateContext->VSSetConstantBuffers(0, 1, &_pConstantBuffer);
 
-		// Draws the scene graph starting from the camera
-		_pCamera->Draw();
+		// Draws the scene graph starting from the root
+		_pRoot->Draw();
 
 		// Present our back buffer to our front buffer
 		_pSwapChain->Present(0, 0);

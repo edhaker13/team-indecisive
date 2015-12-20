@@ -94,6 +94,7 @@ namespace Indecisive
 		ID3D11RasterizerState* CCWcullMode;
 		ID3D11RasterizerState* CWcullMode;
 
+		TreeNode* _pRoot = nullptr;
 		CameraNode* _pCamera = nullptr;
 	};
 };

@@ -33,9 +33,9 @@ namespace Indecisive
 		HWND _hWnd = nullptr;
 		UINT _windowWidth = 720;
 		UINT _windowHeight = 540;
-		LPWSTR _windowName = L"Team Indecisve";
+		std::wstring _windowName = L"Team Indecisve";
 	public:
-		Window(UINT width, UINT height, LPWSTR name) : _windowWidth(width), _windowHeight(height), _windowName(name) {};
+		Window(UINT width, UINT height, const std::wstring& name) : _windowWidth(width), _windowHeight(height), _windowName(name) {};
 		bool Initialise(HINSTANCE hInstance, int nCmdShow)
 		{
 			// Register class
@@ -50,7 +50,7 @@ namespace Indecisive
 			wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
 			wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 			wcex.lpszMenuName = nullptr;
-			wcex.lpszClassName = _windowName;
+			wcex.lpszClassName = _windowName.c_str();
 			wcex.hIconSm = LoadIcon(wcex.hInstance, (LPCTSTR)IDC_TUTORIAL1);
 			if (!RegisterClassEx(&wcex))
 			{
@@ -61,7 +61,7 @@ namespace Indecisive
 			// Create window
 			RECT rc = { 0, 0, _windowWidth, _windowHeight };
 			AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
-			_hWnd = CreateWindow(_windowName, _windowName, WS_OVERLAPPEDWINDOW,
+			_hWnd = CreateWindow(_windowName.c_str(), _windowName.c_str(), WS_OVERLAPPEDWINDOW,
 				CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance, nullptr);
 			if (!_hWnd)
 			{
