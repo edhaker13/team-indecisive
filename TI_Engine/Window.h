@@ -33,10 +33,11 @@ namespace Indecisive
 		HWND _hWnd = nullptr;
 		UINT _windowWidth = 720;
 		UINT _windowHeight = 540;
-		std::wstring _windowName = L"Team Indecisve";
+		const std::wstring _windowName = L"Team Indecisve";
 	public:
-		Window(UINT width, UINT height, const std::wstring& name) : _windowWidth(width), _windowHeight(height), _windowName(name) {};
-		bool Initialise(HINSTANCE hInstance, int nCmdShow)
+		Window(UINT width, UINT height, const std::wstring& name) :
+			_windowWidth(width), _windowHeight(height), _windowName(name) {};
+		void Initialise(HINSTANCE hInstance, int nCmdShow)
 		{
 			// Register class
 			WNDCLASSEX wcex;
@@ -55,7 +56,7 @@ namespace Indecisive
 			if (!RegisterClassEx(&wcex))
 			{
 				// TODO: Error Handling
-				return false;
+				throw GetLastError();
 			}
 
 			// Create window
@@ -66,20 +67,18 @@ namespace Indecisive
 			if (!_hWnd)
 			{
 				// TODO: Error Handling
-				return false;
+				throw GetLastError();
 			}
 
 			if (ShowWindow(_hWnd, nCmdShow) < 0)
 			{
 				// TODO: Error Handling
-				return false;
+				throw GetLastError();
 			}
-			return true;
-
 		};
 
-		const HWND GetHWND() { return _hWnd; }
-		const UINT GetWidth() { return _windowWidth; }
-		const UINT GetHeight() { return _windowHeight; }
+		HWND GetHWND() const { return _hWnd; }
+		UINT GetWidth() const { return _windowWidth; }
+		UINT GetHeight() const { return _windowHeight; }
 	};
 }

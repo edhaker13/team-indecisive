@@ -14,6 +14,7 @@ namespace Indecisive
 
 	bool GraphicsDirectX::CreateTextureFromFile(const wchar_t* file, Texture** ppTexture)
 	{
+		assert(file != nullptr);
 		if (FAILED(CreateDDSTextureFromFile(_pd3dDevice, file, nullptr, (ID3D11ShaderResourceView**)ppTexture)))
 		{
 			// TODO: Error Handling
@@ -34,7 +35,7 @@ namespace Indecisive
 		{
 			Cleanup();
 			// TODO: Error Handling
-			return false;
+			throw GetLastError();
 		}
 
 		// Initialize the world matrix
@@ -45,7 +46,8 @@ namespace Indecisive
 		if (_pCamera == nullptr || _pRoot == nullptr)
 		{
 			// TODO: Error Handling
-			return false;
+			Cleanup();
+			throw std::invalid_argument("Tree Root and Camera should be initialised");
 		}
 
 		// Initialize the view matrix
@@ -379,7 +381,7 @@ namespace Indecisive
 		depthStencilDesc.MiscFlags = 0;
 
 		hr = _pd3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, &_depthStencilBuffer);
-		
+
 		if (FAILED(hr))
 		{
 			// TODO: Error Handling
@@ -452,16 +454,21 @@ namespace Indecisive
 
 	void GraphicsDirectX::Cleanup()
 	{
-		if (_pImmediateContext) _pImmediateContext->ClearState();
+		if (_pd3dDevice) _pd3dDevice->Release();
+		if (_pCCWcullMode) _pCCWcullMode->Release();
 		if (_pConstantBuffer) _pConstantBuffer->Release();
-		if (_pVertexLayout) _pVertexLayout->Release();
-		if (_pVertexShader) _pVertexShader->Release();
+		if (_p
+		if (_pImmediateContext) _pImmediateContext->ClearState();
 		if (_pPixelShader) _pPixelShader->Release();
 		if (_pRenderTargetView) _pRenderTargetView->Release();
 		if (_pSwapChain) _pSwapChain->Release();
 		if (_pImmediateContext) _pImmediateContext->Release();
-		if (_pd3dDevice) _pd3dDevice->Release();
+		if (_pDepthStencilBuffer) _pDepthStencilBuffer->Release();
 		if (_pSamplerLinear) _pSamplerLinear->Release();
+		if (_pVertexLayout) _pVertexLayout->Release();
+		if (_pVertexShader) _pVertexShader->Release();
+		if (_pRoot) { delete _pRoot; _pRoot = nullptr; }
+		if (_pCamera) _pCamera = nullptr;
 	}
 
 	void GraphicsDirectX::Update()

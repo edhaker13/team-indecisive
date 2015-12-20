@@ -41,12 +41,13 @@ namespace Indecisive
 	{
 		LevelLoader lvlLoader;
 		static const std::string level = "dummy.lvl";
-		if (!lvlLoader.GetWindow(level)->Initialise(hInstance, nCmdShow))
+
+		if (!lvlLoader.CanRead(level))
 		{
-			// TODO: Error Handling
-			throw EXCEPTION_EXECUTE_FAULT;
+			throw std::invalid_argument("Can't read level file:" + level);
 		}
 
+		lvlLoader.GetWindow(level)->Initialise(hInstance, nCmdShow);
 		lvlLoader.Read(level);
 
 		_pGraphics = lvlLoader.GetGraphics();

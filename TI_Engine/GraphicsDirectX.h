@@ -55,46 +55,44 @@ namespace Indecisive
 		GraphicsDirectX(GraphicsDirectX const&) = delete;
 		void operator=(GraphicsDirectX const&) = delete;
 
-		HWND                    _hWnd = nullptr;
-		D3D_DRIVER_TYPE         _driverType = D3D_DRIVER_TYPE_NULL;
-		D3D_FEATURE_LEVEL       _featureLevel = D3D_FEATURE_LEVEL_11_0;
-		ID3D11Device*           _pd3dDevice = nullptr;
-		ID3D11DeviceContext*    _pImmediateContext = nullptr;
-		IDXGISwapChain*         _pSwapChain = nullptr;
-		ID3D11RenderTargetView* _pRenderTargetView = nullptr;
-		ID3D11VertexShader*     _pVertexShader = nullptr;
-		ID3D11PixelShader*      _pPixelShader = nullptr;
-		ID3D11InputLayout*      _pVertexLayout = nullptr;
-		ID3D11Buffer*           _pConstantBuffer = nullptr;
-		XMFLOAT4X4              _world;
-		XMFLOAT4X4              _view;
-		XMFLOAT4X4              _projection;
+		HWND                     _hWnd = nullptr;
+		D3D_DRIVER_TYPE          _driverType = D3D_DRIVER_TYPE_NULL;
+		D3D_FEATURE_LEVEL        _featureLevel = D3D_FEATURE_LEVEL_11_0;
+		ID3D11Device*            _pd3dDevice = nullptr;
+		ID3D11RasterizerState*   _pCCWcullMode = nullptr;
+		ID3D11Buffer*            _pConstantBuffer = nullptr;
+		ID3D11RasterizerState*   _pCWcullMode = nullptr;
+		ID3D11Texture2D*         _pDepthStencilBuffer = nullptr;
+		ID3D11DepthStencilView*  _pDepthStencilView = nullptr;
+		ID3D11DepthStencilState* _pDSLessEqual = nullptr;
+		ID3D11DeviceContext*     _pImmediateContext = nullptr;
+		ID3D11PixelShader*       _pPixelShader = nullptr;
+		ID3D11RenderTargetView*  _pRenderTargetView = nullptr;
+		ID3D11RasterizerState*   _pRSCullNone = nullptr;
+		ID3D11SamplerState*      _pSamplerLinear = nullptr;
+		IDXGISwapChain*          _pSwapChain = nullptr;
+		ID3D11VertexShader*      _pVertexShader = nullptr;
+		ID3D11InputLayout*       _pVertexLayout = nullptr;
 
+		// Constants in Constant Buffer. Well they don't change much
+
+		XMFLOAT4X4 _world;
+		XMFLOAT4X4 _view;
+		XMFLOAT4X4 _projection;
 		XMFLOAT3 lightDir;
 		XMFLOAT4 ambient;
 		XMFLOAT4 diffuse;
 
-		ID3D11DepthStencilView* _depthStencilView = nullptr;
-		ID3D11Texture2D* _depthStencilBuffer = nullptr;
+		UINT _windowHeight;
+		UINT _windowWidth;
 
-		ID3D11SamplerState* _pSamplerLinear = nullptr;
+		TreeNode* _pRoot = nullptr;
+		CameraNode* _pCamera = nullptr;
 
 		HRESULT InitDevice();
 		void Cleanup();
 		HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
 		HRESULT InitShadersAndInputLayout();
 		void UpdateConstantBuffer(const TreeNode&);
-
-		UINT _windowHeight;
-		UINT _windowWidth;
-
-		ID3D11DepthStencilState* DSLessEqual;
-		ID3D11RasterizerState* RSCullNone;
-
-		ID3D11RasterizerState* CCWcullMode;
-		ID3D11RasterizerState* CWcullMode;
-
-		TreeNode* _pRoot = nullptr;
-		CameraNode* _pCamera = nullptr;
 	};
 };
