@@ -457,14 +457,16 @@ namespace Indecisive
 		if (_pd3dDevice) _pd3dDevice->Release();
 		if (_pCCWcullMode) _pCCWcullMode->Release();
 		if (_pConstantBuffer) _pConstantBuffer->Release();
-		if (_p
+		if (_pCWcullMode) _pCWcullMode->Release();
+		if (_pDepthStencilBuffer) _pDepthStencilBuffer->Release();
+		if (_pDepthStencilView) _pDepthStencilView->Release();
+		if (_pDSLessEqual) _pDSLessEqual->Release();
 		if (_pImmediateContext) _pImmediateContext->ClearState();
 		if (_pPixelShader) _pPixelShader->Release();
 		if (_pRenderTargetView) _pRenderTargetView->Release();
-		if (_pSwapChain) _pSwapChain->Release();
-		if (_pImmediateContext) _pImmediateContext->Release();
-		if (_pDepthStencilBuffer) _pDepthStencilBuffer->Release();
+		if (_pRSCullNone) _pRSCullNone->Release();
 		if (_pSamplerLinear) _pSamplerLinear->Release();
+		if (_pSwapChain) _pSwapChain->Release();
 		if (_pVertexLayout) _pVertexLayout->Release();
 		if (_pVertexShader) _pVertexShader->Release();
 		if (_pRoot) { delete _pRoot; _pRoot = nullptr; }

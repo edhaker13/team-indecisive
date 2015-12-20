@@ -55,9 +55,12 @@ namespace Indecisive
 		GraphicsDirectX(GraphicsDirectX const&) = delete;
 		void operator=(GraphicsDirectX const&) = delete;
 
-		HWND                     _hWnd = nullptr;
 		D3D_DRIVER_TYPE          _driverType = D3D_DRIVER_TYPE_NULL;
 		D3D_FEATURE_LEVEL        _featureLevel = D3D_FEATURE_LEVEL_11_0;
+
+		// DirectX API pointers
+
+		HWND                     _hWnd = nullptr;
 		ID3D11Device*            _pd3dDevice = nullptr;
 		ID3D11RasterizerState*   _pCCWcullMode = nullptr;
 		ID3D11Buffer*            _pConstantBuffer = nullptr;
@@ -71,8 +74,13 @@ namespace Indecisive
 		ID3D11RasterizerState*   _pRSCullNone = nullptr;
 		ID3D11SamplerState*      _pSamplerLinear = nullptr;
 		IDXGISwapChain*          _pSwapChain = nullptr;
-		ID3D11VertexShader*      _pVertexShader = nullptr;
 		ID3D11InputLayout*       _pVertexLayout = nullptr;
+		ID3D11VertexShader*      _pVertexShader = nullptr;
+
+		// Scene graph pointers
+
+		TreeNode* _pRoot = nullptr;
+		CameraNode* _pCamera = nullptr;
 
 		// Constants in Constant Buffer. Well they don't change much
 
@@ -86,8 +94,6 @@ namespace Indecisive
 		UINT _windowHeight;
 		UINT _windowWidth;
 
-		TreeNode* _pRoot = nullptr;
-		CameraNode* _pCamera = nullptr;
 
 		HRESULT InitDevice();
 		void Cleanup();
