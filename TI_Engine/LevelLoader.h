@@ -9,18 +9,14 @@ namespace Indecisive
 	class LevelLoader : public IReadable
 	{
 	private:
-		std::ifstream _stream;
-		std::string _currentFilename;
 		Window* _pWindow = nullptr;
 		IGraphics* _pGraphics = nullptr;
-		void _Open(const std::string&);
-		void _Close();
-		static const std::string _PATH;
 	protected:
-		void InternalRead(const std::string&) override;
+		LIBRARY_API void _Open(const std::string&, std::ifstream&) override;
 	public:
+		~LevelLoader() {};
+		LIBRARY_API void Read(const std::string&) override;
 		LIBRARY_API LevelLoader() {};
-		LIBRARY_API ~LevelLoader() {};
 		LIBRARY_API IGraphics* GetGraphics();
 		LIBRARY_API Window* GetWindow(const std::string&);
 		LIBRARY_API bool CanRead(const std::string&) const override;

@@ -7,52 +7,53 @@
 
 namespace Indecisive
 {
-	const std::string LevelLoader::_PATH = ".\\Levels\\";
+	const std::string LevelLoader::_PATH = ".\\/Levels\\/";
 
-	void LevelLoader::_Open(const std::string& filename)
+	void LevelLoader::_Open(const std::string& filename, std::ifstream& stream)
 	{
-		if (_stream.is_open() && _currentFilename != filename)
+		assert(!filename.empty());
+		if (!stream.is_open())
 		{
-			_stream.close();
+			stream.open(_PATH + filename);
+			stream.exceptions(std::ifstream::failbit);
 		}
-		if (!_stream.is_open())
-		{
-			_currentFilename = filename;
-			_stream.open(_PATH + filename);
-			_stream.exceptions(std::ifstream::failbit);
-		}
-	}
-
-	void LevelLoader::_Close()
-	{
-		_stream.close();
-		_currentFilename.clear();
 	}
 
 	bool LevelLoader::CanRead(const std::string& filename) const
 	{
-		return ExtensionCheck(filename, "lvl");
+		assert(!filename.empty());
+		std::string::size_type pos = filename.find_last_of('.');
+
+		// No file extension - can't read
+		if (pos == std::string::npos)
+			return false;
+		std::string ext = filename.substr(pos + 1);
+
+		return ext.compare("lvl") == 0;
 	}
 
 	const std::string LevelLoader::GetInfo() const
 	{
-		return "Reads a game level.txt";
+		return "Reads a game level .lvl";
 	}
 
 	Window* LevelLoader::GetWindow(const std::string& filename)
 	{
-		_Open(filename);
+		std::ifstream stream;
 		UINT width, height;
 		std::string name;
-		_stream >> name;
+
+		_Open(filename, stream);
+		stream >> name;
 		if (name.compare("window") == 0)
 		{
 			name.clear();
-			_stream >> width;
-			_stream >> height;
-			_stream.get(); std::getline(_stream, name);
+			stream >> width;
+			stream >> height;
+			stream.get(); std::getline(stream, name);
 			std::wstring w_name(name.begin(), name.end());
 			_pWindow = new Window(width, height, w_name);
+			assert(_pWindow != nullptr);
 			return _pWindow;
 		}
 		return nullptr;
@@ -60,19 +61,19 @@ namespace Indecisive
 
 	IGraphics* LevelLoader::GetGraphics()
 	{
+		assert(_pGraphics != nullptr);
 		return _pGraphics;
 	}
 
-	void LevelLoader::InternalRead(const std::string& filename)
+	void LevelLoader::Read(const std::string& filename)
 	{
 		if (_pWindow == nullptr)
 		{
 			// TODO: Error Handling.
-			// Window needs to be created and initialised before hand.
-			return;
+			throw std::runtime_error("Window needs to be initialised before Read()");
 		}
-
-		_Open(filename);
+		std::ifstream stream;
+		_Open(filename, stream);
 		bool initialised = false;
 		std::string input = "";
 		TreeNode* parent = new TreeNode("root");
@@ -80,13 +81,14 @@ namespace Indecisive
 		Vector3 v, v1, v2;
 		ServiceLocatorInstance()->Add("root", parent);
 
-		while (!_stream.eof())
+		while (!stream.eof())
 		{
-			_stream >> input;
+			assert(parent != nullptr);
+			stream >> input;
 
 			if (input.compare("graphics") == 0)
 			{
-				_stream >> input;
+				stream >> input;
 				if (input.compare("directx") == 0)
 				{
 					_pGraphics = new GraphicsDirectX();
@@ -96,11 +98,12 @@ namespace Indecisive
 			else if (input.compare("camera") == 0)
 			{
 				float nearZ, farZ;
-				_stream >> input;
-				_stream >> v;
-				_stream >> v1;
-				_stream >> v2;
-				_stream >> nearZ; _stream >> farZ;
+				stream >> input;
+				stream >> v;
+				stream >> v1;
+				stream >> v2;
+				stream >> nearZ;
+				stream >> farZ;
 				// Initialize the camera node
 				last = new CameraNode(input, v, v1, v2, nearZ, farZ);
 				// Camera needs to be used in graphics initialise, so add to locator
@@ -110,7 +113,6 @@ namespace Indecisive
 				if (!initialised)
 				{
 					initialised = _pGraphics->Initialise(_pWindow);
-					// TODO: Error Handling
 				}
 			}
 			else if (input.compare("children") == 0)
@@ -120,8 +122,8 @@ namespace Indecisive
 			}
 			else if (input.compare("position") == 0)
 			{
-				_stream >> input;
-				_stream >> v;
+				stream >> input;
+				stream >> v;
 				// Initialise translation node
 				last = new PositionNode(input, v);
 				parent->Append(last);
@@ -129,19 +131,25 @@ namespace Indecisive
 			else if (input.compare("object") == 0)
 			{
 				std::string obj;
-				_stream >> input;
-				_stream >> obj;
+				stream >> input;
+				stream >> obj;
 				// Initialise game objects (OBJLoader makes uses of graphics so it needs to be done after it)
 				last = new ObjectNode(input, *ComponentFactory::MakeObjectFromObj(obj));
 				parent->Append(last);
 			}
-			else if (input.compare("end") == 0 && parent->parent != nullptr)
+			else if (input.compare("end") == 0)
 			{
-				parent = parent->parent;
+				if (parent->parent != nullptr)
+				{
+					parent = parent->parent;
+				}
+				else
+				{
+					stream.exceptions(std::ifstream::badbit);
+				}
 			}
 		}
 
-		_Close();
-		return;
+		stream.close();
 	}
 };
