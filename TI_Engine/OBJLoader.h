@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include "MeshComponent.h"
+#include "Logger.h"
 #include "Structures.h"
 
 namespace Indecisive

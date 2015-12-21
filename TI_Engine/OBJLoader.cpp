@@ -59,7 +59,7 @@ namespace Indecisive
 		auto mesh = ResourceManagerInstance()->GetMesh(meshName);
 		if (mesh == nullptr)
 		{	
-			// TODO: Error Handling
+			TI_LOG_E("ResourceManager couldn't find a mesh named: " << meshName);
 			return nullptr;
 		}
 		auto m = new MeshComponent(*mesh);
@@ -129,7 +129,7 @@ namespace Indecisive
 
 			if (!inFile.good())
 			{
-				// TODO: Error Handling
+				TI_LOG_E("Couldn't open obj file: " << filename);
 				return;
 			}
 			else
@@ -371,13 +371,11 @@ namespace Indecisive
 
 		if (!inFile.good())
 		{
-			// TODO: Error Handling
+			TI_LOG_E("Couldn't open mtl file: " << filename);
 			return;
 		}
 		else
 		{
-			// TODO: Error Handling
-
 			std::string input = "";
 			std::string currentMatName = "";
 			Material* currentMat = nullptr;
@@ -397,7 +395,7 @@ namespace Indecisive
 						}
 						else
 						{
-							// TODO: Error Handling
+							TI_LOG_E("Couldn't add material: " << currentMatName << " ptr: " << currentMat);
 						}
 					}
 					inFile >> currentMatName;
@@ -468,7 +466,7 @@ namespace Indecisive
 					}
 					else
 					{
-						// TODO: Error Handling
+						TI_LOG_E("Couldn't add ambient texture: " << filename);
 					}
 				}
 				else if (input.compare("map_Kd") == 0)
@@ -481,7 +479,7 @@ namespace Indecisive
 					}
 					else
 					{
-						// TODO: Error Handling
+						TI_LOG_E("Couldn't add diffuse texture: " << filename);
 					}
 				}
 				else if (input.compare("map_Ks") == 0)
@@ -494,7 +492,7 @@ namespace Indecisive
 					}
 					else
 					{
-						// TODO: Error Handling
+						TI_LOG_E("Couldn't add specular texture: " << filename);
 					}
 				}
 			}

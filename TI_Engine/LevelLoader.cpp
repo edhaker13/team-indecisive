@@ -73,7 +73,7 @@ namespace Indecisive
 	{
 		if (_pWindow == nullptr)
 		{
-			// TODO: Error Handling.
+			TI_LOG_E("Window was not assigned before reading a level file.");
 			throw std::runtime_error("Window needs to be initialised before Read()");
 		}
 		std::ifstream stream;

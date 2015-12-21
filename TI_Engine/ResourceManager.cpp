@@ -1,5 +1,6 @@
 #include "ResourceManager.h"
 #include "IGraphics.h"
+#include "Logger.h"
 
 namespace Indecisive
 {
@@ -27,7 +28,12 @@ namespace Indecisive
 			Texture* pTexture = nullptr;
 			auto pGraphics = static_cast<IGraphics*>(GetService("graphics"));
 			const std::wstring file = L".\\/Assets\\/" + std::wstring(name.cbegin(), name.cend());
-			if (pGraphics == nullptr || !pGraphics->CreateTextureFromFile(file.c_str(), &pTexture))
+			if (pGraphics == nullptr)
+			{
+				TI_LOG_E("Couldn't find graphics interface");
+				throw std::bad_alloc();
+			}
+			if (!pGraphics->CreateTextureFromFile(file.c_str(), &pTexture))
 			{
 				return false;
 			}

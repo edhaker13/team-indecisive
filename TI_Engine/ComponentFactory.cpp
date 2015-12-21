@@ -20,18 +20,19 @@ namespace Indecisive
 			0, 1, 2,
 			2, 1, 3,
 		};
-		// Create structures to be used
-		auto pMesh = new Mesh();
-		auto pSubObject = new SubObject();
-		auto pGameObject = new GameObject();
-		auto pMeshComponent = new MeshComponent(*pMesh);
 		// Load graphics from locator
 		auto pGraphics = static_cast<IGraphics*>(ResourceManagerInstance()->GetService("graphics"));
 
 		if (pGraphics == nullptr)
 		{
-			// TODO: Error Handling
+			TI_LOG_E("Couldn't find a graphics interface.");
+			throw std::bad_alloc();
 		}
+		// Create structures to be used
+		auto pMesh = new Mesh();
+		auto pSubObject = new SubObject();
+		auto pGameObject = new GameObject();
+		auto pMeshComponent = new MeshComponent(*pMesh);
 
 		pMesh->vertexBuffer = pGraphics->InitVertexBuffer(vertices, 4);
 		pSubObject->vertexEnd = 4;
@@ -49,7 +50,7 @@ namespace Indecisive
 		}
 		else
 		{
-			// TODO: Error Handling
+			TI_LOG_W("No default texture loaded.");
 		}
 		pSubObject->ambientTexture = none;
 		pSubObject->diffuseTexture = none;
@@ -64,7 +65,7 @@ namespace Indecisive
 		// Load default `none` texture
 		if (!ResourceManagerInstance()->AddTexture("WhiteTex.dds"))
 		{
-			// TODO: Error Handling
+			TI_LOG_W("No default texture loaded.");
 		}
 		auto ObjLoader = OBJLoader();
 		ObjLoader.Load(filename);
@@ -75,7 +76,7 @@ namespace Indecisive
 			pGameObject->AddDrawable(pMeshComponent);
 			return pGameObject;
 		}
-		// TODO: Error Handling
+		TI_LOG_E("OBJLoader didn't return any mesh from : " + filename);
 		return nullptr;
 	}
 }

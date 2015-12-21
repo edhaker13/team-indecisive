@@ -1,6 +1,8 @@
+#pragma once
 #include <string>
 #include "LibraryAPI.h"
 #include "IGameObject.h"
+#include "Logger.h"
 
 namespace Indecisive
 {

@@ -1,6 +1,7 @@
 #pragma once
 #include <windows.h>
 #include "resource.h"
+#include "Logger.h"
 
 namespace Indecisive
 {
@@ -55,8 +56,9 @@ namespace Indecisive
 			wcex.hIconSm = LoadIcon(wcex.hInstance, (LPCTSTR)IDC_TUTORIAL1);
 			if (!RegisterClassEx(&wcex))
 			{
-				// TODO: Error Handling
-				throw GetLastError();
+				auto winApiError = GetLastError();
+				TI_LOG_E("Failed to register window class. WINAPI ERROR: " << winApiError);
+				throw winApiError;
 			}
 
 			// Create window
@@ -66,14 +68,16 @@ namespace Indecisive
 				CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance, nullptr);
 			if (!_hWnd)
 			{
-				// TODO: Error Handling
-				throw GetLastError();
+				auto winApiError = GetLastError();
+				TI_LOG_E("Failed to create window. WINAPI ERROR: " << winApiError);
+				throw winApiError;
 			}
 
 			if (ShowWindow(_hWnd, nCmdShow) < 0)
 			{
-				// TODO: Error Handling
-				throw GetLastError();
+				auto winApiError = GetLastError();
+				TI_LOG_E("Failed to show window. WINAPI ERROR: " << winApiError);
+				throw winApiError;
 			}
 		};
 

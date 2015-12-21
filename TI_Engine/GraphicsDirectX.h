@@ -6,6 +6,7 @@
 #include <directxcolors.h>
 #include "resource.h"
 #include "IGraphics.h"
+#include "Logger.h"
 #include "Structures.h"
 
 namespace Indecisive

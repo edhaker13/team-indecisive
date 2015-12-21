@@ -15,9 +15,10 @@ namespace Indecisive
 	bool GraphicsDirectX::CreateTextureFromFile(const wchar_t* file, Texture** ppTexture) const
 	{
 		assert(file != nullptr);
-		if (FAILED(CreateDDSTextureFromFile(_pd3dDevice, file, nullptr, (ID3D11ShaderResourceView**)ppTexture)))
+		auto hr = CreateDDSTextureFromFile(_pd3dDevice, file, nullptr, (ID3D11ShaderResourceView**)ppTexture);
+		if (FAILED(hr))
 		{
-			// TODO: Error Handling
+			TI_LOG_E("Failed to create texture from file: " << file << ". WINAPI ERROR#" << hr);
 			if (ppTexture != nullptr) delete *ppTexture;
 			ppTexture = nullptr;
 			return false;
@@ -45,9 +46,9 @@ namespace Indecisive
 		_pRoot = static_cast<TreeNode*>(ResourceManagerInstance()->GetService("root"));
 		if (_pCamera == nullptr || _pRoot == nullptr)
 		{
-			// TODO: Error Handling
+			TI_LOG_F("No camera or root node found.");
 			Cleanup();
-			throw std::invalid_argument("Tree Root and Camera should be initialised");
+			throw std::invalid_argument("Tree Root and Camera should be initialised before this.");
 		}
 
 		// Initialize the view matrix
@@ -72,7 +73,8 @@ namespace Indecisive
 		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 		_pd3dDevice->CreateSamplerState(&sampDesc, &_pSamplerLinear);
-
+		
+		TI_LOG_V("Initialised DirectX Graphics");
 		return true;
 	}
 
@@ -86,9 +88,7 @@ namespace Indecisive
 
 		if (FAILED(hr))
 		{
-			// TODO: Error Handling
-			MessageBox(nullptr,
-				L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
+			TI_LOG_E("Failed to compile vertex shader.  Make sure the file is in the same directory as the executable WINAPI ERROR#" << hr);
 			return hr;
 		}
 
@@ -97,7 +97,7 @@ namespace Indecisive
 
 		if (FAILED(hr))
 		{
-			// TODO: Error Handling
+			TI_LOG_E("Failed to create vertex shader. WINAPI ERROR#" << hr);
 			pVSBlob->Release();
 			return hr;
 		}
@@ -108,9 +108,7 @@ namespace Indecisive
 
 		if (FAILED(hr))
 		{
-			// TODO: Error Handling
-			MessageBox(nullptr,
-				L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK);
+			TI_LOG_E("Failed to compile pixel shader.  Make sure the file is in the same directory as the executable. WINAPI ERROR#" << hr);
 			return hr;
 		}
 
@@ -120,7 +118,7 @@ namespace Indecisive
 
 		if (FAILED(hr))
 		{
-			// TODO: Error Handling
+			TI_LOG_E("Failed to create pixel shader. WINAPI ERROR#" << hr);
 			return hr;
 		}
 
@@ -141,7 +139,7 @@ namespace Indecisive
 
 		if (FAILED(hr))
 		{
-			// TODO: Error Handling
+			TI_LOG_E("Failed to create input layout. WINAPI ERROR#" << hr);
 			return hr;
 		}
 
@@ -161,7 +159,7 @@ namespace Indecisive
 
 		if (FAILED(hr))
 		{
-			// TODO: Error Handling
+			TI_LOG_E("Failed to create sampler state. WINAPI ERROR#" << hr);
 			return hr;
 		}
 
@@ -189,7 +187,7 @@ namespace Indecisive
 
 		if (FAILED(hr))
 		{
-			// TODO: Error Handling
+			TI_LOG_E("Failed to create vertex buffer.");
 			return nullptr;
 		}
 
@@ -217,7 +215,7 @@ namespace Indecisive
 
 		if (FAILED(hr))
 		{
-			// TODO: Error Handling
+			TI_LOG_E("Failed to create index buffer. WINAPI ERROR#");
 			return nullptr;
 		}
 
@@ -247,7 +245,6 @@ namespace Indecisive
 				OutputDebugStringA((char*)pErrorBlob->GetBufferPointer());
 
 			if (pErrorBlob) pErrorBlob->Release();
-			// TODO: Error Handling
 			return hr;
 		}
 
