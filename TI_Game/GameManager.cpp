@@ -1,5 +1,6 @@
 #include "GameManager.h"
 #include "LevelLoader.h"
+#include "Logger.h"
 #include "Window.h"
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
@@ -8,7 +9,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
 	auto _gameMngr = Indecisive::GameManager(hInstance, nCmdShow);
-
 	// Main message loop
 	MSG msg = { 0 };
 
@@ -39,13 +39,21 @@ namespace Indecisive
 
 		if (!lvlLoader.CanRead(level))
 		{
-			throw std::invalid_argument("Can't read level file: " + level);
+			TI_LOG_F("Wrong file type for level file: " + level);
 		}
-		lvlLoader.ReadWindow(level);
-		lvlLoader.GetWindow()->Initialise(hInstance, nCmdShow);
-		lvlLoader.Read(level);
 
-		_pGraphics = lvlLoader.GetGraphics();
+		try
+		{
+			lvlLoader.ReadWindow(level);
+			lvlLoader.GetWindow()->Initialise(hInstance, nCmdShow);
+			lvlLoader.Read(level);
+			_pGraphics = lvlLoader.GetGraphics();
+		}
+		catch (const std::exception& ex)
+		{
+			TI_LOG_EXCEPTION("failed to read level.", ex);
+		}
+		TI_LOG_V("Loaded Level: " + level);
 	};
 
 	void GameManager::Draw() const
