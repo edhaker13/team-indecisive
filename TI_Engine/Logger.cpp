@@ -24,6 +24,8 @@ namespace Indecisive
 {
 	LogManager* LogManager::_pInstance = new LogManager;
 
+	LogManager* LogManagerInstance() { return LogManager::Instance(); };
+
 	std::ostream& operator<<(std::ostream& lhs, const LogLevel& rhs)
 	{
 		switch (rhs) {
@@ -37,6 +39,8 @@ namespace Indecisive
 		}
 		return lhs;
 	}
+
+	void LogEntry::WriteToLog() { LogManagerInstance()->Write(_level, _stream.str()); };
 
 	FileLogger::FileLogger(const std::string& filepath, bool append)
 		: _filepath(filepath), _append(append)
@@ -116,7 +120,7 @@ namespace Indecisive
 		std::lock_guard<std::mutex> lock(_mutex);
 		for (auto& logger : _loggers)
 		{
-			logger->Write(level, text); 
+			logger->Write(level, text);
 		}
 	}
 }

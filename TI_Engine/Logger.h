@@ -41,6 +41,27 @@ namespace Indecisive
 
 	extern std::ostream& operator<<(std::ostream &lhs, const LogLevel &rhs);
 
+	struct LogEntry {
+		LogEntry(const LogLevel& level, const std::string& function, const std::string& filename, const size_t line)
+			: _level(level), _hasContent(false)
+		{
+			_stream << function << " [L" << line << "] ";
+		};
+		~LogEntry() { if (_hasContent) WriteToLog(); };
+		template <typename T>
+		LogEntry& operator<<(const T& rhs)
+		{
+			_hasContent = true;
+			_stream << rhs;
+			return *this;
+		};
+		LIBRARY_API void WriteToLog();
+	private:
+		bool _hasContent = false;
+		LogLevel _level;
+		std::stringstream _stream;
+	};
+
 	class ILogger
 	{
 	private:
@@ -117,22 +138,13 @@ namespace Indecisive
 	// Freestanding functions
 
 	// The global manager for logging, used to manipulate the Logger stack. Provides thread safety amongst the Loggers.
-	LogManager* LogManagerInstance() { return LogManager::Instance(); };
+	LogManager* LogManagerInstance();
 
 	// Creates and returns a new logger of type LoggerT, adding it to the current Logger stack.
 	template<typename LoggerT, typename... Args>
 	std::shared_ptr<LoggerT> MakeLogger(Args&&... args)
 	{
 		return LogManagerInstance()->MakeLogger<LoggerT>(std::forward<Args>(args)...);
-	}
-
-	// Pieces together an entries information, returns a string.
-	template<typename T>
-	const std::string MakeEntry(const std::string& function, const std::string& filename, const size_t line, const T& stream)
-	{
-		std::stringstream ss;
-		ss << function << " [L" << line << "] " << stream;
-		return ss.str();
 	}
 
 	// Template method implementations
@@ -166,7 +178,7 @@ namespace Indecisive
 
 // Logging macros
 
-#define INDECISIVE_LOG_STREAM(level, stream) ::Indecisive::LogManagerInstance()->Write(level, ::Indecisive::MakeEntry(__FUNCTION__, __FILE__, __LINE__, stream))
+#define INDECISIVE_LOG_STREAM(level, stream) ::Indecisive::LogEntry(level, __FUNCTION__, __FILE__, __LINE__) << stream
 
 // TI_MIN_LOG_LEVEL is designed so that if you set it to 7 : nothing logs, 6 : only fatal, 5 : fatal + error, ..., 1 : everything
 
@@ -217,7 +229,5 @@ namespace Indecisive
 //! Debug macro to simplify logging an exception, which also prints the exception type
 #define TI_LOG_EXCEPTION(stream, ex)	\
 {										\
-	std::stringstream ss;				\
-	ss << stream << ", exception type: " << typeid(ex).name() << ", what: " << ex.what(); \
-	TI_LOG_E(ss.str());	\
+	TI_LOG_E(stream << ", exception type: " << typeid(ex).name() << ", what: " << ex.what());	\
 }
