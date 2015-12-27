@@ -73,6 +73,8 @@ namespace Indecisive
 		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 		_pd3dDevice->CreateSamplerState(&sampDesc, &_pSamplerLinear);
+
+		_pInput = new Input();
 		
 		TI_LOG_V("Initialised DirectX Graphics");
 		return true;
@@ -490,6 +492,28 @@ namespace Indecisive
 
 			t = (dwTimeCur - dwTimeStart) / 1000.0f;
 		}
+
+		if (_pInput->IsKeyDown('W'))
+		{
+			_pCamera->eye.z += 0.1f;
+		}
+		else if (_pInput->IsKeyDown('S'))
+		{
+			_pCamera->eye.z -= 0.1f;
+		}
+		else if (_pInput->IsKeyDown('A'))
+		{
+			_pCamera->eye.x += 0.1f;
+		}
+		else if (_pInput->IsKeyDown('D'))
+		{
+			_pCamera->eye.x -= 0.1f;
+		}
+
+		_pInput->Update();
+
+		// Initialize the view matrix
+		XMStoreFloat4x4(&_view, XMMatrixLookAtLH(_pCamera->eye, _pCamera->center, _pCamera->up));
 
 		_pRoot->Update(t);
 		UpdateConstantBuffer(*_pRoot);

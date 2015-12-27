@@ -84,6 +84,8 @@ namespace Indecisive
 		TreeNode* _pRoot = nullptr;
 		CameraNode* _pCamera = nullptr;
 
+		Input* _pInput = nullptr;
+
 		// Constants in Constant Buffer. Well they don't change much
 
 		XMFLOAT4X4 _world;
