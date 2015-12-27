@@ -92,6 +92,7 @@
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="DirectXMath.h" />
     <ClInclude Include="GraphicsDirectX.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="IReadable.h" />
     <ClInclude Include="IResourceManager.h" />
     <ClInclude Include="I_AI.h" />
@@ -119,6 +120,7 @@
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="DirectXMath.cpp" />
     <ClCompile Include="GraphicsDirectX.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="OBJLoader.cpp" />

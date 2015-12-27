@@ -491,9 +491,6 @@ namespace Indecisive
 			t = (dwTimeCur - dwTimeStart) / 1000.0f;
 		}
 
-		// Animate the cube
-		//XMStoreFloat4x4(&_world, XMMatrixRotationZ(t));
-
 		_pRoot->Update(t);
 		UpdateConstantBuffer(*_pRoot);
 	}

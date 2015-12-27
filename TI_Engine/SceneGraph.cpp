@@ -89,20 +89,20 @@ namespace Indecisive
 
 	void ClampedPositionNode::Update(float elapsedTime)
 	{
-		if (position.z < lowerBounds.z && position.z > upperBounds.z)
-		{
-			position.z = midPoints.z;
-		}
+		//if (position.z < lowerBounds.z && position.z > upperBounds.z)
+		//{
+		//	position.z = midPoints.z;
+		//}
 		world = Matrix::CreateTranslation(position);
 		TreeNode::Update(elapsedTime);
 	};
 
 	void CameraNode::Update(float elapsedTime)
 	{
-		if (center + distance != eye)
-		{
-			eye = center - distance;
-		}
+		//if (center + distance != eye)
+		//{
+		//	eye = center - distance;
+		//}
 		TreeNode::Update(elapsedTime);
 	};
 };

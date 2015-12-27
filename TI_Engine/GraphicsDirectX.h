@@ -8,6 +8,7 @@
 #include "IGraphics.h"
 #include "Logger.h"
 #include "Structures.h"
+#include "Input.h"
 
 namespace Indecisive
 {
