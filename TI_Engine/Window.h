@@ -28,7 +28,7 @@ namespace Indecisive
 		return 0;
 	};
 
-	class Window
+	LIBRARY_API class Window
 	{
 	private:
 		HWND _hWnd = nullptr;
@@ -69,8 +69,11 @@ namespace Indecisive
 			if (!_hWnd)
 			{
 				auto winApiError = GetLastError();
-				TI_LOG_E("Failed to create window. WINAPI ERROR: " << winApiError);
-				throw winApiError;
+				if (winApiError != 1410) // Class already registered
+				{
+					TI_LOG_E("Failed to create window. WINAPI ERROR: " << winApiError);
+					throw winApiError;
+				}
 			}
 
 			if (ShowWindow(_hWnd, nCmdShow) < 0)

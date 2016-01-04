@@ -39,6 +39,7 @@ namespace Indecisive
 		{};
 		LIBRARY_API virtual void Draw() const override;
 		LIBRARY_API virtual void Update(float) override;
+		LIBRARY_API IGameObject& Object() { return _object; };
 	};
 	/// <summary> Node with a rotation to apply to all child objects </summary>
 	struct RotationNode : public TreeNode

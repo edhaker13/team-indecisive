@@ -28,6 +28,19 @@ namespace Indecisive
 
 	bool GraphicsDirectX::Initialise(const Window* pWindow)
 	{
+		if (pWindow == nullptr)
+		{
+			if (FAILED(InitDevice()))
+			{
+				Cleanup();
+				// TODO: Error Handling
+				throw GetLastError();
+			}
+
+			TI_LOG_V("Initialised Barebones?! DirectX Graphics");
+			return true;
+		}
+
 		_hWnd = pWindow->GetHWND();
 		_windowWidth = pWindow->GetWidth();
 		_windowHeight = pWindow->GetHeight();
