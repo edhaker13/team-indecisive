@@ -88,6 +88,23 @@ namespace Indecisive
 		_pd3dDevice->CreateSamplerState(&sampDesc, &_pSamplerLinear);
 
 		_pInput = new Input();
+
+		bool result;
+
+		// Create the sound object.
+		_pSoundClass = new SoundClass();
+		if (!_pSoundClass)
+		{
+			return false;
+		}
+
+		// Initialize the sound object.
+		result = _pSoundClass->Initialize(_hWnd);
+		if (!result)
+		{
+			MessageBox(_hWnd, L"Could not initialize Direct Sound.", L"Error", MB_OK);
+			return false;
+		}
 		
 		TI_LOG_V("Initialised DirectX Graphics");
 		return true;
@@ -483,6 +500,13 @@ namespace Indecisive
 		if (_pVertexShader) _pVertexShader->Release();
 		if (_pRoot) { delete _pRoot; _pRoot = nullptr; }
 		if (_pCamera) _pCamera = nullptr;
+
+		if (_pSoundClass)
+		{
+			_pSoundClass->Shutdown();
+			delete _pSoundClass;
+			_pSoundClass = 0;
+		}
 	}
 
 	void GraphicsDirectX::Update()

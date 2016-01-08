@@ -112,6 +112,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SceneGraph.h" />
+    <ClInclude Include="SoundClass.h" />
     <ClInclude Include="Structures.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
@@ -126,6 +127,7 @@
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
+    <ClCompile Include="SoundClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DX11 Framework.rc" />

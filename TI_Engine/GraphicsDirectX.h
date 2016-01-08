@@ -9,6 +9,7 @@
 #include "Logger.h"
 #include "Structures.h"
 #include "Input.h"
+#include "SoundClass.h"
 
 namespace Indecisive
 {
@@ -85,6 +86,8 @@ namespace Indecisive
 		CameraNode* _pCamera = nullptr;
 
 		Input* _pInput = nullptr;
+
+		SoundClass* _pSoundClass = nullptr;
 
 		// Constants in Constant Buffer. Well they don't change much
 
