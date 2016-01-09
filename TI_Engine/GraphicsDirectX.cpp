@@ -489,6 +489,8 @@ namespace Indecisive
 	{
 		// Update our time
 		static float t = 0.0f;
+		static float dt = 0.0f;
+		static float lastT = 0.0f;
 
 		//To be removed (placed in game loop)
 		if (_driverType == D3D_DRIVER_TYPE_REFERENCE)
@@ -504,6 +506,7 @@ namespace Indecisive
 				dwTimeStart = dwTimeCur;
 
 			t = (dwTimeCur - dwTimeStart) / 1000.0f;
+			dt = t - lastT;
 		}
 
 		if (_pInput->IsKeyDown('W'))
@@ -528,8 +531,10 @@ namespace Indecisive
 		// Initialize the view matrix
 		XMStoreFloat4x4(&_view, XMMatrixLookAtLH(_pCamera->eye, _pCamera->center, _pCamera->up));
 
-		_pRoot->Update(t);
+		_pRoot->Update(dt);
 		UpdateConstantBuffer(*_pRoot);
+
+		lastT = t;
 	}
 
 	void GraphicsDirectX::Draw() const
@@ -575,7 +580,7 @@ namespace Indecisive
 		cb.specularPower = 5.0f;
 		cb.lightVecW = lightDir;
 		// Set camera position
-		cb.eyePos = XMFLOAT3(0.0f, 100.0f, -150.0f);
+		cb.eyePos = _pCamera->eye;
 		cb.hasTexture = 0.0f;
 		// Update constant buffer
 		_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);

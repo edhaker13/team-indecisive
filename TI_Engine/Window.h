@@ -28,7 +28,7 @@ namespace Indecisive
 		return 0;
 	};
 
-	LIBRARY_API class Window
+	class Window
 	{
 	private:
 		HWND _hWnd = nullptr;

@@ -1,4 +1,6 @@
 #include "DirectXMath.h"
+#include <fstream>
+
 namespace Indecisive
 {
 	//--- Constants ---//
@@ -754,13 +756,13 @@ namespace Indecisive
 		XMStoreFloat3(this, X);
 	}
 
-	void Vector3::Normalize(Vector3& result) const
+	/*void Vector3::Normalize(Vector3& result) const
 	{
 		using namespace DirectX;
 		XMVECTOR v1 = XMLoadFloat3(this);
 		XMVECTOR X = XMVector3Normalize(v1);
 		XMStoreFloat3(&result, X);
-	}
+	}*/
 
 	void Vector3::Clamp(const Vector3& vmin, const Vector3& vmax)
 	{
@@ -841,6 +843,23 @@ namespace Indecisive
 		XMVECTOR x2 = XMLoadFloat3(&v2);
 		XMVECTOR X = XMVectorMax(x1, x2);
 
+		Vector3 result;
+		XMStoreFloat3(&result, X);
+		return result;
+	}
+	void Vector3::Normalize(const Vector3& V, Vector3& result)
+	{
+		using namespace DirectX;
+		XMVECTOR v1 = XMLoadFloat3(&V);
+		XMVECTOR X = XMVector3Normalize(v1);
+		XMStoreFloat3(&result, X);
+	}
+
+	Vector3 Vector3::Normalize(const Vector3& V)
+	{
+		using namespace DirectX;
+		XMVECTOR v1 = XMLoadFloat3(&V);
+		XMVECTOR X = XMVector3Normalize(v1);
 		Vector3 result;
 		XMStoreFloat3(&result, X);
 		return result;
@@ -1082,6 +1101,15 @@ namespace Indecisive
 		XMVector3TransformNormalStream(resultArray, sizeof(XMFLOAT3), varray, sizeof(XMFLOAT3), count, M);
 	}
 
+	std::istream& operator >>(std::istream& s, Vector3& v)
+	{
+		return s >> v.x >> v.y >> v.z;
+	};
+
+	std::ostream& operator <<(std::ostream& s, const Vector3& v)
+	{
+		return s << "(" << v.x << ", " << v.y << ", " << v.z << ")";
+	}
 
 	/*** Vector4 ***/
 

@@ -1,7 +1,7 @@
 #include "GameManager.h"
-#include "LevelLoader.h"
-#include "Logger.h"
-#include "Window.h"
+#include "..\TI_Engine\Logger.h"
+#include "..\TI_Engine\Window.h"
+#include "..\TI_Loader\LevelLoader.h"
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow)
 {
