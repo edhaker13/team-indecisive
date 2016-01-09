@@ -57,8 +57,9 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration)\;</AdditionalLibraryDirectories>
-      <AdditionalDependencies>TI_Engine.lib;TI_AI.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -84,6 +85,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LevelLoader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TI_AI\TI_AI.vcxproj">
+      <Project>{73a43b62-444d-49dd-8628-98cf35131005}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\TI_Engine\TI_Engine.vcxproj">
+      <Project>{d7fab2bf-0980-4018-b62b-003e08dfe4b2}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
