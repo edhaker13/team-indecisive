@@ -15,6 +15,6 @@
 #include "..\TI_Engine\GraphicsDirectX.h"
 #include "..\TI_Engine\ComponentFactory.h"
 #include "..\TI_Engine\OBJLoader.h"
-#include "..\TI_Engine\LevelLoader.h"
+#include "..\TI_Loader\LevelLoader.h"
 #include "..\TI_Engine\SceneGraph.h"
 #include "..\TI_Engine\Window.h"

@@ -12,6 +12,7 @@
 // http://go.microsoft.com/fwlink/?LinkId=248929
 //-------------------------------------------------------------------------------------
 #pragma once
+#define NOMINMAX
 #include <memory>
 #include <directxmath.h>
 #include <d3d11.h>
@@ -136,79 +137,82 @@ namespace Indecisive
 		operator XMVECTOR() const { return XMLoadFloat3(this); };
 
 		// Comparision operators
-		bool operator == (const Vector3& V) const;
+		LIBRARY_API bool operator == (const Vector3& V) const;
 		LIBRARY_API bool operator != (const Vector3& V) const;
 
 		// Assignment operators
-		Vector3& operator= (const Vector3& V) { x = V.x; y = V.y; z = V.z; return *this; }
-		Vector3& operator= (const XMFLOAT3& V) { x = V.x; y = V.y; z = V.z; return *this; }
-		Vector3& operator+= (const Vector3& V);
-		Vector3& operator-= (const Vector3& V);
-		Vector3& operator*= (const Vector3& V);
-		Vector3& operator*= (float S);
-		Vector3& operator/= (float S);
+		LIBRARY_API Vector3& operator= (const Vector3& V) { x = V.x; y = V.y; z = V.z; return *this; }
+		LIBRARY_API Vector3& operator= (const XMFLOAT3& V) { x = V.x; y = V.y; z = V.z; return *this; }
+		LIBRARY_API Vector3& operator+= (const Vector3& V);
+		LIBRARY_API Vector3& operator-= (const Vector3& V);
+		LIBRARY_API Vector3& operator*= (const Vector3& V);
+		LIBRARY_API Vector3& operator*= (float S);
+		LIBRARY_API Vector3& operator/= (float S);
 
 		// Urnary operators
-		Vector3 operator+ () const { return *this; }
-		Vector3 operator- () const;
+		LIBRARY_API Vector3 operator+ () const { return *this; }
+		LIBRARY_API Vector3 operator- () const;
 
 		// Vector operations
-		bool InBounds(const Vector3& Bounds) const;
+		LIBRARY_API bool InBounds(const Vector3& Bounds) const;
 
-		float Length() const;
-		float LengthSquared() const;
+		LIBRARY_API float Length() const;
+		LIBRARY_API float LengthSquared() const;
 
-		float Dot(const Vector3& V) const;
-		void Cross(const Vector3& V, Vector3& result) const;
-		Vector3 Cross(const Vector3& V) const;
+		LIBRARY_API float Dot(const Vector3& V) const;
+		LIBRARY_API void Cross(const Vector3& V, Vector3& result) const;
+		LIBRARY_API Vector3 Cross(const Vector3& V) const;
 
-		void Normalize();
-		void Normalize(Vector3& result) const;
+		LIBRARY_API void Normalize();
+		//LIBRARY_API void Normalize(Vector3& result) const;
 
-		void Clamp(const Vector3& vmin, const Vector3& vmax);
-		void Clamp(const Vector3& vmin, const Vector3& vmax, Vector3& result) const;
+		LIBRARY_API void Clamp(const Vector3& vmin, const Vector3& vmax);
+		LIBRARY_API void Clamp(const Vector3& vmin, const Vector3& vmax, Vector3& result) const;
 
 		// Static functions
-		static float Distance(const Vector3& v1, const Vector3& v2);
-		static float DistanceSquared(const Vector3& v1, const Vector3& v2);
+		LIBRARY_API static float Distance(const Vector3& v1, const Vector3& v2);
+		LIBRARY_API static float DistanceSquared(const Vector3& v1, const Vector3& v2);
 
-		static void Min(const Vector3& v1, const Vector3& v2, Vector3& result);
-		static Vector3 Min(const Vector3& v1, const Vector3& v2);
+		LIBRARY_API static void Min(const Vector3& v1, const Vector3& v2, Vector3& result);
+		LIBRARY_API static Vector3 Min(const Vector3& v1, const Vector3& v2);
 
-		static void Max(const Vector3& v1, const Vector3& v2, Vector3& result);
-		static Vector3 Max(const Vector3& v1, const Vector3& v2);
+		LIBRARY_API static void Max(const Vector3& v1, const Vector3& v2, Vector3& result);
+		LIBRARY_API static Vector3 Max(const Vector3& v1, const Vector3& v2);
 
-		static void Lerp(const Vector3& v1, const Vector3& v2, float t, Vector3& result);
-		static Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
+		LIBRARY_API static void Normalize(const Vector3& V, Vector3& result);
+		LIBRARY_API static Vector3 Normalize(const Vector3& V);
 
-		static void SmoothStep(const Vector3& v1, const Vector3& v2, float t, Vector3& result);
-		static Vector3 SmoothStep(const Vector3& v1, const Vector3& v2, float t);
+		LIBRARY_API static void Lerp(const Vector3& v1, const Vector3& v2, float t, Vector3& result);
+		LIBRARY_API static Vector3 Lerp(const Vector3& v1, const Vector3& v2, float t);
 
-		static void Barycentric(const Vector3& v1, const Vector3& v2, const Vector3& v3, float f, float g, Vector3& result);
-		static Vector3 Barycentric(const Vector3& v1, const Vector3& v2, const Vector3& v3, float f, float g);
+		LIBRARY_API static void SmoothStep(const Vector3& v1, const Vector3& v2, float t, Vector3& result);
+		LIBRARY_API static Vector3 SmoothStep(const Vector3& v1, const Vector3& v2, float t);
 
-		static void CatmullRom(const Vector3& v1, const Vector3& v2, const Vector3& v3, const Vector3& v4, float t, Vector3& result);
-		static Vector3 CatmullRom(const Vector3& v1, const Vector3& v2, const Vector3& v3, const Vector3& v4, float t);
+		LIBRARY_API static void Barycentric(const Vector3& v1, const Vector3& v2, const Vector3& v3, float f, float g, Vector3& result);
+		LIBRARY_API static Vector3 Barycentric(const Vector3& v1, const Vector3& v2, const Vector3& v3, float f, float g);
 
-		static void Hermite(const Vector3& v1, const Vector3& t1, const Vector3& v2, const Vector3& t2, float t, Vector3& result);
-		static Vector3 Hermite(const Vector3& v1, const Vector3& t1, const Vector3& v2, const Vector3& t2, float t);
+		LIBRARY_API static void CatmullRom(const Vector3& v1, const Vector3& v2, const Vector3& v3, const Vector3& v4, float t, Vector3& result);
+		LIBRARY_API static Vector3 CatmullRom(const Vector3& v1, const Vector3& v2, const Vector3& v3, const Vector3& v4, float t);
 
-		static void Reflect(const Vector3& ivec, const Vector3& nvec, Vector3& result);
-		static Vector3 Reflect(const Vector3& ivec, const Vector3& nvec);
+		LIBRARY_API static void Hermite(const Vector3& v1, const Vector3& t1, const Vector3& v2, const Vector3& t2, float t, Vector3& result);
+		LIBRARY_API static Vector3 Hermite(const Vector3& v1, const Vector3& t1, const Vector3& v2, const Vector3& t2, float t);
 
-		static void Refract(const Vector3& ivec, const Vector3& nvec, float refractionIndex, Vector3& result);
-		static Vector3 Refract(const Vector3& ivec, const Vector3& nvec, float refractionIndex);
+		LIBRARY_API static void Reflect(const Vector3& ivec, const Vector3& nvec, Vector3& result);
+		LIBRARY_API static Vector3 Reflect(const Vector3& ivec, const Vector3& nvec);
 
-		static void Transform(const Vector3& v, const Matrix& m, Vector3& result);
-		static Vector3 Transform(const Vector3& v, const Matrix& m);
-		static void Transform(_In_reads_(count) const Vector3* varray, size_t count, const Matrix& m, _Out_writes_(count) Vector3* resultArray);
+		LIBRARY_API static void Refract(const Vector3& ivec, const Vector3& nvec, float refractionIndex, Vector3& result);
+		LIBRARY_API static Vector3 Refract(const Vector3& ivec, const Vector3& nvec, float refractionIndex);
 
-		static void Transform(const Vector3& v, const Matrix& m, Vector4& result);
-		static void Transform(_In_reads_(count) const Vector3* varray, size_t count, const Matrix& m, _Out_writes_(count) Vector4* resultArray);
+		LIBRARY_API static void Transform(const Vector3& v, const Matrix& m, Vector3& result);
+		LIBRARY_API static Vector3 Transform(const Vector3& v, const Matrix& m);
+		LIBRARY_API static void Transform(_In_reads_(count) const Vector3* varray, size_t count, const Matrix& m, _Out_writes_(count) Vector3* resultArray);
 
-		static void TransformNormal(const Vector3& v, const Matrix& m, Vector3& result);
-		static Vector3 TransformNormal(const Vector3& v, const Matrix& m);
-		static void TransformNormal(_In_reads_(count) const Vector3* varray, size_t count, const Matrix& m, _Out_writes_(count) Vector3* resultArray);
+		LIBRARY_API static void Transform(const Vector3& v, const Matrix& m, Vector4& result);
+		LIBRARY_API static void Transform(_In_reads_(count) const Vector3* varray, size_t count, const Matrix& m, _Out_writes_(count) Vector4* resultArray);
+
+		LIBRARY_API static void TransformNormal(const Vector3& v, const Matrix& m, Vector3& result);
+		LIBRARY_API static Vector3 TransformNormal(const Vector3& v, const Matrix& m);
+		LIBRARY_API static void TransformNormal(_In_reads_(count) const Vector3* varray, size_t count, const Matrix& m, _Out_writes_(count) Vector3* resultArray);
 
 		// Constants
 		LIBRARY_API static const Vector3 Zero;
@@ -227,10 +231,14 @@ namespace Indecisive
 	// Binary operators
 	LIBRARY_API Vector3 operator+ (const Vector3& V1, const Vector3& V2);
 	LIBRARY_API Vector3 operator- (const Vector3& V1, const Vector3& V2);
-	Vector3 operator* (const Vector3& V1, const Vector3& V2);
-	Vector3 operator* (const Vector3& V, float S);
-	Vector3 operator/ (const Vector3& V1, const Vector3& V2);
-	Vector3 operator* (float S, const Vector3& V);
+	LIBRARY_API Vector3 operator* (const Vector3& V1, const Vector3& V2);
+	LIBRARY_API Vector3 operator* (const Vector3& V, float S);
+	LIBRARY_API Vector3 operator/ (const Vector3& V1, const Vector3& V2);
+	LIBRARY_API Vector3 operator* (float S, const Vector3& V);
+
+	// Stream operators
+	LIBRARY_API std::istream& operator >>(std::istream& s, Vector3& v);
+	LIBRARY_API std::ostream& operator <<(std::ostream& s, const Vector3& v);
 
 	//------------------------------------------------------------------------------
 	// 4D vector
@@ -366,20 +374,20 @@ namespace Indecisive
 		operator XMMATRIX() const { return XMLoadFloat4x4(this); }
 
 		// Comparision operators
-		bool operator == (const Matrix& M) const;
-		bool operator != (const Matrix& M) const;
+		LIBRARY_API bool operator == (const Matrix& M) const;
+		LIBRARY_API bool operator != (const Matrix& M) const;
 
 		// Assignment operators
-		Matrix& operator= (const Matrix& M) { memcpy_s(this, sizeof(float) * 16, &M, sizeof(float) * 16); return *this; }
-		Matrix& operator= (const XMFLOAT4X4& M) { memcpy_s(this, sizeof(float) * 16, &M, sizeof(XMFLOAT4X4)); return *this; }
-		Matrix& operator+= (const Matrix& M);
-		Matrix& operator-= (const Matrix& M);
+		LIBRARY_API Matrix& operator= (const Matrix& M) { memcpy_s(this, sizeof(float) * 16, &M, sizeof(float) * 16); return *this; }
+		LIBRARY_API Matrix& operator= (const XMFLOAT4X4& M) { memcpy_s(this, sizeof(float) * 16, &M, sizeof(XMFLOAT4X4)); return *this; }
+		LIBRARY_API Matrix& operator+= (const Matrix& M);
+		LIBRARY_API Matrix& operator-= (const Matrix& M);
 		LIBRARY_API Matrix& operator*= (const Matrix& M);
-		Matrix& operator*= (float S);
-		Matrix& operator/= (float S);
+		LIBRARY_API Matrix& operator*= (float S);
+		LIBRARY_API Matrix& operator/= (float S);
 
-		Matrix& operator/= (const Matrix& M);
 		// Element-wise divide
+		LIBRARY_API Matrix& operator/= (const Matrix& M);
 
 		// Urnary operators
 		Matrix operator+ () const { return *this; }
@@ -417,9 +425,9 @@ namespace Indecisive
 		float Determinant() const;
 
 		// Static functions
-		static Matrix CreateBillboard(const Vector3& object, const Vector3& cameraPosition, const Vector3& cameraUp, _In_opt_ const Vector3* cameraForward = nullptr);
+		LIBRARY_API static Matrix CreateBillboard(const Vector3& object, const Vector3& cameraPosition, const Vector3& cameraUp, _In_opt_ const Vector3* cameraForward = nullptr);
 
-		static Matrix CreateConstrainedBillboard(const Vector3& object, const Vector3& cameraPosition, const Vector3& rotateAxis,
+		LIBRARY_API static Matrix CreateConstrainedBillboard(const Vector3& object, const Vector3& cameraPosition, const Vector3& rotateAxis,
 			_In_opt_ const Vector3* cameraForward = nullptr, _In_opt_ const Vector3* objectForward = nullptr);
 
 		LIBRARY_API static Matrix CreateTranslation(const Vector3& position);
@@ -435,19 +443,19 @@ namespace Indecisive
 
 		static Matrix CreateFromAxisAngle(const Vector3& axis, float angle);
 
-		static Matrix CreatePerspectiveFieldOfView(float fov, float aspectRatio, float nearPlane, float farPlane);
-		static Matrix CreatePerspective(float width, float height, float nearPlane, float farPlane);
-		static Matrix CreatePerspectiveOffCenter(float left, float right, float bottom, float top, float nearPlane, float farPlane);
-		static Matrix CreateOrthographic(float width, float height, float zNearPlane, float zFarPlane);
-		static Matrix CreateOrthographicOffCenter(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane);
+		LIBRARY_API static Matrix CreatePerspectiveFieldOfView(float fov, float aspectRatio, float nearPlane, float farPlane);
+		LIBRARY_API static Matrix CreatePerspective(float width, float height, float nearPlane, float farPlane);
+		LIBRARY_API static Matrix CreatePerspectiveOffCenter(float left, float right, float bottom, float top, float nearPlane, float farPlane);
+		LIBRARY_API static Matrix CreateOrthographic(float width, float height, float zNearPlane, float zFarPlane);
+		LIBRARY_API static Matrix CreateOrthographicOffCenter(float left, float right, float bottom, float top, float zNearPlane, float zFarPlane);
 
-		static Matrix CreateLookAt(const Vector3& position, const Vector3& target, const Vector3& up);
-		static Matrix CreateWorld(const Vector3& position, const Vector3& forward, const Vector3& up);
+		LIBRARY_API static Matrix CreateLookAt(const Vector3& position, const Vector3& target, const Vector3& up);
+		LIBRARY_API static Matrix CreateWorld(const Vector3& position, const Vector3& forward, const Vector3& up);
 
-		static Matrix CreateFromYawPitchRoll(float yaw, float pitch, float roll);
+		LIBRARY_API static Matrix CreateFromYawPitchRoll(float yaw, float pitch, float roll);
 
-		static void Lerp(const Matrix& M1, const Matrix& M2, float t, Matrix& result);
-		static Matrix Lerp(const Matrix& M1, const Matrix& M2, float t);
+		LIBRARY_API static void Lerp(const Matrix& M1, const Matrix& M2, float t, Matrix& result);
+		LIBRARY_API static Matrix Lerp(const Matrix& M1, const Matrix& M2, float t);
 
 		// Constants
 		LIBRARY_API static const Matrix Identity;

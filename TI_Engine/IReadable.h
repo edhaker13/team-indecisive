@@ -6,11 +6,6 @@
 
 namespace Indecisive
 {
-	// TODO: Move to .inl (?)
-	inline std::istream& operator>> (std::istream& s, Vector3& v)
-	{
-		return s >> v.x >> v.y >> v.z;
-	};
 
 	class IReadable
 	{

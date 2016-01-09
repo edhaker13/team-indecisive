@@ -12,7 +12,10 @@ namespace Indecisive
 	private:
 		IGraphics* _pGraphics;
 	public:	
-		
+		TEST_CLASS_INITIALIZE(setup)
+		{
+			//TO DO
+		}
 		
 		TEST_METHOD(LevelLoaderTest)
 			{

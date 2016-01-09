@@ -1,6 +1,6 @@
 #pragma once
 #include <windows.h>
-#include "IGraphics.h"
+#include "..\TI_Engine\IGraphics.h"
 
 namespace Indecisive
 {
