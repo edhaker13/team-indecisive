@@ -95,7 +95,6 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="IReadable.h" />
     <ClInclude Include="IResourceManager.h" />
-    <ClInclude Include="I_AI.h" />
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="IGameObject.h" />
     <ClInclude Include="IInput.h" />

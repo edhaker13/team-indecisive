@@ -105,6 +105,6 @@ namespace Indecisive
 		void Cleanup();
 		HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
 		HRESULT InitShadersAndInputLayout();
-		void UpdateConstantBuffer(const TreeNode&);
+		void UpdateConstantBuffer(const TreeNode&, const XMMATRIX&);
 	};
 };
