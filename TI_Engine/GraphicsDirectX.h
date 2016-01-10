@@ -88,9 +88,11 @@ namespace Indecisive
 		Input* _pInput = nullptr;
 
 		SoundClass* _pSoundClass = nullptr;
+		IDirectSound8* _pDirectSound = nullptr;
+		IDirectSoundBuffer8* _pSecondaryBuffer = nullptr;
+		IDirectSoundBuffer8* _pSecondaryBuffer1 = nullptr;
 
 		// Constants in Constant Buffer. Well they don't change much
-
 		XMFLOAT4X4 _world;
 		XMFLOAT4X4 _view;
 		XMFLOAT4X4 _projection;

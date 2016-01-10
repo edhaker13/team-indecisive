@@ -17,12 +17,7 @@ namespace Indecisive
 		bool InitializeDirectSound(HWND);
 		void ShutdownDirectSound();
 
-		bool LoadWaveFile(char*, IDirectSoundBuffer8**);
 		void ShutdownWaveFile(IDirectSoundBuffer8**);
-
-		bool PlayWaveFile();
-
-		void GetSecondaryBuffer(IDirectSoundBuffer8* sound);
 
 		struct WaveHeaderType
 		{
@@ -50,8 +45,19 @@ namespace Indecisive
 		SoundClass(const SoundClass&);
 		~SoundClass();
 
+
+		bool LoadWaveFile(char*, IDirectSoundBuffer8**);
+		bool PlayWaveFile(IDirectSoundBuffer8* secondaryBuffer, DWORD dwReserved1, DWORD dwPriority, DWORD dwFlags);
+
 		bool Initialize(HWND);
 		void Shutdown();
+
+		HRESULT CreateBasicBuffer(LPDIRECTSOUND8 lpDirectSound, IDirectSoundBuffer8* ppDsb8);
+
+		IDirectSound8* GetDirectSound() const							{ return m_DirectSound; }
+
+		IDirectSoundBuffer8* GetSecondaryBuffer() const					{ return m_secondaryBuffer1; }
+		void SetSecondaryBuffer(IDirectSoundBuffer8* secondaryBuffer)	{ this->m_secondaryBuffer1 = secondaryBuffer; }
 	};
 }
 
