@@ -1,8 +1,10 @@
 #pragma once
+
 namespace Indecisive
 {
 	struct Vector3;
-	class ITransformComponent
+	struct Matrix;
+	class ITransformComponent  
 	{
 	public:
 		virtual void SetPosition(const Vector3&) = 0;
@@ -16,7 +18,7 @@ namespace Indecisive
 		virtual Vector3 GetPrevPosition() const = 0;
 		virtual Vector3 GetScale() const = 0;
 		virtual Vector3 GetRotation() const = 0;
-
 		virtual void Update(float dt) = 0;
+		virtual const Matrix& GetWorld() const = 0;
 	};
 }

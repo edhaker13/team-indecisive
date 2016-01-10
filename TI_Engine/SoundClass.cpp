@@ -4,7 +4,7 @@ namespace Indecisive
 {
 	SoundClass::SoundClass()
 	{
-	
+
 	}
 
 	SoundClass::SoundClass(const SoundClass& other)
@@ -27,32 +27,20 @@ namespace Indecisive
 		}
 
 		// Load a wave audio file onto a secondary buffer.	
-		// Add new files here
-		result = LoadWaveFile(".\\Assets\\Snare.wav", &m_secondaryBuffer1);
-		if (!result)
-		{
-			return false;
-		}
-
-		// Play the wave file now that it has been loaded.
-		result = PlayWaveFile();
-		if (!result)
-		{
-			return false;
-		}
+		//result = LoadWaveFile(".\\Assets\\Snare.wav", &m_secondaryBuffer1);
+		//if (!result)
+		//{
+		//	return false;
+		//}
+		//
+		//// Play the wave file now that it has been loaded.
+		//result = PlayWaveFile();
+		//if (!result)
+		//{
+		//	return false;
+		//}
 
 		return true;
-	}
-
-	void SoundClass::Shutdown()
-	{
-		// Release the secondary buffer.
-		ShutdownWaveFile(&m_secondaryBuffer1);
-
-		// Shutdown the Direct Sound API.
-		ShutdownDirectSound();
-
-		return;
 	}
 
 	bool SoundClass::InitializeDirectSound(HWND hwnd)
@@ -111,23 +99,42 @@ namespace Indecisive
 		return true;
 	}
 
-	void SoundClass::ShutdownDirectSound()
+	HRESULT SoundClass::CreateBasicBuffer(LPDIRECTSOUND8 lpDirectSound, IDirectSoundBuffer8* ppDsb8)	//LPDIRECTSOUNDBUFFER8* ppDsb8) 
 	{
-		// Release the primary sound buffer pointer.
-		if (m_primaryBuffer)
-		{
-			m_primaryBuffer->Release();
-			m_primaryBuffer = 0;
-		}
+		WAVEFORMATEX wfx;
+		DSBUFFERDESC dsbdesc;
+		LPDIRECTSOUNDBUFFER pDsb = NULL;
+		HRESULT hr;
 
-		// Release the direct sound interface pointer.
-		if (m_DirectSound)
-		{
-			m_DirectSound->Release();
-			m_DirectSound = 0;
-		}
+		// Set up WAV format structure. 
 
-		return;
+		memset(&wfx, 0, sizeof(WAVEFORMATEX));
+		wfx.wFormatTag = WAVE_FORMAT_PCM;
+		wfx.nChannels = 2;
+		wfx.nSamplesPerSec = 22050;
+		wfx.nBlockAlign = 4;
+		wfx.nAvgBytesPerSec = wfx.nSamplesPerSec * wfx.nBlockAlign;
+		wfx.wBitsPerSample = 16;
+
+		// Set up DSBUFFERDESC structure. 
+
+		memset(&dsbdesc, 0, sizeof(DSBUFFERDESC));
+		dsbdesc.dwSize = sizeof(DSBUFFERDESC);
+		dsbdesc.dwFlags =
+			DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY
+			| DSBCAPS_GLOBALFOCUS;
+		dsbdesc.dwBufferBytes = 3 * wfx.nAvgBytesPerSec;
+		dsbdesc.lpwfxFormat = &wfx;
+
+		// Create buffer. 
+
+		hr = lpDirectSound->CreateSoundBuffer(&dsbdesc, &pDsb, NULL);
+		if (SUCCEEDED(hr))
+		{
+			hr = pDsb->QueryInterface(IID_IDirectSoundBuffer8, (LPVOID*)ppDsb8);
+			pDsb->Release();
+		}
+		return hr;
 	}
 
 	bool SoundClass::LoadWaveFile(char* filename, IDirectSoundBuffer8** secondaryBuffer)
@@ -293,6 +300,69 @@ namespace Indecisive
 		return true;
 	}
 
+	bool SoundClass::PlayWaveFile(IDirectSoundBuffer8* secondaryBuffer, DWORD dwReserved1, DWORD dwPriority, DWORD dwFlags)
+	{
+		HRESULT result;
+
+		//PlaySound(TEXT("Resources\\synth.wav"), NULL, SND_ASYNC);
+
+		// Set position at the beginning of the sound buffer.
+		result = secondaryBuffer->SetCurrentPosition(0);
+		//result = m_secondaryBuffer2->SetCurrentPosition(0);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		// Set volume of the buffer to 100%.
+		result = secondaryBuffer->SetVolume(DSBVOLUME_MAX);
+		//result = m_secondaryBuffer2->SetVolume(DSBVOLUME_MAX);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		// Play the contents of the secondary sound buffer.
+		result = secondaryBuffer->Play(dwReserved1, dwPriority, dwFlags);
+		//result = m_secondaryBuffer2->Play(0, 0, 1);
+		if (FAILED(result))
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	void SoundClass::Shutdown()
+	{
+		// Release the secondary buffer.
+		ShutdownWaveFile(&m_secondaryBuffer1);
+
+		// Shutdown the Direct Sound API.
+		ShutdownDirectSound();
+
+		return;
+	}
+
+	void SoundClass::ShutdownDirectSound()
+	{
+		// Release the primary sound buffer pointer.
+		if (m_primaryBuffer)
+		{
+			m_primaryBuffer->Release();
+			m_primaryBuffer = 0;
+		}
+
+		// Release the direct sound interface pointer.
+		if (m_DirectSound)
+		{
+			m_DirectSound->Release();
+			m_DirectSound = 0;
+		}
+
+		return;
+	}
+
 	void SoundClass::ShutdownWaveFile(IDirectSoundBuffer8** secondaryBuffer)
 	{
 		// Release the secondary sound buffer.
@@ -303,41 +373,5 @@ namespace Indecisive
 		}
 
 		return;
-	}
-
-	bool SoundClass::PlayWaveFile()
-	{
-		HRESULT result;
-
-		//PlaySound(TEXT("Resources\\synth.wav"), NULL, SND_ASYNC);
-
-		// Set position at the beginning of the sound buffer.
-		result = m_secondaryBuffer1->SetCurrentPosition(0);
-		if (FAILED(result))
-		{
-			return false;
-		}
-
-		// Set volume of the buffer to 100%.
-		result = m_secondaryBuffer1->SetVolume(DSBVOLUME_MAX);
-		if (FAILED(result))
-		{
-			return false;
-		}
-
-		// Play the contents of the secondary sound buffer.
-		// Change the last value to 1 to loop sound
-		result = m_secondaryBuffer1->Play(0, 0, 1);
-		if (FAILED(result))
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	void SoundClass::GetSecondaryBuffer(IDirectSoundBuffer8* sound)
-	{
-
 	}
 }

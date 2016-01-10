@@ -1,17 +1,10 @@
 #pragma once
+#include "..\TI_Engine\IUpdatable.h"
 #include "TransformComponent.h"
-#include <string>
-
-#pragma once
-#ifdef _WINDLL
-#	define PHYSICS_API __declspec(dllexport)
-#else
-#	define PHYSICS_API __declspec(dllimport)
-#endif
 
 namespace Indecisive
 {
-	class PhysicsComp
+	class PhysicsComp: public IUpdatable
 	{
 	public:
 		PHYSICS_API	PhysicsComp(ITransformComponent* Itransform);
@@ -32,7 +25,8 @@ namespace Indecisive
 	PHYSICS_API	void UpdateNetForce();
 	PHYSICS_API	void UpdateAccel();
 	PHYSICS_API	void UpdateState();
-	PHYSICS_API	virtual void Update(float t);
+	PHYSICS_API void Update(float dt) override;
+	PHYSICS_API const Matrix& GetWorld() const override { return _transform->GetWorld(); };
 	
 	void SlidingMotion();
 	void SlidingForce(float theta, float frCoef);
@@ -75,8 +69,6 @@ namespace Indecisive
 		
 		bool collisionCheck;
 		float radius;
-		
-	
 
 		float gravity;
 		Vector3 sForce;
