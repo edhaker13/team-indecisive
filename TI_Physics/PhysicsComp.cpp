@@ -18,13 +18,9 @@ namespace Indecisive
 		useConstAcc = true;
 		laminar = true;
 
-		//
 		radius = 0.5f;
 
 		collisionCheck = false;
-
-		//RPM = 1.0f;
-
 		boolsForce = true;
 
 	

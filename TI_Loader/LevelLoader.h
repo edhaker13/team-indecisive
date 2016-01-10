@@ -11,6 +11,7 @@ namespace Indecisive
 {
 	class IGraphics;
 	class Window;
+	class PhysicsComp;
 	class LevelLoader : public IReadable
 	{
 	private:
@@ -18,6 +19,8 @@ namespace Indecisive
 		Window* _pWindow = nullptr;
 		// Graphics interface. Allocated after constructor, so no reference.
 		IGraphics* _pGraphics = nullptr;
+		//PhysicsComponent
+		PhysicsComp* _pPhysics = nullptr;
 	protected:
 		LOADER_API void _Open(const std::string&, std::ifstream&) override;
 	public:
@@ -28,6 +31,7 @@ namespace Indecisive
 		LOADER_API IGraphics* GetGraphics() const;
 		LOADER_API const std::string GetInfo() const override;
 		LOADER_API Window* GetWindow() const;
+		LOADER_API PhysicsComp* GetPhysics() const;
 		LOADER_API void ReadWindow(const std::string&);
 	};
 };

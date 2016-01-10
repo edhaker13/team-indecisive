@@ -2,6 +2,12 @@
 #include "TransformComponent.h"
 #include <string>
 
+#pragma once
+#ifdef _WINDLL
+#	define PHYSICS_API __declspec(dllexport)
+#else
+#	define PHYSICS_API __declspec(dllimport)
+#endif
 
 namespace Indecisive
 {
@@ -11,42 +17,42 @@ namespace Indecisive
 		PhysicsComp(ITransformComponent* Itransform);
 		~PhysicsComp();
 
-		void MoveConstVel(float t);
-		void MoveConstAcc(float t);
-		void Move(float newX, float newY, float newZ);
+	PHYSICS_API	void MoveConstVel(float t);
+	PHYSICS_API	void MoveConstAcc(float t);
+	PHYSICS_API	void Move(float newX, float newY, float newZ);
+	
+	PHYSICS_API	Vector3 GetVel() const { return velocity; }
+	PHYSICS_API	void GetVelocity(Vector3 _velocity) { velocity = _velocity; }
+	
+	PHYSICS_API	void SetVel(Vector3 _velocity) { velocity = _velocity; }
 
-		Vector3 GetVel() const { return velocity; }
-		void GetVelocity(Vector3 _velocity) { velocity = _velocity; }
+	PHYSICS_API	float GetMass() const { return mass; };
+	PHYSICS_API	void SetMass(float _mass) { mass = _mass; }
+	
+	PHYSICS_API	void UpdateNetForce();
+	PHYSICS_API	void UpdateAccel();
+	PHYSICS_API	void UpdateState();
+	PHYSICS_API	virtual void Update(float t);
+	
+	void SlidingMotion();
+	void SlidingForce(float theta, float frCoef);
 
-		void SetVel(Vector3 _velocity) { velocity = _velocity; }
+	void MotionInFluid(float t);
+	void DragForce();
+	void dragLamFlow();
+	void TurbulantFlow();
+	
+			//Collision
+	PHYSICS_API	float GetCollisionRadius() const { return radius; }
+	PHYSICS_API	void SetCollisionRadius(float _radius) { radius = _radius; }
 
-		float GetMass() const { return mass; };
-		void SetMass(float _mass) { mass = _mass; }
+	PHYSICS_API	bool CubeCollisionCheck(Vector3 position, float radius);
+	PHYSICS_API	void FloorCollisionCheck(Vector3 position);
+	PHYSICS_API	void ResolveCollision(PhysicsComp* particleModel1, PhysicsComp* particleModel2, float restitution);
 
-		void UpdateNetForce();
-		void UpdateAccel();
-		void UpdateState();
-		virtual void Update(float t);
-
-		void SlidingMotion();
-		void SlidingForce(float theta, float frCoef);
-
-		void MotionInFluid(float t);
-		void DragForce();
-		void dragLamFlow();
-		void TurbulantFlow();
-
-		//Collision
-		float GetCollisionRadius() const { return radius; }
-		void SetCollisionRadius(float _radius) { radius = _radius; }
-
-		bool CubeCollisionCheck(Vector3 position, float radius);
-		void FloorCollisionCheck(Vector3 position);
-		void ResolveCollision(PhysicsComp* particleModel1, PhysicsComp* particleModel2, float restitution);
-
-		void SetSlidingForce();
-
-		void GetDirection();
+	PHYSICS_API	void SetSlidingForce();
+	
+	PHYSICS_API	void GetDirection();
 
 	protected:
 		Vector3 velocity;
