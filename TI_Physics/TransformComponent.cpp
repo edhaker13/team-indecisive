@@ -19,10 +19,11 @@ namespace Indecisive
 
 	void TransformComponent::Update(float dt)
 	{
+		if (_parent != nullptr) _parent->Update(dt);
 		// Calculate world matrix
-		Matrix scale = scale.CreateScale(_scale.x, _scale.y, _scale.z);
-		Matrix rotation = rotation.CreateRotationX(_rotation.x) * rotation.CreateRotationY(_rotation.y) * rotation.CreateRotationZ(_rotation.z);
-		Matrix translation = translation.CreateTranslation(_position * dt);
+		Matrix scale = Matrix::CreateScale(_scale.x, _scale.y, _scale.z);
+		Matrix rotation = Matrix::CreateFromYawPitchRoll(_rotation.x, _rotation.y, _rotation.z);
+		Matrix translation = Matrix::CreateTranslation(_position * dt);
 		
 		_world = scale * rotation * translation;
 

@@ -3,10 +3,10 @@
 namespace Indecisive
 {
 	struct Matrix;
-	class IUpdatable
+	 class IUpdatable
 	{
 	public:
-		virtual void Update(float elapsedTime) = 0;
-		virtual const Matrix& GetWorld() const = 0;
+		 virtual void Update(float elapsedTime) = 0;
+		 virtual const Matrix& GetWorld() const = 0;
 	};
 };

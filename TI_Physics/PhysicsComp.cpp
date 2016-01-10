@@ -4,7 +4,7 @@ namespace Indecisive
 {
 	PhysicsComp::PhysicsComp(ITransformComponent* Itransform)
 	{
-		Itransform = _transform;
+		_transform = Itransform;
 		Acceleration = Vector3(0.0f, 0.0f, -0.1f);
 		mass = 1.0f;
 		force = Vector3(0.0f, 0.0f, 0.0f);
@@ -232,6 +232,7 @@ namespace Indecisive
 
 	void PhysicsComp::Update(float t)
 	{
+		_transform->Update(t);
 		if (useConstAcc)
 		{
 			if (boolsForce)

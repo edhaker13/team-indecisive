@@ -2,6 +2,7 @@
 #include "ITransformComponent.h"
 #include "..\TI_Engine\Structures.h"
 
+
 #ifdef _WINDLL
 #	define PHYSICS_API __declspec(dllexport)
 #else
@@ -31,8 +32,8 @@ namespace Indecisive
 		void SetRotation(const Vector3& rotation) override { _rotation = rotation; }
 		void SetRotation(float x, float y, float z) override {_rotation.x = x; _rotation.y = y; _rotation.z = z;}
 		Vector3 GetRotation() const override { return _rotation; }
-
-		void Update (float t) override;
+		const Matrix& GetWorld() const override { return _world; };
+		void Update(float dt) override;
 
 	private:
 		Vector3 _position;

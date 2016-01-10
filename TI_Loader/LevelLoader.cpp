@@ -188,30 +188,27 @@ namespace Indecisive
 						aiComp->SetTarget(waypoints->back()->position);
 						o->Object().AddUpdatable(aiComp);
 					}
-				}
-				else if (input.compare("Physics") == 0)
-				{
-					TransformComponent* Basetransform = new TransformComponent();
-					Basetransform->SetScale(0.5f, 0.5f, 0.5f);
-					Basetransform->SetPosition(-4.0f + 2.0f, 2.5f, 10.0f);
+					else if (input.compare("Physics") == 0)
+					{
+						TransformComponent* Basetransform = new TransformComponent();
+						Basetransform->SetScale(10000.0f, 10000.0f, 10000.0f);
+						Basetransform->SetPosition(0.0f, 0.0f, 0.0f);
 
-					PhysicsComp* FloorModel = new PhysicsComp(Basetransform);
+						PhysicsComp* FloorModel = new PhysicsComp(Basetransform);
 
-					Vector3 scale, position, rotation;
-					float t = 0;
-					t += 0.001;
-					stream >> scale; stream >> position; stream >> rotation;
+						Vector3 scale, position, rotation;
+						stream >> scale; stream >> position; stream >> rotation;
 
-					TransformComponent* ObjectTransform = new TransformComponent();
-					ObjectTransform->SetScale(scale.x, scale.y, scale.z);
-					ObjectTransform->SetPosition(position.x, position.y, position.z);
-					ObjectTransform->SetRotation(rotation.x, rotation.y, rotation.z);
+						TransformComponent* ObjectTransform = new TransformComponent();
+						ObjectTransform->SetScale(scale);
+						ObjectTransform->SetPosition(position);
+						ObjectTransform->SetRotation(rotation);
 
-					PhysicsComp* PhysComp = new PhysicsComp(ObjectTransform);
+						PhysicsComp* PhysComp = new PhysicsComp(ObjectTransform);
 
-					PhysComp->Update(t);
-					PhysComp->FloorCollisionCheck(Basetransform->GetPosition());
-
+						PhysComp->FloorCollisionCheck(Basetransform->GetPosition()); //???
+						o->Object().AddUpdatable(PhysComp);
+					}
 				}
 			}
 			else if (input.compare("end") == 0)
