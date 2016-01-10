@@ -32,8 +32,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RandomTest", "RandomTest\Ra
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TI_Loader", "TI_Loader\TI_Loader.vcxproj", "{931C9CA5-5B42-4EE7-9691-E71795F26FDF}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Win32Project1", "Win32Project1\Win32Project1.vcxproj", "{7FEC05C0-0B2D-40DF-806A-D4FC0DED745E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -108,14 +106,6 @@ Global
 		{931C9CA5-5B42-4EE7-9691-E71795F26FDF}.Release|Win32.ActiveCfg = Release|Win32
 		{931C9CA5-5B42-4EE7-9691-E71795F26FDF}.Release|Win32.Build.0 = Release|Win32
 		{931C9CA5-5B42-4EE7-9691-E71795F26FDF}.Release|x64.ActiveCfg = Release|Win32
-		{7FEC05C0-0B2D-40DF-806A-D4FC0DED745E}.Debug|ARM.ActiveCfg = Debug|Win32
-		{7FEC05C0-0B2D-40DF-806A-D4FC0DED745E}.Debug|Win32.ActiveCfg = Debug|Win32
-		{7FEC05C0-0B2D-40DF-806A-D4FC0DED745E}.Debug|Win32.Build.0 = Debug|Win32
-		{7FEC05C0-0B2D-40DF-806A-D4FC0DED745E}.Debug|x64.ActiveCfg = Debug|Win32
-		{7FEC05C0-0B2D-40DF-806A-D4FC0DED745E}.Release|ARM.ActiveCfg = Release|Win32
-		{7FEC05C0-0B2D-40DF-806A-D4FC0DED745E}.Release|Win32.ActiveCfg = Release|Win32
-		{7FEC05C0-0B2D-40DF-806A-D4FC0DED745E}.Release|Win32.Build.0 = Release|Win32
-		{7FEC05C0-0B2D-40DF-806A-D4FC0DED745E}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

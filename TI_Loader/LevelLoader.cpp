@@ -5,6 +5,7 @@
 #include "..\TI_Engine\SceneGraph.h"
 #include "..\TI_Engine\IResourceManager.h"
 #include "..\TI_Engine\Window.h"
+#include "..\TI_Physics\TransformComponent.h"
 
 namespace Indecisive
 {
@@ -89,6 +90,7 @@ namespace Indecisive
 		ResourceManagerInstance()->AddService("edgecosts", edgecosts);
 		ResourceManagerInstance()->AddService("waypoints", waypoints);
 		ResourceManagerInstance()->AddService("root", parent);
+		//ResourceManagerInstance()->AddService("Collision Physics", parent);
 
 		while (!stream.eof())
 		{
@@ -186,7 +188,26 @@ namespace Indecisive
 						o->Object().AddUpdatable(aiComp);
 					}
 				}
+
+				if (ObjectNode* o = dynamic_cast<ObjectNode*>(last))
+				{
+					stream >> input;
+					if (input.compare("Physics") == 0)
+					{
+
+						Vector3 scale, position, rotation;
+						stream >> scale; stream >> position; stream >> rotation;
+					
+						TransformComponent* ObjectTransform = new TransformComponent();
+						ObjectTransform->SetScale(scale.x, scale.y, scale.z);
+						ObjectTransform->SetPosition(position.x, position.y, position.z);
+						ObjectTransform->SetRotation(rotation.x, rotation.y, rotation.z);
+						
+						//auto PhysComp = new PhysicsComp(ObjectTransform);
+					}
+				}
 			}
+	
 			else if (input.compare("end") == 0)
 			{
 				if (parent->parent != nullptr)

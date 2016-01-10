@@ -19,7 +19,7 @@ namespace Indecisive
 		}
 	};
 
-	struct Mesh
+	 struct Mesh
 	{
 		Buffer* vertexBuffer = nullptr;
 		Buffer* indexBuffer = nullptr;
@@ -29,7 +29,7 @@ namespace Indecisive
 		UINT indexBufferOffset = 0;
 	};
 
-	struct Material
+	 struct Material
 	{
 		std::string name = "";
 		std::string ambientTextureName = "";
@@ -42,7 +42,7 @@ namespace Indecisive
 		Vector4 specular;
 	};
 
-	struct SubObject
+	 struct SubObject
 	{
 		std::string material = "";
 		std::string name = "";

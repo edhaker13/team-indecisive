@@ -17,12 +17,12 @@ namespace Indecisive
 
 	}
 
-	void TransformComponent::Update(float t)
+	void TransformComponent::Update(float dt)
 	{
 		// Calculate world matrix
 		Matrix scale = scale.CreateScale(_scale.x, _scale.y, _scale.z);
 		Matrix rotation = rotation.CreateRotationX(_rotation.x) * rotation.CreateRotationY(_rotation.y) * rotation.CreateRotationZ(_rotation.z);
-		Matrix translation = translation.CreateTranslation(_position.x, _position.y, _position.z);
+		Matrix translation = translation.CreateTranslation(_position * dt);
 		
 		_world = scale * rotation * translation;
 
