@@ -14,7 +14,7 @@ namespace Indecisive
 	class PhysicsComp
 	{
 	public:
-		PhysicsComp(ITransformComponent* Itransform);
+		PHYSICS_API	PhysicsComp(ITransformComponent* Itransform);
 		~PhysicsComp();
 
 	PHYSICS_API	void MoveConstVel(float t);

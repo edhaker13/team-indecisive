@@ -6,6 +6,7 @@
 #include "..\TI_Engine\IResourceManager.h"
 #include "..\TI_Engine\Window.h"
 #include "..\TI_Physics\TransformComponent.h"
+#include "..\TI_Physics\PhysicsComp.h"
 
 namespace Indecisive
 {
@@ -188,24 +189,37 @@ namespace Indecisive
 						o->Object().AddUpdatable(aiComp);
 					}
 				}
-
-				if (ObjectNode* o = dynamic_cast<ObjectNode*>(last))
+				else if (input.compare("comp") == 0)
 				{
-					stream >> input;
-					if (input.compare("Physics") == 0)
+					if (ObjectNode* o = dynamic_cast<ObjectNode*>(last))
 					{
+						stream >> input;
+						if (input.compare("Physics") == 0)
+						{
+							TransformComponent* transform = new TransformComponent();
+							transform->SetScale(0.5f, 0.5f, 0.5f);
+							transform->SetPosition(-4.0f + 2.0f, 2.5f, 10.0f);
 
-						Vector3 scale, position, rotation;
-						stream >> scale; stream >> position; stream >> rotation;
+							PhysicsComp* FloorModel = new PhysicsComp(transform);
+
+							Vector3 scale, position, rotation;
+							float t;
+							stream >> scale; stream >> position; stream >> rotation;
 					
-						TransformComponent* ObjectTransform = new TransformComponent();
-						ObjectTransform->SetScale(scale.x, scale.y, scale.z);
-						ObjectTransform->SetPosition(position.x, position.y, position.z);
-						ObjectTransform->SetRotation(rotation.x, rotation.y, rotation.z);
+							TransformComponent* ObjectTransform = new TransformComponent();
+							ObjectTransform->SetScale(scale.x, scale.y, scale.z);
+							ObjectTransform->SetPosition(position.x, position.y, position.z);
+							ObjectTransform->SetRotation(rotation.x, rotation.y, rotation.z);
 						
-						//auto PhysComp = new PhysicsComp(ObjectTransform);
+							PhysicsComp* PhysComp = new PhysicsComp(ObjectTransform);
+
+							//PhysComp->Update(t);
+							PhysComp->FloorCollisionCheck(transform->GetPosition());
+
+						}
 					}
 				}
+				
 			}
 	
 			else if (input.compare("end") == 0)
