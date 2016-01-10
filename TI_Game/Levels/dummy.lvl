@@ -1,11 +1,11 @@
 window 1280 720 Team Indecisive
 graphics directx
 waypoints 5
-O 1.0 0.0 3.0 A,B,C
-A 4.0 0.0 5.0 O,B,D
-B 5.0 0.0 3.0 O,C,A,D
-C 3.0 0.0 1.0 O,B
-D 7.0 0.0 3.0 A,B
+O  0.0 -5.0 20.0 A,B,C
+A  5.0  5.0 20.0 O,B,D
+B  0.0  5.0 30.0 O,C,A,D
+C -5.0 -5.0 20.0 O,B
+D  5.0 -5.0 35.0 A,B
 edgecosts 8
 O A 2
 O B 5
@@ -20,6 +20,6 @@ camera camera 0.0 100.0 -150.0 0.0 0.0 0.0 0.0 1.0 0.0 10.0 10000.0
 position move 0.0 0.0 10.0
 	children
 	object car fullcar.obj
-    comp AI 1.0 1000.0 0.1
+    comp AI 0.4 1 100
 	end
 end

@@ -1,7 +1,8 @@
-#include "AIComponent.h"
 #include <algorithm>
 #include <iostream>
 #include <sstream>
+#include "..\TI_Engine\SceneGraph.h"
+#include "AIComponent.h"
 
 namespace Indecisive
 {
@@ -56,7 +57,7 @@ namespace Indecisive
 			}
 			for (auto id : current->waypoint->connectedIDs)
 			{
-				
+
 				if (IsInList(openNodes, id) || IsInList(closedNodes, id))
 				{
 					// check new cost < current cost???
@@ -97,11 +98,11 @@ namespace Indecisive
 		auto it = std::find_if(edges.begin(), edges.end(), [from, to](const EdgeCost& e){
 			return e.first.first == from->id && e.first.second == to->id
 				|| e.first.first == to->id && e.second == from->id; });
-		if (it != edges.cend())
-		{
-			return it->second;
-		}
-		return std::numeric_limits<float>::max();
+			if (it != edges.cend())
+			{
+				return it->second;
+			}
+			return std::numeric_limits<float>::max();
 	}
 	//--------------------------------------------------------------------------------------------------
 	float PathFinder::GetEuclidianCost(const Vector3& positionOne, const Vector3& positionTwo)
@@ -138,22 +139,22 @@ namespace Indecisive
 	//------------------------------------------------------------------------------------------------//
 
 	//-----------------------------------------------------------------------------------------------
-	void Steering::MoveInHeadingDirection(float dt, Vector3& steering, Vector3& velocity
-		, Vector3& position, float mass, float maxSpeed)
+	float Steering::GetMinDistanceInPath(const PositionList& path)
 	{
-		Vector3 force = steering; /* + Steering::ObstacleAvoidance();*/
-
-		//Acceleration = Force/Mass
-		Vector3 acceleration = force / mass;
-
-		//Update velocity.
-		velocity += acceleration * dt;
-
-		//Limit to maxSpeed
-		velocity = Vector3::Normalize(velocity) * maxSpeed;
-
-		//Finally, update the position.
-		position += velocity * dt;
+		static float result = 0;
+		if (result == 0)
+		{
+			float minDist = std::numeric_limits<float>::max();
+			Vector3 lastV = path[0];
+			std::for_each(path.cbegin() + 1, path.cend(),
+				[&minDist, &lastV](Vector3 v){
+				auto d = Vector3::DistanceSquared(lastV, v);
+				lastV = v;
+				if (d < minDist) minDist = d / 2;
+			});
+			result = minDist;
+		}
+		return result;
 	}
 	//--------------------------------------------------------------------------------------------------
 	Vector3 Steering::Arrive(const Vector3& position, const Vector3& target, const Vector3& velocity
@@ -166,10 +167,10 @@ namespace Indecisive
 		if (distance > 0)
 		{
 			float speed = distance / deceleration;
-			speed = std::min(speed, maxSpeed);
+			//speed = std::min(speed, maxSpeed);
 
 			Vector3 resultingVelocity = Vector3::Normalize(vectorToTarget) * speed;
-			
+
 			return (resultingVelocity - velocity);
 		}
 
@@ -201,44 +202,30 @@ namespace Indecisive
 	//--------------------------------------------------------------------------------------------------
 	Vector3 Steering::PathFollow(const Vector3& position, const Vector3& endTarget, bool& hasTarget, bool& newTarget
 		, bool& endOnTarget, const Vector3& velocity, float decel, float maxSpeed
-		, const PositionList& path, PositionList::size_type& currentIndex, Vector3& currentTarget)
+		, const PositionList& path, PositionList::size_type& currentIndex, const TreeNode& node)
 	{
-		float dist = 0;	float dist2 = 0; float dist3 = 0; float dist4 = 0;
-		Vector3 possibleTarget;
+		Vector3 currentTarget;
 
-		// Initial state: no target set
+		// No target set, don't do anything
 		if (!hasTarget && !newTarget)
 		{
 			return Vector3::Zero;
 		}
+
+		assert(!path.empty());
+		// Get current target in model space
+		auto world = Matrix::CreateTranslation(path[currentIndex]) * node.GetParentWorld().Invert();
+		currentTarget = world.Translation();
+
 		// New target has been clicked
 		if (newTarget)
 		{
-			if (path.empty())
-			{
-				std::cout << "No path generated." << std::endl;
-				endOnTarget = true;
-				return Vector3::Zero;
-			}
 			currentIndex = 0;
-			possibleTarget = path[currentIndex];
-			dist2 = Vector3::DistanceSquared(position, possibleTarget);
-			dist3 = Vector3::DistanceSquared(position, endTarget);
-			// Is end target closer than new target
-			if (dist3 < dist2)
-			{
-				endOnTarget = true;
-				hasTarget = true;
-				newTarget = false;
-				return Vector3::Zero; //return Steering::Arrive(position, endTarget, velocity, deceleration, maxSpeed);
-			}
-			else
-			{
-				currentTarget = possibleTarget;
-				hasTarget = true;
-				newTarget = false;
-				endOnTarget = false;
-			}
+			auto world = Matrix::CreateTranslation(path[currentIndex]) * node.GetParentWorld().Invert();
+			currentTarget = world.Translation();
+			hasTarget = true;
+			newTarget = false;
+			endOnTarget = false;
 		}
 		else if (endOnTarget)
 		{
@@ -246,55 +233,69 @@ namespace Indecisive
 		}
 		else if (hasTarget)
 		{
+			auto distToCurrent = Vector3::DistanceSquared(position, currentTarget);
+			auto distToEnd = Vector3::DistanceSquared(position, endTarget);
+			// Next waypoint if close enough to currentTarget and there's a next
 			if (currentIndex + 1 < path.size())
 			{
-				dist = Vector3::Distance(position, currentTarget);
-				//dist2 = Vector3::DistanceSquared(position, path[currentIndex + 1]);
-				// Next waypoint if close enough and there's a next
-				if (dist <= maxSpeed)
+				if (distToCurrent <= GetMinDistanceInPath(path))
 				{
-					possibleTarget = path[++currentIndex];
+					auto world = Matrix::CreateTranslation(path[++currentIndex]) * node.GetParentWorld().Invert();
+					currentTarget = world.Translation();
 				}
 			}
-			if (possibleTarget == Vector3::Zero && currentTarget != Vector3::Zero)
-			{
-				possibleTarget = currentTarget;
-			}
-
-			// If we had a target and now have a new target, check new target is better
-			dist2 = Vector3::DistanceSquared(possibleTarget, endTarget);
-			dist3 = Vector3::DistanceSquared(position, possibleTarget);
-			dist4 = Vector3::DistanceSquared(position, endTarget);
-
-			if (dist4 < dist3 || dist4 < dist2) // endT closer than to possibleT or than possibleT to endT
+			else if (distToEnd < distToCurrent || currentTarget == endTarget)
 			{
 				endOnTarget = true;
-				return Steering::Arrive(position, endTarget, velocity, decel, maxSpeed);
-			}
-			else //if (dist2 > dist)
-			{
-				currentTarget = possibleTarget;
+				hasTarget = true;
+				newTarget = false;
+				return Vector3::Zero; //Steering::Arrive(position, endTarget, velocity, decel, maxSpeed);
 			}
 		}
 
 		// Move to target
 		return Steering::Seek(position, currentTarget, velocity, maxSpeed);
 	}
+	//-----------------------------------------------------------------------------------------------
+	void Steering::MoveInHeadingDirection(float dt, Vector3& steering, Vector3& velocity
+		, Vector3& position, float mass, float maxSpeed)
+	{
+		Vector3 force = steering;
+
+		//Acceleration = Force/Mass
+		Vector3 acceleration = force / mass;
+
+		//Update velocity.
+		velocity += acceleration * dt;
+
+		//Finally, update the position.
+		position += velocity * dt;
+	}
 	//------------------------------------------------------------------------------------------------//
 
 	//--------------------------------------------------------------------------------------------------
+	void AIComponent::SetTarget(const Vector3& t)
+	{
+		mPath = PathFinder::Find(mPosition, t, mWaypoints, mEdges);
+		auto world = Matrix::CreateTranslation(t) * mNode.GetParentWorld().Invert();
+		mTarget = world.Translation();
+		mNewTarget = true;
+		mHasTarget = true;
+	}
+	//--------------------------------------------------------------------------------------------------
 	void AIComponent::Update(float dt)
 	{
+		dt = 0.002f;
 		if (mPath.empty())
 			return;
-		
+
 		switch (mBehaviour)
 		{
 		case Indecisive::AIComponent::NoBehaviour:
 			break;
 		case Indecisive::AIComponent::FollowBehaviour:
 			mSteering = Steering::PathFollow(mPosition, mTarget, mHasTarget, mNewTarget, mEndOnTarget
-				, mVelocity, mDeceleration, mMaxSpeed, mPath, mCurrentIndex, mCurrentTarget);
+				, mVelocity, mDeceleration, mMaxSpeed, mPath, mCurrentIndex, mNode);
 			break;
 		case Indecisive::AIComponent::SeekBehaviour:
 			mSteering = Steering::Seek(mPosition, mTarget, mVelocity, mMaxSpeed);

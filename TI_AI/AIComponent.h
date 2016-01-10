@@ -47,6 +47,7 @@ namespace Indecisive
 	typedef std::vector<Node*> NodeList; // List of nodes, binds waypoints and costs
 	typedef std::vector<Waypoint*> WaypointList; // List of possible waypoints to find a path
 	typedef std::vector<Vector3> PositionList; // List of positions to follow as a path
+	struct TreeNode;
 
 	//--------------------------------------------------------------------------------------------------
 	// Path Finding class, returns a node list with the calculated path
@@ -69,11 +70,12 @@ namespace Indecisive
 	//--------------------------------------------------------------------------------------------------
 	namespace Steering
 	{
+		float GetMinDistanceInPath(const PositionList&);
 		Vector3 Arrive(const Vector3&, const Vector3&, const Vector3&, float, float);
 		Vector3 Seek(const Vector3&, const Vector3&, const Vector3&, float);
 		Vector3 Flee(const Vector3&, const Vector3&, const Vector3&, float);
-		Vector3 PathFollow(const Vector3&, const Vector3& , bool&, bool&, bool&, const Vector3&, float, float
-			, const PositionList&, PositionList::size_type&, Vector3&);
+		Vector3 PathFollow(const Vector3&, const Vector3& , bool&, bool&, bool&, const Vector3&, float
+			, float, const PositionList&, PositionList::size_type&, const TreeNode&);
 		void MoveInHeadingDirection(float, Vector3&, Vector3&, Vector3&, float, float);
 	}
 
@@ -83,21 +85,16 @@ namespace Indecisive
 	class AIComponent : public IComponent, public IUpdatable
 	{
 	public:
-		AIComponent(const WaypointList& ws, const EdgeMap& es, float decel, float mass, float maxSpeed)
-			: IComponent("AI"), mWaypoints(ws), mEdges(es), mDeceleration(decel), mMass(mass)
-			, mBehaviour(Behaviour::FollowBehaviour), mMaxSpeed(maxSpeed) {};
 		enum Behaviour { NoBehaviour, FollowBehaviour, SeekBehaviour };
+		AIComponent(const TreeNode& node, const WaypointList& ws, const EdgeMap& es, float decel, float mass, float maxSpeed,
+			Behaviour behaviour=FollowBehaviour)
+			: IComponent("AI"), mNode(node), mWaypoints(ws), mEdges(es), mDeceleration(decel), mMass(mass)
+			, mBehaviour(behaviour), mMaxSpeed(maxSpeed) {};
 		const Behaviour& GetBehaviour() const { return mBehaviour; };
 		const Vector3& GetTarget() const { return mTarget; };
 		const Matrix& GetWorld() const override { return mWorld; };
 		void SetBehaviour(const Behaviour& b) { mBehaviour = b; };
-		void SetTarget(const Vector3& t)
-		{ 
-			mTarget = t;
-			mPath = PathFinder::Find(mPosition, mTarget, mWaypoints, mEdges);
-			mNewTarget = true;
-			mHasTarget = true;
-		}
+		AI_API void SetTarget(const Vector3& t);
 
 		AI_API void Update(float) override;
 	
@@ -109,9 +106,10 @@ namespace Indecisive
 		const EdgeMap& mEdges;
 		float mDeceleration, mMass, mMaxSpeed;
 		Matrix mWorld;
+		const TreeNode& mNode;
 		PositionList mPath;
 		PositionList::size_type mCurrentIndex = 0;
-		Vector3 mCurrentTarget, mPosition, mSteering, mTarget, mVelocity;
+		Vector3 mPosition, mSteering, mTarget, mVelocity, mWorldPosition;
 		const WaypointList& mWaypoints;
 	};
 	//------------------------------------------------------------------------------------------------//

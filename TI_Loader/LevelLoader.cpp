@@ -184,9 +184,9 @@ namespace Indecisive
 						assert(!edgecosts->empty());
 						float decel, mass, speed;
 						stream >> decel; stream >> mass; stream >> speed;
-						auto aiComp = new AIComponent(*waypoints, *edgecosts, decel, mass, speed);
+						auto aiComp = new AIComponent(*last, *waypoints, *edgecosts, decel, mass, speed);
 						aiComp->SetTarget(waypoints->back()->position);
-						o->Object().AddUpdatable(aiComp);
+						o->GetGameObject().AddUpdatable(aiComp);
 					}
 				}
 				else if (input.compare("Physics") == 0)
