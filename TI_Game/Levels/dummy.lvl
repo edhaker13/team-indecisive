@@ -29,8 +29,18 @@ camera
 	movebackwards S 1
 	moveright D 1
 endcamera
-sound snare.wav 1
-sound synth.wav 0
+sound
+	filename snare.wav 
+	playstart 
+	playkey H
+	flag 1
+endsound
+sound
+	filename synth.wav 
+	playstart 
+	playkey H
+	flag 1
+endsound
 position move 0.0 0.0 10.0
 	children
 	object car fullcar.obj

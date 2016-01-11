@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Indecisive::IGraphics">
+    <Position X="5.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwAAAAAAAAAAwAAAgAAAAABAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>e:\-- uni --\year three\advanced windows game programming\awgp-15-team-indecisive\ti_engine\igraphics.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Indecisive::Window">
+    <Position X="5.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAAAIAAAAAAQAAAAAAAAJAAAAAAAAAAAAACEIAAQA=</HashCode>
+      <FileName>e:\-- uni --\year three\advanced windows game programming\awgp-15-team-indecisive\ti_engine\window.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_hWnd" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Indecisive::LevelLoader">
+    <Position X="10" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABgACABCAAAAAAAAIAAgAAEAAMAAAAAAAACKAAA=</HashCode>
+      <FileName>levelloader.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_pGraphics" />
+      <Field Name="_pWindow" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Indecisive::IReadable">
+    <Position X="10" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAAAAAAAAAgAIAAAEAAAAAAAAAIAAA=</HashCode>
+      <FileName>e:\-- uni --\year three\advanced windows game programming\awgp-15-team-indecisive\ti_engine\ireadable.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Typedef Name="HWND" Collapsed="true">
+    <Position X="7.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>c:\program files (x86)\windows kits\8.1\include\shared\wtypes.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

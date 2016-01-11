@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Indecisive::PathFinder">
+    <Position X="6.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAgAAIAAAAEAABAAAAAgA=</HashCode>
+      <FileName>AIComponent.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Indecisive::AIComponent">
+    <Position X="1" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="Indecisive::AIComponent::Behaviour" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>AIComponent.h</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>IIQAAgAJQQAAAAgAAAEoAAAAQAAAAAAgAIgHABQAEgI=</HashCode>
+      <FileName>AIComponent.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="mEdges" />
+      <Field Name="mWaypoints" />
+      <Field Name="mWorldPosition" />
+      <Field Name="mWorld" />
+      <Field Name="mPath" />
+      <Field Name="mNode" />
+    </ShowAsAssociation>
+  </Class>
+  <Struct Name="Indecisive::Waypoint" Collapsed="true">
+    <Position X="6.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAAAAAAAKgAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>AIComponent.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Indecisive::Node">
+    <Position X="8.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAACAAAAIQAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>AIComponent.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="waypoint" />
+    </ShowAsAssociation>
+  </Struct>
+  <Struct Name="Indecisive::TreeNode" Collapsed="true">
+    <Position X="4.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAEAAAAAAAAgRAAQAEABAAAAAIAQCAAAABAAAAAAA=</HashCode>
+      <FileName>e:\-- uni --\year three\advanced windows game programming\awgp-15-team-indecisive\ti_engine\scenegraph.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Indecisive::Vector3" Collapsed="true">
+    <Position X="4.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAGAIgKBCJAABAAAEAAgQwRBCQAAAABAiECgAAAAAMI=</HashCode>
+      <FileName>e:\-- uni --\year three\advanced windows game programming\awgp-15-team-indecisive\ti_engine\directxmath.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Indecisive::Matrix" Collapsed="true">
+    <Position X="4.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEEaAAIAAAEACEAEAAQBTIAAgACIAiEDgAAgAAAI=</HashCode>
+      <FileName>e:\-- uni --\year three\advanced windows game programming\awgp-15-team-indecisive\ti_engine\directxmath.h</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Typedef Name="Indecisive::Edge" Collapsed="true">
+    <Position X="6.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AIComponent.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Indecisive::EdgeCost" Collapsed="true">
+    <Position X="8" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AIComponent.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Indecisive::EdgeMap" Collapsed="true">
+    <Position X="4.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AIComponent.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Indecisive::NodeList" Collapsed="true">
+    <Position X="6.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AIComponent.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Indecisive::WaypointList" Collapsed="true">
+    <Position X="4.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AIComponent.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Typedef Name="Indecisive::PositionList" Collapsed="true">
+    <Position X="4.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>AIComponent.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
