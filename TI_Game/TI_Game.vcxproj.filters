@@ -38,5 +38,11 @@
     <None Include="Levels\input.lvl">
       <Filter>Level Files</Filter>
     </None>
+    <None Include="Levels\AI.lvl">
+      <Filter>Level Files</Filter>
+    </None>
+    <None Include="Levels\PhysicsLvl.lvl">
+      <Filter>Level Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

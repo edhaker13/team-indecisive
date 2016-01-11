@@ -1,0 +1,37 @@
+window 1280 720 AI Demo
+graphics directx
+waypoints 5
+O   0.0 -100.0  50.0 A,B,C
+A -50.0  100.0 100.0 O,B,D
+B -50.0 -100.0 125.0 O,C,A,D
+C -50.0 -100.0 150.0 O,B
+D  50.0 -100.0 200.0 A,B
+edgecosts 8
+O A 2
+O B 5
+O C 4
+A D 7
+A B 2
+B D 4
+B C 1
+C D 4
+children
+camera
+	name camera
+	eye 0.0 150.0 -150.0
+	center 0.0 0.0 0.0
+	up 0.0 1.0 0.0 
+	near 10.0
+	far 10000.0
+	actions
+	moveforwards W 1
+	moveleft A 1
+	movebackwards S 1
+	moveright D 1
+endcamera
+position move 0.0 0.0 10.0
+	children
+	object car fullcar.obj
+    comp AI 0.6 1 100
+	end
+end

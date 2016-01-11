@@ -17,8 +17,10 @@
     <ClInclude Include="GameManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Levels\AI.lvl" />
     <None Include="Levels\dummy.lvl" />
     <None Include="Levels\input.lvl" />
+    <None Include="Levels\PhysicsLvl.lvl" />
     <None Include="Lighting.fx">
       <FileType>Document</FileType>
     </None>
