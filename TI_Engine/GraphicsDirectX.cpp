@@ -86,25 +86,6 @@ namespace Indecisive
 		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 		_pd3dDevice->CreateSamplerState(&sampDesc, &_pSamplerLinear);
-
-		_pInput = new Input();
-
-		bool result;
-
-		// Create the sound object.
-		_pSoundClass = new SoundClass();
-		if (!_pSoundClass)
-		{
-			return false;
-		}
-
-		// Initialize the sound object.
-		result = _pSoundClass->Initialize(_hWnd);
-		if (!result)
-		{
-			MessageBox(_hWnd, L"Could not initialize Direct Sound.", L"Error", MB_OK);
-			return false;
-		}
 		
 		TI_LOG_V("Initialised DirectX Graphics");
 		return true;
@@ -501,12 +482,6 @@ namespace Indecisive
 		if (_pRoot) { delete _pRoot; _pRoot = nullptr; }
 		if (_pCamera) _pCamera = nullptr;
 
-		if (_pSoundClass)
-		{
-			_pSoundClass->Shutdown();
-			delete _pSoundClass;
-			_pSoundClass = 0;
-		}
 	}
 
 	void GraphicsDirectX::Update()
@@ -533,30 +508,11 @@ namespace Indecisive
 			dt = t - lastT;
 		}
 
-		if (_pInput->IsKeyDown('W'))
-		{
-			_pCamera->eye.z += 0.1f;
-		}
-		else if (_pInput->IsKeyDown('S'))
-		{
-			_pCamera->eye.z -= 0.1f;
-		}
-		else if (_pInput->IsKeyDown('A'))
-		{
-			_pCamera->eye.x += 0.1f;
-		}
-		else if (_pInput->IsKeyDown('D'))
-		{
-			_pCamera->eye.x -= 0.1f;
-		}
-
-		_pInput->Update();
-
 		// Initialize the view matrix
 		XMStoreFloat4x4(&_view, XMMatrixLookAtLH(_pCamera->eye, _pCamera->center, _pCamera->up));
 
 		_pRoot->Update(dt);
-		UpdateConstantBuffer(*_pRoot);
+		UpdateConstantBuffer(*_pRoot, XMMatrixIdentity());
 
 		lastT = t;
 	}
@@ -585,10 +541,10 @@ namespace Indecisive
 	// TODO: Call this for each node and subobject somehow. Possible solution method DrawNode: Updates CB, DrawsMesh. Alt: Method takes subobject, grabs current cb, updates.
 	// Alt Alt: Node::Draw doesnt do recursion, DrawNode sets initial cb, calls DrawNode on children, updates world for all, updates lighting for subobjects.
 	// Alt^3: UpdateCB(SubObject){ _cb; set lighting from mat; update cb; } SetCB(Node){ _cb->World = world; set lighting; update cb; }
-	void GraphicsDirectX::UpdateConstantBuffer(const TreeNode& n)
+	void GraphicsDirectX::UpdateConstantBuffer(const TreeNode& n, const XMMATRIX& parentWorld)
 	{
 		// World Matrices
-		auto world = n.GetWorld() * (n.parent != nullptr ? n.GetParentWorld() : _world);
+		auto world = n.GetWorld() * parentWorld;
 		ConstantBuffer cb;
 		// Set matrices
 		cb.mWorld = XMMatrixTranspose(world);
@@ -609,7 +565,7 @@ namespace Indecisive
 		// Update constant buffer
 		_pImmediateContext->UpdateSubresource(_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 		// Call for all children
-		for (const auto& pair : n.children) UpdateConstantBuffer(*pair.second);
+		for (const auto& pair : n.children) UpdateConstantBuffer(*pair.second, world);
 	}
 
 	void GraphicsDirectX::DrawMesh(const Mesh& m, const SubObject& s) const

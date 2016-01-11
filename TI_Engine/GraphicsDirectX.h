@@ -8,8 +8,6 @@
 #include "IGraphics.h"
 #include "Logger.h"
 #include "Structures.h"
-#include "Input.h"
-#include "SoundClass.h"
 
 namespace Indecisive
 {
@@ -85,12 +83,7 @@ namespace Indecisive
 		TreeNode* _pRoot = nullptr;
 		CameraNode* _pCamera = nullptr;
 
-		Input* _pInput = nullptr;
-
-		SoundClass* _pSoundClass = nullptr;
-
 		// Constants in Constant Buffer. Well they don't change much
-
 		XMFLOAT4X4 _world;
 		XMFLOAT4X4 _view;
 		XMFLOAT4X4 _projection;
@@ -105,6 +98,6 @@ namespace Indecisive
 		void Cleanup();
 		HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut);
 		HRESULT InitShadersAndInputLayout();
-		void UpdateConstantBuffer(const TreeNode&);
+		void UpdateConstantBuffer(const TreeNode&, const XMMATRIX&);
 	};
 };

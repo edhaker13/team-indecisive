@@ -35,11 +35,10 @@ namespace Indecisive
 		IGameObject& _object;
 	public:
 		LIBRARY_API ObjectNode(const std::string& key, IGameObject& object) :
-			TreeNode(key), _object(object)
-		{};
+			TreeNode(key), _object(object) {};
 		LIBRARY_API virtual void Draw() const override;
 		LIBRARY_API virtual void Update(float) override;
-		LIBRARY_API IGameObject& Object() { return _object; };
+		LIBRARY_API IGameObject& GetGameObject() { return _object; };
 	};
 	/// <summary> Node with a rotation to apply to all child objects </summary>
 	struct RotationNode : public TreeNode
@@ -70,13 +69,11 @@ namespace Indecisive
 		{};
 		LIBRARY_API virtual void Update(float) override;
 	};
-	/// <summary> Node with camera eye, center, and up positions. Will follow center position </summary>
+	/// <summary> Node with camera eye, center, and up positions </summary>
 	struct CameraNode : public TreeNode
 	{
-		///<summary> Position to follow as the center of the camera </summary>
-		const Vector3& center;
 		const Vector3 up, distance;
-		Vector3 eye;
+		Vector3 eye, center;
 		const float nearZ, farZ;
 		LIBRARY_API CameraNode(const std::string& key, const Vector3& eye, const Vector3& center, const Vector3& up, float nearZ, float farZ) :
 			TreeNode(key), eye(eye), center(center), up(up), distance(center - eye), nearZ(nearZ), farZ(farZ)

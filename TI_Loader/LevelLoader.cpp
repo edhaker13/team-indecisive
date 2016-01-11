@@ -7,6 +7,8 @@
 #include "..\TI_Engine\Window.h"
 #include "..\TI_Physics\TransformComponent.h"
 #include "..\TI_Physics\PhysicsComp.h"
+#include "..\TI_Sound\SoundManager.h"
+#include "..\TI_Input\InputManager.h"
 
 namespace Indecisive
 {
@@ -86,11 +88,16 @@ namespace Indecisive
 		TreeNode* parent = new TreeNode("root");
 		TreeNode* last = parent;
 		Vector3 v, v1, v2;
+		auto pSoundManager = new SoundManager();
+		auto pInputManager = new InputManager();
 		auto edgecosts = new EdgeMap();
 		auto waypoints = new WaypointList();
+		pSoundManager->Initialize(_pWindow->GetHWND());
 		ResourceManagerInstance()->AddService("edgecosts", edgecosts);
 		ResourceManagerInstance()->AddService("waypoints", waypoints);
 		ResourceManagerInstance()->AddService("root", parent);
+		ResourceManagerInstance()->AddService("sound", pSoundManager);
+		ResourceManagerInstance()->AddService("input", pInputManager);
 		//ResourceManagerInstance()->AddService("Collision Physics", parent);
 
 		while (!stream.eof())
@@ -141,7 +148,8 @@ namespace Indecisive
 				stream >> nearZ;
 				stream >> farZ;
 				// Initialize the camera node
-				last = new CameraNode(input, v, v1, v2, nearZ, farZ);
+				auto cam = new CameraNode(input, v, v1, v2, nearZ, farZ);
+				last = cam;
 				// Camera needs to be used in graphics initialise, so add to locator
 				ResourceManagerInstance()->AddService(input, last);
 				parent->Append(last);
@@ -149,6 +157,22 @@ namespace Indecisive
 				if (!initialised)
 				{
 					initialised = _pGraphics->Initialise(_pWindow);
+				}
+				// TODO: Read key and value from file
+				pInputManager->RegisterAction((KeyCode)'W', [cam](){ cam->eye.z += 1.f; });
+				pInputManager->RegisterAction((KeyCode)'A', [cam](){ cam->eye.x -= 1.f; });
+				pInputManager->RegisterAction((KeyCode)'S', [cam](){ cam->eye.z -= 1.f; });
+				pInputManager->RegisterAction((KeyCode)'D', [cam](){ cam->eye.x += 1.f; });
+			}
+			else if (input.compare("sound") == 0)
+			{
+				if (pSoundManager->IsInitialised())
+				{
+					stream >> input;
+					pSoundManager->Load(input);
+					DWORD flag;
+					stream >> flag;
+					pSoundManager->Play(input, 0, 0, flag);
 				}
 			}
 			else if (input.compare("children") == 0)
@@ -163,8 +187,7 @@ namespace Indecisive
 				// Initialise translation node
 				last = new PositionNode(input, v);
 				parent->Append(last);
-			}	
-		
+			}
 			else if (input.compare("object") == 0)
 			{
 				std::string obj;
@@ -185,9 +208,9 @@ namespace Indecisive
 						assert(!edgecosts->empty());
 						float decel, mass, speed;
 						stream >> decel; stream >> mass; stream >> speed;
-						auto aiComp = new AIComponent(*waypoints, *edgecosts, decel, mass, speed);
+						auto aiComp = new AIComponent(*last, *waypoints, *edgecosts, decel, mass, speed);
 						aiComp->SetTarget(waypoints->back()->position);
-						o->Object().AddUpdatable(aiComp);
+						o->GetGameObject().AddUpdatable(aiComp);
 					}
 					else if (input.compare("Physics") == 0)
 					{
@@ -205,26 +228,25 @@ namespace Indecisive
 						ObjectTransform->SetScale(scale);
 						ObjectTransform->SetPosition(position);
 						ObjectTransform->SetRotation(rotation);
-						
+
 						PhysicsComp* PhysComp = new PhysicsComp(ObjectTransform);
 
 						PhysComp->SetCollisionRadius(radius);
 						PhysComp->SetVel(velocity);
 						PhysComp->SetMass(mass);
 						PhysComp->SlidingForce(theta, frCoef);
-						
-						
+
+
 						PhysComp->FloorCollisionCheck(Basetransform->GetPosition()); //???
 
-						o->Object().AddUpdatable(PhysComp);
+						o->GetGameObject().AddUpdatable(PhysComp);
 
-						//->Object().AddUpdatable(FloorModel);
-					}	
-	
+					}
+
 				}
+			
 			}
 
-		
 			else if (input.compare("end") == 0)
 			{
 				if (parent->parent != nullptr)

@@ -416,13 +416,13 @@ namespace Indecisive
 		void Translation(const Vector3& v) { _41 = v.x; _42 = v.y; _43 = v.z; }
 
 		// Matrix operations
-		Matrix Transpose() const;
-		void Transpose(Matrix& result) const;
+		LIBRARY_API Matrix Transpose() const;
+		LIBRARY_API void Transpose(Matrix& result) const;
 
-		Matrix Invert() const;
-		void Invert(Matrix& result) const;
+		LIBRARY_API Matrix Invert() const;
+		LIBRARY_API void Invert(Matrix& result) const;
 
-		float Determinant() const;
+		LIBRARY_API float Determinant() const;
 
 		// Static functions
 		LIBRARY_API static Matrix CreateBillboard(const Vector3& object, const Vector3& cameraPosition, const Vector3& cameraUp, _In_opt_ const Vector3* cameraForward = nullptr);
@@ -441,7 +441,7 @@ namespace Indecisive
 		LIBRARY_API static Matrix CreateRotationY(float radians);
 		LIBRARY_API static Matrix CreateRotationZ(float radians);
 
-		static Matrix CreateFromAxisAngle(const Vector3& axis, float angle);
+		LIBRARY_API static Matrix CreateFromAxisAngle(const Vector3& axis, float angle);
 
 		LIBRARY_API static Matrix CreatePerspectiveFieldOfView(float fov, float aspectRatio, float nearPlane, float farPlane);
 		LIBRARY_API static Matrix CreatePerspective(float width, float height, float nearPlane, float farPlane);

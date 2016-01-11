@@ -92,13 +92,12 @@
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="DirectXMath.h" />
     <ClInclude Include="GraphicsDirectX.h" />
-    <ClInclude Include="Input.h" />
+    <ClInclude Include="IInputManager.h" />
     <ClInclude Include="IReadable.h" />
     <ClInclude Include="IResourceManager.h" />
-    <ClInclude Include="I_AI.h" />
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="IGameObject.h" />
-    <ClInclude Include="IInput.h" />
+    <ClInclude Include="ISoundManager.h" />
     <ClInclude Include="IDrawable.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="IPhysics.h" />
@@ -111,7 +110,6 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SceneGraph.h" />
-    <ClInclude Include="SoundClass.h" />
     <ClInclude Include="Structures.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
@@ -120,12 +118,10 @@
     <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="DirectXMath.cpp" />
     <ClCompile Include="GraphicsDirectX.cpp" />
-    <ClCompile Include="Input.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
-    <ClCompile Include="SoundClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DX11 Framework.rc" />

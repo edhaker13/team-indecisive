@@ -2,6 +2,8 @@
 #include <windows.h>
 #include "resource.h"
 #include "Logger.h"
+#include "IResourceManager.h"
+#include "IInputManager.h"
 
 namespace Indecisive
 {
@@ -17,6 +19,9 @@ namespace Indecisive
 			EndPaint(hWnd, &ps);
 			break;
 
+		case WM_KEYDOWN:
+			static_cast<IInputManager*>(ResourceManagerInstance()->GetService("input"))->KeyPress(static_cast<KeyCode>(wParam));
+			break;
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			break;

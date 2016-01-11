@@ -40,11 +40,13 @@ namespace Indecisive
 
 		virtual void Update(float elapsedTime) override
 		{
+			auto w = Matrix::Identity;
 			for (auto* p : _updatableComponents)
 			{
 				p->Update(elapsedTime);
-				_world = p->GetWorld() * _world;
+				w *= p->GetWorld();
 			}
+			_world = w;
 		}
 
 		virtual const Matrix& GetWorld() const override { return _world; }

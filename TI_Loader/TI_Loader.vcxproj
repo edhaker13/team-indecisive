@@ -53,6 +53,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;TI_LOADER_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -61,6 +62,9 @@
       </AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -93,8 +97,14 @@
     <ProjectReference Include="..\TI_Engine\TI_Engine.vcxproj">
       <Project>{d7fab2bf-0980-4018-b62b-003e08dfe4b2}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\TI_Input\TI_Input.vcxproj">
+      <Project>{2fadb67b-1b36-4baf-a85a-c11da45b9666}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\TI_Physics\TI_Physics.vcxproj">
       <Project>{b7b40873-1512-45db-b592-f4ed2a27a01e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\TI_Sound\TI_Sound.vcxproj">
+      <Project>{adc160e4-99f1-4d33-aed0-10997b189fb4}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

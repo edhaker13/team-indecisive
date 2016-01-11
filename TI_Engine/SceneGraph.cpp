@@ -61,7 +61,7 @@ namespace Indecisive
 		{
 			(pair.second)->Update(elapsedTime);
 		}
-		world *= GetParentWorld();
+		//world *= GetParentWorld();
 	};
 
 	const Matrix TreeNode::GetWorld() const
@@ -99,10 +99,6 @@ namespace Indecisive
 
 	void CameraNode::Update(float elapsedTime)
 	{
-		//if (center + distance != eye)
-		//{
-		//	eye = center - distance;
-		//}
 		TreeNode::Update(elapsedTime);
 	};
 };
