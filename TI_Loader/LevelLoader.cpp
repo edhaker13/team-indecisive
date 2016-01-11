@@ -238,10 +238,6 @@ namespace Indecisive
 					}
 					else if (input.compare("Physics") == 0)
 					{
-						TransformComponent* Basetransform = new TransformComponent();
-						Basetransform->SetScale(10000.0f, 10000.0f, 10000.0f);
-						Basetransform->SetPosition(0.0f, 0.0f, 0.0f);
-						PhysicsComp* FloorModel = new PhysicsComp(Basetransform);
 
 						Vector3 scale, position, rotation, velocity;
 						float mass, radius, theta, frCoef;
@@ -259,8 +255,6 @@ namespace Indecisive
 						PhysComp->SetVel(velocity);
 						PhysComp->SetMass(mass);
 						PhysComp->SlidingForce(theta, frCoef);
-
-						PhysComp->FloorCollisionCheck(Basetransform->GetPosition()); 
 
 						o->GetGameObject().AddUpdatable(PhysComp);
 

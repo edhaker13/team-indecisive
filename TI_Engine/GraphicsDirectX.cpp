@@ -506,6 +506,7 @@ namespace Indecisive
 
 			t = (dwTimeCur - dwTimeStart) / 1000.0f;
 			dt = t - lastT;
+			if (dt > 1) dt /= 10;
 		}
 
 		// Initialize the view matrix
