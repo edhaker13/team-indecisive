@@ -18,6 +18,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
+    <None Include="Levels\dummy.lvl" />
+    <None Include="Levels\input.lvl" />
     <None Include="Lighting.fx">
       <FileType>Document</FileType>
     </None>
