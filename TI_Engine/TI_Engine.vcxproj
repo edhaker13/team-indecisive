@@ -97,7 +97,7 @@
     <ClInclude Include="IResourceManager.h" />
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="IGameObject.h" />
-    <ClInclude Include="IInput.h" />
+    <ClInclude Include="ISoundManager.h" />
     <ClInclude Include="IDrawable.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="IPhysics.h" />
@@ -110,7 +110,6 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="SceneGraph.h" />
-    <ClInclude Include="SoundClass.h" />
     <ClInclude Include="Structures.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
@@ -124,18 +123,12 @@
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SceneGraph.cpp" />
-    <ClCompile Include="SoundClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DX11 Framework.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="TeamIndecisive.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TI_Sound\TI_Sound.vcxproj">
-      <Project>{adc160e4-99f1-4d33-aed0-10997b189fb4}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

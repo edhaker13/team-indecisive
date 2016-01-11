@@ -10,6 +10,12 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="SoundManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SoundManager.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{ADC160E4-99F1-4D33-AED0-10997B189FB4}</ProjectGuid>
     <RootNamespace>TI_Sound</RootNamespace>

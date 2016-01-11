@@ -96,6 +96,9 @@
     <ProjectReference Include="..\TI_Physics\TI_Physics.vcxproj">
       <Project>{b7b40873-1512-45db-b592-f4ed2a27a01e}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\TI_Sound\TI_Sound.vcxproj">
+      <Project>{adc160e4-99f1-4d33-aed0-10997b189fb4}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

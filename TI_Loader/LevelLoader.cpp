@@ -7,6 +7,7 @@
 #include "..\TI_Engine\Window.h"
 #include "..\TI_Physics\TransformComponent.h"
 #include "..\TI_Physics\PhysicsComp.h"
+#include "..\TI_Sound\SoundManager.h"
 
 namespace Indecisive
 {
@@ -86,11 +87,14 @@ namespace Indecisive
 		TreeNode* parent = new TreeNode("root");
 		TreeNode* last = parent;
 		Vector3 v, v1, v2;
+		auto pSoundManager = new SoundManager();
+		pSoundManager->Initialize(_pWindow->GetHWND());
 		auto edgecosts = new EdgeMap();
 		auto waypoints = new WaypointList();
 		ResourceManagerInstance()->AddService("edgecosts", edgecosts);
 		ResourceManagerInstance()->AddService("waypoints", waypoints);
 		ResourceManagerInstance()->AddService("root", parent);
+		ResourceManagerInstance()->AddService("sound", pSoundManager);
 		//ResourceManagerInstance()->AddService("Collision Physics", parent);
 
 		while (!stream.eof())
@@ -151,6 +155,17 @@ namespace Indecisive
 					initialised = _pGraphics->Initialise(_pWindow);
 				}
 			}
+			else if (input.compare("sound") == 0)
+			{
+				if (pSoundManager->IsInitialised())
+				{
+					stream >> input;
+					pSoundManager->Load(input);
+					DWORD flag;
+					stream >> flag;
+					pSoundManager->Play(input, 0, 0, flag);
+				}
+			}
 			else if (input.compare("children") == 0)
 			{
 				// Set parent to last node
@@ -207,7 +222,7 @@ namespace Indecisive
 						PhysicsComp* PhysComp = new PhysicsComp(ObjectTransform);
 
 						PhysComp->FloorCollisionCheck(Basetransform->GetPosition()); //???
-						o->Object().AddUpdatable(PhysComp);
+						//o->Object().AddUpdatable(PhysComp);
 					}
 				}
 			}

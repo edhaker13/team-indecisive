@@ -88,37 +88,6 @@ namespace Indecisive
 		_pd3dDevice->CreateSamplerState(&sampDesc, &_pSamplerLinear);
 
 		_pInput = new Input();
-
-		bool result;
-
-		// Create the sound object.
-		_pSoundClass = new SoundClass();
-		if (!_pSoundClass)
-		{
-			return false;
-		}
-
-		// Initialize the sound object.
-		result = _pSoundClass->Initialize(_hWnd);
-		_pDirectSound = _pSoundClass->GetDirectSound();
-
-		//_pSoundClass->CreateBasicBuffer(_pDirectSound, _pSecondaryBuffer);
-		_pSoundClass->LoadWaveFile(".\\Assets\\Snare.wav", &_pSecondaryBuffer);
-		//_pSoundClass->SetSecondaryBuffer(_pSecondaryBuffer);
-
-		//_pSoundClass->CreateBasicBuffer(_pDirectSound, _pSecondaryBuffer1);
-		_pSoundClass->LoadWaveFile(".\\Assets\\synth.wav", &_pSecondaryBuffer1);
-		//_pSoundClass->SetSecondaryBuffer(_pSecondaryBuffer1);
-
-		// Change the last value to 1 to loop sound
-		_pSoundClass->PlayWaveFile(_pSecondaryBuffer, 0, 0, 1);
-		_pSoundClass->PlayWaveFile(_pSecondaryBuffer1, 0, 0, 0);
-
-		if (!result)
-		{
-			MessageBox(_hWnd, L"Could not initialize Direct Sound. Can't find .wav file.", L"Error", MB_OK);
-			return false;
-		}
 		
 		TI_LOG_V("Initialised DirectX Graphics");
 		return true;
@@ -515,12 +484,6 @@ namespace Indecisive
 		if (_pRoot) { delete _pRoot; _pRoot = nullptr; }
 		if (_pCamera) _pCamera = nullptr;
 
-		if (_pSoundClass)
-		{
-			_pSoundClass->Shutdown();
-			delete _pSoundClass;
-			_pSoundClass = 0;
-		}
 	}
 
 	void GraphicsDirectX::Update()
