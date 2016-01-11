@@ -54,7 +54,7 @@ namespace Indecisive
 			{
 
 				auto lvlLoader = LevelLoader();
-				static const std::string level = "PhysicsLvl.lvl";
+				static const std::string level = "input.lvl";
 				lvlLoader.ReadWindow(level);
 				lvlLoader.GetWindow()->Initialise(nullptr, 5);
 				lvlLoader.Read(level);
