@@ -1,9 +1,25 @@
 window 1280 720 Input Demo
 graphics directx
 children
-camera camera 0.0 100.0 -150.0 0.0 0.0 0.0 0.0 1.0 0.0 10.0 10000.0
-sound snare.wav 1
-sound synth.wav 0
+camera
+	name camera
+	eye 0.0 100.0 -150.0
+	center 0.0 0.0 0.0
+	up 0.0 1.0 0.0 
+	near 10.0
+	far 10000.0
+	actions
+	moveforwards W 1
+	moveleft A 1
+	movebackwards S 1
+	moveright D 1
+endcamera
+sound
+	filename snare.wav 
+	playstart 
+	playkey H
+	flag 1
+endsound
 position move 0.0 0.0 10.0
 	children
 	object car fullcar.obj

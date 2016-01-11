@@ -191,11 +191,24 @@ namespace Indecisive
 			{
 				if (pSoundManager->IsInitialised())
 				{
-					stream >> input;
-					pSoundManager->Load(input);
+					std::string name;
+					char key;
 					DWORD flag;
-					stream >> flag;
-					pSoundManager->Play(input, 0, 0, flag);
+					bool playAtStart = false;
+					while (input.compare("endsound") != 0)
+					{
+						stream >> input;
+						if (input.compare("filename") == 0)			stream >> name;
+						else if (input.compare("playstart") == 0)	playAtStart = true;
+						else if (input.compare("playkey") == 0)		stream >> key;
+						else if (input.compare("flag") == 0)		stream >> flag;
+					}
+					pSoundManager->Load(name);
+					if (playAtStart != false)
+					{
+						pSoundManager->Play(name, 0, 0, flag);
+					}
+					pInputManager->RegisterAction((KeyCode)key, [pSoundManager, name, flag](){ pSoundManager->Play(name, 0, 0, flag); });
 				}
 			}
 			else if (input.compare("children") == 0)
