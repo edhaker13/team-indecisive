@@ -19,8 +19,8 @@ namespace Indecisive
 		assert(!filename.empty());
 		if (!stream.is_open())
 		{
-			stream.open(_PATH + filename);
 			stream.exceptions(std::ifstream::failbit);
+			stream.open(_PATH + filename);
 		}
 	}
 
@@ -87,7 +87,6 @@ namespace Indecisive
 		std::string input = "";
 		TreeNode* parent = new TreeNode("root");
 		TreeNode* last = parent;
-		Vector3 v, v1, v2;
 		auto pSoundManager = new SoundManager();
 		auto pInputManager = new InputManager();
 		auto edgecosts = new EdgeMap();
@@ -98,7 +97,6 @@ namespace Indecisive
 		ResourceManagerInstance()->AddService("root", parent);
 		ResourceManagerInstance()->AddService("sound", pSoundManager);
 		ResourceManagerInstance()->AddService("input", pInputManager);
-		//ResourceManagerInstance()->AddService("Collision Physics", parent);
 
 		while (!stream.eof())
 		{
@@ -140,29 +138,54 @@ namespace Indecisive
 			}
 			else if (input.compare("camera") == 0)
 			{
-				float nearZ, farZ;
-				stream >> input;
-				stream >> v;
-				stream >> v1;
-				stream >> v2;
-				stream >> nearZ;
-				stream >> farZ;
-				// Initialize the camera node
-				auto cam = new CameraNode(input, v, v1, v2, nearZ, farZ);
+				std::string name; Vector3 eye, center, up; float nearZ, farZ; char key; float amount;
+				CameraNode* cam = nullptr;
+				while (input.compare("endcamera") != 0)
+				{
+					stream >> input;
+					if (input.compare("name") == 0)			stream >> name;
+					else if (input.compare("eye") == 0)		stream >> eye;
+					else if (input.compare("center") == 0)	stream >> center;
+					else if (input.compare("up") == 0)		stream >> up;
+					else if (input.compare("near") == 0)	stream >> nearZ;
+					else if (input.compare("far") == 0)		stream >> farZ;
+					else if (input.compare("actions") == 0)	cam = new CameraNode(name, eye, center, up, nearZ, farZ);
+					else if (input.compare("moveright") == 0)
+					{
+						stream >> key;
+						stream >> amount;
+						pInputManager->RegisterAction((KeyCode)key, [cam, amount](){ cam->eye.x += amount; });
+					}
+					else if (input.compare("moveleft") == 0)
+					{
+						stream >> key;
+						stream >> amount;
+						pInputManager->RegisterAction((KeyCode)key, [cam, amount](){ cam->eye.x -= amount; });
+					}
+					else if (input.compare("moveforwards") == 0)
+					{
+						stream >> key;
+						stream >> amount;
+						pInputManager->RegisterAction((KeyCode)key, [cam, amount](){ cam->eye.z += amount; });
+					}
+					else if (input.compare("movebackwards") == 0)
+					{
+						stream >> key;
+						stream >> amount;
+						pInputManager->RegisterAction((KeyCode)key, [cam, amount](){ cam->eye.z -= amount; });
+					}
+				}
+				if (cam == nullptr) TI_LOG_E("Couldn't make a camera node");
+				// A camera needs to be used in graphics initialise, so add to locator
+				ResourceManagerInstance()->AddService(name, cam);
+				// Add node to tree, set last node as this
+				parent->Append(cam);
 				last = cam;
-				// Camera needs to be used in graphics initialise, so add to locator
-				ResourceManagerInstance()->AddService(input, last);
-				parent->Append(last);
-
+				// Now that we have a camera initialise graphics if not already done
 				if (!initialised)
 				{
 					initialised = _pGraphics->Initialise(_pWindow);
 				}
-				// TODO: Read key and value from file
-				pInputManager->RegisterAction((KeyCode)'W', [cam](){ cam->eye.z += 1.f; });
-				pInputManager->RegisterAction((KeyCode)'A', [cam](){ cam->eye.x -= 1.f; });
-				pInputManager->RegisterAction((KeyCode)'S', [cam](){ cam->eye.z -= 1.f; });
-				pInputManager->RegisterAction((KeyCode)'D', [cam](){ cam->eye.x += 1.f; });
 			}
 			else if (input.compare("sound") == 0)
 			{
@@ -182,10 +205,11 @@ namespace Indecisive
 			}
 			else if (input.compare("position") == 0)
 			{
+				Vector3 pos;
 				stream >> input;
-				stream >> v;
+				stream >> pos;
 				// Initialise translation node
-				last = new PositionNode(input, v);
+				last = new PositionNode(input, pos);
 				parent->Append(last);
 			}
 			else if (input.compare("object") == 0)

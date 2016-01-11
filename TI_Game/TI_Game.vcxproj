@@ -17,6 +17,8 @@
     <ClInclude Include="GameManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Levels\dummy.lvl" />
+    <None Include="Levels\input.lvl" />
     <None Include="Lighting.fx">
       <FileType>Document</FileType>
     </None>
