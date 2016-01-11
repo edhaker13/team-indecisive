@@ -138,24 +138,6 @@ namespace Indecisive
 	}
 	//------------------------------------------------------------------------------------------------//
 
-	//-----------------------------------------------------------------------------------------------
-	float Steering::GetMinDistanceInPath(const PositionList& path)
-	{
-		static float result = 0;
-		if (result == 0)
-		{
-			float minDist = std::numeric_limits<float>::max();
-			Vector3 lastV = path[0];
-			std::for_each(path.cbegin() + 1, path.cend(),
-				[&minDist, &lastV](Vector3 v){
-				auto d = Vector3::DistanceSquared(lastV, v);
-				lastV = v;
-				if (d < minDist) minDist = d / 4;
-			});
-			result = minDist;
-		}
-		return result;
-	}
 	//--------------------------------------------------------------------------------------------------
 	Vector3 Steering::Arrive(const Vector3& position, const Vector3& target, const Vector3& velocity
 		, float deceleration, float maxSpeed)
@@ -200,8 +182,8 @@ namespace Indecisive
 		return (resultingVelocity - velocity);
 	}
 	//--------------------------------------------------------------------------------------------------
-	Vector3 Steering::PathFollow(const Vector3& position, const Vector3& endTarget, bool& hasTarget, bool& newTarget
-		, bool& endOnTarget, const Vector3& velocity, float decel, float maxSpeed
+	Vector3 Steering::PathFollow(const Vector3& position, const Vector3& endTarget, bool& hasTarget
+		, bool& newTarget, bool& endOnTarget, const Vector3& velocity, float decel, float maxSpeed
 		, const PositionList& path, PositionList::size_type& currentIndex, const TreeNode& node)
 	{
 		Vector3 currentTarget;
@@ -214,15 +196,16 @@ namespace Indecisive
 
 		assert(!path.empty());
 		// Get current target in model space
-		auto world = Matrix::CreateTranslation(path[currentIndex]) * node.GetParentWorld().Invert();
-		currentTarget = world.Translation();
+		currentTarget = Vector3ToLocalSpace(path[currentIndex], node.GetParentWorld());
 
 		// New target has been clicked
 		if (newTarget)
 		{
-			currentIndex = 0;
-			auto world = Matrix::CreateTranslation(path[currentIndex]) * node.GetParentWorld().Invert();
-			currentTarget = world.Translation();
+			if (currentIndex != 0)
+			{
+				currentIndex = 0;
+				currentTarget = Vector3ToLocalSpace(path[currentIndex], node.GetParentWorld());
+			}
 			hasTarget = true;
 			newTarget = false;
 			endOnTarget = false;
@@ -240,8 +223,7 @@ namespace Indecisive
 			{
 				if (distToCurrent <= GetMinDistanceInPath(path))
 				{
-					auto world = Matrix::CreateTranslation(path[++currentIndex]) * node.GetParentWorld().Invert();
-					currentTarget = world.Translation();
+					currentTarget = Vector3ToLocalSpace(path[++currentIndex], node.GetParentWorld());
 				}
 			}
 			else if (distToEnd < distToCurrent || currentTarget == endTarget)
@@ -256,7 +238,7 @@ namespace Indecisive
 		// Move to target
 		return Steering::Seek(position, currentTarget, velocity, maxSpeed);
 	}
-	//-----------------------------------------------------------------------------------------------
+	//--------------------------------------------------------------------------------------------------
 	void Steering::MoveInHeadingDirection(float dt, Vector3& steering, Vector3& velocity
 		, Vector3& position, float mass, float maxSpeed)
 	{
@@ -273,12 +255,37 @@ namespace Indecisive
 	}
 	//------------------------------------------------------------------------------------------------//
 
+	//-------------------------------------------------------------------------------------------------
+	float GetMinDistanceInPath(const PositionList& path)
+	{
+		static float result = 0;
+		if (result == 0)
+		{
+			float minDist = std::numeric_limits<float>::max();
+			Vector3 lastV = path[0];
+			std::for_each(path.cbegin() + 1, path.cend(),
+				[&minDist, &lastV](Vector3 v){
+				auto d = Vector3::DistanceSquared(lastV, v);
+				lastV = v;
+				if (d < minDist) minDist = d / 4;
+			});
+			result = minDist;
+		}
+		return result;
+	}
+	//--------------------------------------------------------------------------------------------------
+	Vector3 Vector3ToLocalSpace(const Vector3& v, const Matrix& parentWorld)
+	{
+		auto world = Matrix::CreateTranslation(v) * parentWorld.Invert();
+		return world.Translation();
+	}
+	//------------------------------------------------------------------------------------------------//
+
 	//--------------------------------------------------------------------------------------------------
 	void AIComponent::SetTarget(const Vector3& t)
 	{
 		mPath = PathFinder::Find(mPosition, t, mWaypoints, mEdges);
-		auto world = Matrix::CreateTranslation(t) * mNode.GetParentWorld().Invert();
-		mTarget = world.Translation();
+		mTarget = Vector3ToLocalSpace(t, mNode.GetParentWorld());
 		mNewTarget = true;
 		mHasTarget = true;
 	}

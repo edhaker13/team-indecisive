@@ -20,6 +20,21 @@ sound
 	playkey H
 	flag 1
 endsound
+sound
+	filename Closed-Hi-Hat-5.wav
+	playkey J
+	flag 0
+endsound
+sound
+	filename Crash-Cymbal-2.wav
+	playkey K
+	flag 0
+endsound
+sound
+	filename Bass-Drum-3.wav
+	playkey L
+	flag 0
+endsound
 position move 0.0 0.0 10.0
 	children
 	object car fullcar.obj

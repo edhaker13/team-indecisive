@@ -70,7 +70,6 @@ namespace Indecisive
 	//--------------------------------------------------------------------------------------------------
 	namespace Steering
 	{
-		float GetMinDistanceInPath(const PositionList&);
 		Vector3 Arrive(const Vector3&, const Vector3&, const Vector3&, float, float);
 		Vector3 Seek(const Vector3&, const Vector3&, const Vector3&, float);
 		Vector3 Flee(const Vector3&, const Vector3&, const Vector3&, float);
@@ -79,6 +78,11 @@ namespace Indecisive
 		void MoveInHeadingDirection(float, Vector3&, Vector3&, Vector3&, float, float);
 	}
 
+	//--------------------------------------------------------------------------------------------------
+	// Independent helper functions
+	//--------------------------------------------------------------------------------------------------
+	float GetMinDistanceInPath(const PositionList&);
+	Vector3 Vector3ToLocalSpace(const Vector3&, const Matrix&);
 	//--------------------------------------------------------------------------------------------------
 	// Binding class, path finding and steering to our engine methods
 	//--------------------------------------------------------------------------------------------------
