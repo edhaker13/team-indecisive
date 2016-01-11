@@ -8,7 +8,7 @@
 #include "IGraphics.h"
 #include "Logger.h"
 #include "Structures.h"
-#include "Input.h"
+#include "..\TI_Input\Input.h"
 
 namespace Indecisive
 {
