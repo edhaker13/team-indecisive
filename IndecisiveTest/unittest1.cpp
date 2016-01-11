@@ -6,66 +6,60 @@
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace Indecisive
-{		
+{
 	TEST_CLASS(UnitTest1)
 	{
-	private:
-		IGraphics* _pGraphics;
-	public:	
+	public:
 		TEST_CLASS_INITIALIZE(setup)
 		{
 			//TO DO
 		}
-		
+
 		TEST_METHOD(LevelLoaderTest)
-			{
-				auto lvlLoader = LevelLoader();
-				auto LV = LevelLoader();
-				
-				static const std::string level = "dummy.lvl";
-				bool CanRead = lvlLoader.CanRead(level);
+		{
+			auto lvlLoader = LevelLoader();
 
-				auto root = static_cast<TreeNode*> (ResourceManagerInstance()->GetService("root"));
-				
-				Assert::IsTrue(CanRead);
-			};
-	
-			TEST_METHOD(TextureLoadTest)
-			{
+			static const std::string level = "dummy.lvl";
+			bool CanRead = lvlLoader.CanRead(level);
 
-				Window* pWindow = new Window(1280, 720, L"TEST"); 
-				pWindow->Initialise(nullptr, 5);
+			auto root = static_cast<TreeNode*> (ResourceManagerInstance()->GetService("root"));
 
-				auto pGraphics = new GraphicsDirectX();
-				
-				ResourceManagerInstance()->AddService("graphics", pGraphics);
-				ResourceManagerInstance()->AddService("root", new TreeNode("root"));
-				ResourceManagerInstance()->AddService("camera", new CameraNode("cam", Vector3(0.f, 5.f, 100.f), Vector3::Zero, Vector3::Up, 0.0f, 100.0f));
-				pGraphics->Initialise(pWindow);
-				bool test = ResourceManagerInstance()->AddTexture("WhiteTex.dds");
-				
+			Assert::IsTrue(CanRead);
+		};
 
-				Assert::IsTrue(test);
-				
-			}
+		TEST_METHOD(TextureLoadTest)
+		{
 
+			auto pWindow = new Window(1280, 720, L"TextureTest");
+			pWindow->Initialise(nullptr, 5);
 
-			TEST_METHOD(ObjectMeshTest)
-			{
+			auto pGraphics = new GraphicsDirectX();
 
-				auto lvlLoader = LevelLoader();
-				static const std::string level = "input.lvl";
-				lvlLoader.ReadWindow(level);
-				lvlLoader.GetWindow()->Initialise(nullptr, 5);
-				lvlLoader.Read(level);
+			ResourceManagerInstance()->AddService("graphics", pGraphics);
+			ResourceManagerInstance()->AddService("root", new TreeNode("root"));
+			ResourceManagerInstance()->AddService("camera", new CameraNode("cam", Vector3(0.f, 5.f, 100.f), Vector3::Zero, Vector3::Up, 0.0f, 100.0f));
+			pGraphics->Initialise(pWindow);
+			bool test = ResourceManagerInstance()->AddTexture("WhiteTex.dds");
+			delete pWindow;
+			delete pGraphics;
 
-				auto root = static_cast<TreeNode*> (ResourceManagerInstance()->GetService("root"));
-				auto nodeObject = static_cast<ObjectNode*> (root->children["move"]->children["car"]);
-				auto GO = &nodeObject->GetGameObject();
+			Assert::IsTrue(test);
+		}
 
-				Assert::IsNotNull(GO);
+		TEST_METHOD(ObjectMeshTest)
+		{
 
-			}
-		
+			auto lvlLoader = LevelLoader();
+			static const std::string level = "dummy.lvl";
+			lvlLoader.ReadWindow(level);
+			lvlLoader.GetWindow()->Initialise(nullptr, 5);
+			lvlLoader.Read(level);
+
+			auto root = static_cast<TreeNode*> (ResourceManagerInstance()->GetService("root"));
+			auto nodeObject = static_cast<ObjectNode*> (root->children["move"]->children["car"]);
+			auto GO = &nodeObject->GetGameObject();
+
+			Assert::IsNotNull(GO);
+		}
 	};
 }

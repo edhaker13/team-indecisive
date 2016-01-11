@@ -1,9 +1,0 @@
-window 1280 720 Team Indecisive
-graphics directx
-children
-camera camera 0.0 100.0 -150.0 0.0 0.0 0.0 0.0 1.0 0.0 10.0 1000.0
-position move 0.0 0.0 50.0
-	children
-	object car fullcar.obj
-	end
-end
