@@ -1,9 +1,21 @@
 window 1280 720 Team Indecisive
 graphics directx
 children
-camera camera 0.0 100.0 -150.0 0.0 0.0 0.0 0.0 1.0 0.0 10.0 10000.0
+camera
+	name camera
+	eye 0.0 100.0 -150.0
+	center 0.0 0.0 0.0
+	up 0.0 1.0 0.0 
+	near 10.0
+	far 10000.0
+	actions
+	moveforwards W 1
+	moveleft A 1
+	movebackwards S 1
+	moveright D 1
+endcamera
 	children
 	object cube cube.obj
-     	comp Physics 1.0 1.0 1.0 -10.0 -20.0 -20.0 10.0 0.0 0.0 5.0 50.0 0.0 0.0 1.0 50.0 10.0
+     	comp Physics 1.0 1.0 1.0 -10.0 -20.0 -20.0 10.0 0.0 0.0 5.0 1.0 0.0 0.0 100.0 50.0 10.0
 	end
 end
