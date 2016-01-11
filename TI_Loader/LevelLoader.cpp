@@ -222,7 +222,7 @@ namespace Indecisive
 						PhysicsComp* PhysComp = new PhysicsComp(ObjectTransform);
 
 						PhysComp->FloorCollisionCheck(Basetransform->GetPosition()); //???
-						//o->Object().AddUpdatable(PhysComp);
+						o->GetGameObject().AddUpdatable(PhysComp);
 					}
 				}
 			}
