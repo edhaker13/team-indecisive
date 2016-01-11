@@ -42,7 +42,7 @@ namespace Indecisive
 				
 				auto root = static_cast<TreeNode*> (ResourceManagerInstance()->GetService("root"));
 				auto nodeObject = static_cast<ObjectNode*> (root->children["move"]->children["car"]);
-				auto GO = &nodeObject->Object(); 
+				auto GO = &nodeObject->GetGameObject(); 
 
 				Assert::IsNotNull(GO);
 
