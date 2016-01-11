@@ -92,6 +92,7 @@
     <ClInclude Include="ComponentFactory.h" />
     <ClInclude Include="DirectXMath.h" />
     <ClInclude Include="GraphicsDirectX.h" />
+    <ClInclude Include="IInputManager.h" />
     <ClInclude Include="IReadable.h" />
     <ClInclude Include="IResourceManager.h" />
     <ClInclude Include="IComponent.h" />
@@ -127,11 +128,6 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="TeamIndecisive.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TI_Input\TI_Input.vcxproj">
-      <Project>{2fadb67b-1b36-4baf-a85a-c11da45b9666}</Project>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -97,6 +97,9 @@
     <ProjectReference Include="..\TI_Engine\TI_Engine.vcxproj">
       <Project>{d7fab2bf-0980-4018-b62b-003e08dfe4b2}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\TI_Input\TI_Input.vcxproj">
+      <Project>{2fadb67b-1b36-4baf-a85a-c11da45b9666}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\TI_Physics\TI_Physics.vcxproj">
       <Project>{b7b40873-1512-45db-b592-f4ed2a27a01e}</Project>
     </ProjectReference>

@@ -8,6 +8,7 @@
 #include "..\TI_Physics\TransformComponent.h"
 #include "..\TI_Physics\PhysicsComp.h"
 #include "..\TI_Sound\SoundManager.h"
+#include "..\TI_Input\InputManager.h"
 
 namespace Indecisive
 {
@@ -88,13 +89,15 @@ namespace Indecisive
 		TreeNode* last = parent;
 		Vector3 v, v1, v2;
 		auto pSoundManager = new SoundManager();
-		pSoundManager->Initialize(_pWindow->GetHWND());
+		auto pInputManager = new InputManager();
 		auto edgecosts = new EdgeMap();
 		auto waypoints = new WaypointList();
+		pSoundManager->Initialize(_pWindow->GetHWND());
 		ResourceManagerInstance()->AddService("edgecosts", edgecosts);
 		ResourceManagerInstance()->AddService("waypoints", waypoints);
 		ResourceManagerInstance()->AddService("root", parent);
 		ResourceManagerInstance()->AddService("sound", pSoundManager);
+		ResourceManagerInstance()->AddService("input", pInputManager);
 		//ResourceManagerInstance()->AddService("Collision Physics", parent);
 
 		while (!stream.eof())
@@ -145,7 +148,8 @@ namespace Indecisive
 				stream >> nearZ;
 				stream >> farZ;
 				// Initialize the camera node
-				last = new CameraNode(input, v, v1, v2, nearZ, farZ);
+				auto cam = new CameraNode(input, v, v1, v2, nearZ, farZ);
+				last = cam;
 				// Camera needs to be used in graphics initialise, so add to locator
 				ResourceManagerInstance()->AddService(input, last);
 				parent->Append(last);
@@ -154,6 +158,11 @@ namespace Indecisive
 				{
 					initialised = _pGraphics->Initialise(_pWindow);
 				}
+				// TODO: Read key and value from file
+				pInputManager->RegisterAction((KeyCode)'W', [cam](){ cam->eye.z += 1.f; });
+				pInputManager->RegisterAction((KeyCode)'A', [cam](){ cam->eye.x -= 1.f; });
+				pInputManager->RegisterAction((KeyCode)'S', [cam](){ cam->eye.z -= 1.f; });
+				pInputManager->RegisterAction((KeyCode)'D', [cam](){ cam->eye.x += 1.f; });
 			}
 			else if (input.compare("sound") == 0)
 			{
