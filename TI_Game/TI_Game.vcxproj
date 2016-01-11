@@ -17,6 +17,7 @@
     <ClInclude Include="GameManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="Lighting.fx">
       <FileType>Document</FileType>
     </None>

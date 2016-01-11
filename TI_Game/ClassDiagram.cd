@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Indecisive::GameManager">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAABAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAABABAA=</HashCode>
+      <FileName>GameManager.h</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_pGraphics" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Indecisive::IGraphics">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAwAAAAAAAAAAwAAAgAAAAABAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>e:\-- uni --\year three\advanced windows game programming\awgp-15-team-indecisive\ti_engine\igraphics.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
