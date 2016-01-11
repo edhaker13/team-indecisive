@@ -150,7 +150,7 @@ namespace Indecisive
 				[&minDist, &lastV](Vector3 v){
 				auto d = Vector3::DistanceSquared(lastV, v);
 				lastV = v;
-				if (d < minDist) minDist = d / 2;
+				if (d < minDist) minDist = d / 4;
 			});
 			result = minDist;
 		}
@@ -285,7 +285,7 @@ namespace Indecisive
 	//--------------------------------------------------------------------------------------------------
 	void AIComponent::Update(float dt)
 	{
-		dt = 0.002f;
+		//dt = 0.002f;
 		if (mPath.empty())
 			return;
 
