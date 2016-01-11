@@ -19,8 +19,6 @@ namespace Indecisive
 		Window* _pWindow = nullptr;
 		// Graphics interface. Allocated after constructor, so no reference.
 		IGraphics* _pGraphics = nullptr;
-		//PhysicsComponent
-		PhysicsComp* _pPhysics = nullptr;
 
 	protected:
 		LOADER_API void _Open(const std::string&, std::ifstream&) override;

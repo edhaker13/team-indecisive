@@ -13,6 +13,10 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Level Files">
+      <UniqueIdentifier>{b8bf88d2-5137-4d80-9f04-97791baa234c}</UniqueIdentifier>
+      <Extensions>lvl;</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameManager.cpp">
@@ -27,6 +31,12 @@
   <ItemGroup>
     <None Include="Lighting.fx">
       <Filter>Resource Files</Filter>
+    </None>
+    <None Include="Levels\dummy.lvl">
+      <Filter>Level Files</Filter>
+    </None>
+    <None Include="Levels\input.lvl">
+      <Filter>Level Files</Filter>
     </None>
   </ItemGroup>
 </Project>
