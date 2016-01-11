@@ -132,6 +132,11 @@
   <ItemGroup>
     <Image Include="TeamIndecisive.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TI_Sound\TI_Sound.vcxproj">
+      <Project>{adc160e4-99f1-4d33-aed0-10997b189fb4}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

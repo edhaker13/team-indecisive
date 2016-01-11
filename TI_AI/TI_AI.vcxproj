@@ -16,6 +16,11 @@
   <ItemGroup>
     <ClCompile Include="AIComponent.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TI_Engine\TI_Engine.vcxproj">
+      <Project>{d7fab2bf-0980-4018-b62b-003e08dfe4b2}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{73A43B62-444D-49DD-8628-98CF35131005}</ProjectGuid>
     <RootNamespace>TI_AI</RootNamespace>
@@ -53,8 +58,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>TI_Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
