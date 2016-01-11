@@ -163,7 +163,8 @@ namespace Indecisive
 				// Initialise translation node
 				last = new PositionNode(input, v);
 				parent->Append(last);
-			}
+			}	
+		
 			else if (input.compare("object") == 0)
 			{
 				std::string obj;
@@ -193,24 +194,37 @@ namespace Indecisive
 						TransformComponent* Basetransform = new TransformComponent();
 						Basetransform->SetScale(10000.0f, 10000.0f, 10000.0f);
 						Basetransform->SetPosition(0.0f, 0.0f, 0.0f);
-
 						PhysicsComp* FloorModel = new PhysicsComp(Basetransform);
 
-						Vector3 scale, position, rotation;
-						stream >> scale; stream >> position; stream >> rotation;
+						Vector3 scale, position, rotation, velocity;
+						float mass, radius, theta, frCoef;
+						stream >> scale; stream >> position; stream >> rotation; stream >> radius; stream >> velocity; stream >> mass;
+						stream >> theta; stream >> frCoef;
 
 						TransformComponent* ObjectTransform = new TransformComponent();
 						ObjectTransform->SetScale(scale);
 						ObjectTransform->SetPosition(position);
 						ObjectTransform->SetRotation(rotation);
-
+						
 						PhysicsComp* PhysComp = new PhysicsComp(ObjectTransform);
 
+						PhysComp->SetCollisionRadius(radius);
+						PhysComp->SetVel(velocity);
+						PhysComp->SetMass(mass);
+						PhysComp->SlidingForce(theta, frCoef);
+						
+						
 						PhysComp->FloorCollisionCheck(Basetransform->GetPosition()); //???
+
 						o->Object().AddUpdatable(PhysComp);
-					}
+
+						//->Object().AddUpdatable(FloorModel);
+					}	
+	
 				}
 			}
+
+		
 			else if (input.compare("end") == 0)
 			{
 				if (parent->parent != nullptr)

@@ -35,7 +35,7 @@ namespace Indecisive
 	GameManager::GameManager(HINSTANCE hInstance, int nCmdShow)
 	{
 		auto lvlLoader = LevelLoader();
-		static const std::string level = "dummy.lvl";
+		static const std::string level = "PhysicsLvl.lvl";
 
 		if (!lvlLoader.CanRead(level))
 		{

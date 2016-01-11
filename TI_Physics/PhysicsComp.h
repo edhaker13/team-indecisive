@@ -29,7 +29,7 @@ namespace Indecisive
 	PHYSICS_API const Matrix& GetWorld() const override { return _transform->GetWorld(); };
 	
 	void SlidingMotion();
-	void SlidingForce(float theta, float frCoef);
+	PHYSICS_API void SlidingForce(float theta, float frCoef);
 
 	void MotionInFluid(float t);
 	void DragForce();

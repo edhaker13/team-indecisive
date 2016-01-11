@@ -6,11 +6,11 @@ namespace Indecisive
 	{
 		_transform = Itransform;
 		Acceleration = Vector3(0.0f, 0.0f, -0.1f);
-		mass = 1.0f;
-		force = Vector3(0.0f, 0.0f, 0.0f);
+		mass = 100.0f;
+		force = Vector3(1000.0f, 0.0f, 0.0f);
 		velocity = Vector3(10.0f, 0.0f, -0.1f);
 		netForce = Vector3(0.0f, 0.0f, 0.0f);
-		forceMag = 0.0f;
+		forceMag = 10.0f;
 		sForce = Vector3(0.0f, 0.0f, 0.0f);
 		dragFactor = 1.0f;
 		gravity = -9.81f;
@@ -18,7 +18,7 @@ namespace Indecisive
 		useConstAcc = true;
 		laminar = true;
 
-		radius = 0.5f;
+		radius = 20.0f;
 
 		collisionCheck = false;
 		boolsForce = true;
@@ -133,8 +133,8 @@ namespace Indecisive
 
 		if (sForce.y > 0.0f)
 		{
-			sForce.x = 0.0f;
-			sForce.y = 0.0f;
+			/*sForce.x = 0.0f;
+			sForce.y = 0.0f;*/
 		}
 	}
 
@@ -247,7 +247,6 @@ namespace Indecisive
 			}
 
 			DragForce();
-
 			MoveConstAcc(t);
 			UpdateState();
 
@@ -255,7 +254,10 @@ namespace Indecisive
 		else
 		{
 			MoveConstVel(t);
+			UpdateAccel();
+		
 		}
+	
 	}
 
 
