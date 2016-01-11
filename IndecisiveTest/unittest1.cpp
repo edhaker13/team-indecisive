@@ -30,24 +30,7 @@ namespace Indecisive
 				Assert::IsTrue(CanRead);
 			};
 
-				TEST_METHOD(TextureLoadTest)
-			{
-
-				Window* pWindow = new Window(1280, 720, L"TEST"); 
-				pWindow->Initialise(nullptr, 5);
-
-				auto pGraphics = new GraphicsDirectX();
-				
-				ResourceManagerInstance()->AddService("graphics", pGraphics);
-				ResourceManagerInstance()->AddService("root", new TreeNode("root"));
-				ResourceManagerInstance()->AddService("camera", new CameraNode("cam", Vector3(0.f, 5.f, 100.f), Vector3::Zero, Vector3::Up, 0.0f, 100.0f));
-				pGraphics->Initialise(pWindow);
-				bool test = ResourceManagerInstance()->AddTexture("WhiteTex.dds");
-				
-
-				Assert::IsTrue(test);
-				
-			}
+		
 
 			TEST_METHOD(ObjectMeshTest)
 			{
@@ -64,6 +47,25 @@ namespace Indecisive
 
 				Assert::IsNotNull(GO);
 
+			}		
+
+			TEST_METHOD(TextureLoadTest)
+			{
+
+				Window* pWindow = new Window(1280, 720, L"TEST"); 
+				pWindow->Initialise(nullptr, 5);
+
+				auto pGraphics = new GraphicsDirectX();
+				
+				ResourceManagerInstance()->AddService("graphics", pGraphics);
+				ResourceManagerInstance()->AddService("root", new TreeNode("root"));
+				ResourceManagerInstance()->AddService("camera", new CameraNode("cam", Vector3(0.f, 5.f, 100.f), Vector3::Zero, Vector3::Up, 0.0f, 100.0f));
+				pGraphics->Initialise(pWindow);
+				bool test = ResourceManagerInstance()->AddTexture("WhiteTex.dds");
+				
+
+				Assert::IsTrue(test);
+				
 			}
 
 		

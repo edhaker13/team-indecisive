@@ -69,7 +69,8 @@ namespace Indecisive
 		velocity.y += Acceleration.y * t;
 		velocity.z += Acceleration.z * t;
 
-		_transform->SetPosition(position);
+		//_transform->SetPosition(position);
+		_transform->SetPosition(position.x, position.y, position.z);
 	}
 
 	void PhysicsComp::MotionInFluid(float t)
@@ -249,7 +250,7 @@ namespace Indecisive
 			}
 
 			DragForce();
-			MoveConstAcc(t);
+			MoveConstAcc(1.0f);
 			UpdateState();
 
 		}
