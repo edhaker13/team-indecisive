@@ -236,7 +236,6 @@ namespace Indecisive
 						PhysComp->SetMass(mass);
 						PhysComp->SlidingForce(theta, frCoef);
 
-
 						PhysComp->FloorCollisionCheck(Basetransform->GetPosition()); //???
 
 						o->GetGameObject().AddUpdatable(PhysComp);

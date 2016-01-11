@@ -30,25 +30,7 @@ namespace Indecisive
 				Assert::IsTrue(CanRead);
 			};
 
-			
-			TEST_METHOD(ObjectMeshTest)
-			{
-
-				auto lvlLoader = LevelLoader();
-				static const std::string level = "dummy.lvl";
-				lvlLoader.ReadWindow(level);
-				lvlLoader.GetWindow()->Initialise(nullptr, 5);
-				lvlLoader.Read(level);
-				
-				auto root = static_cast<TreeNode*> (ResourceManagerInstance()->GetService("root"));
-				auto nodeObject = static_cast<ObjectNode*> (root->children["move"]->children["car"]);
-				auto GO = &nodeObject->GetGameObject(); 
-
-				Assert::IsNotNull(GO);
-
-			}
-
-			TEST_METHOD(TextureLoadTest)
+				TEST_METHOD(TextureLoadTest)
 			{
 
 				Window* pWindow = new Window(1280, 720, L"TEST"); 
@@ -66,6 +48,25 @@ namespace Indecisive
 				Assert::IsTrue(test);
 				
 			}
+
+			TEST_METHOD(ObjectMeshTest)
+			{
+
+				auto lvlLoader = LevelLoader();
+				static const std::string level = "dummy.lvl";
+				lvlLoader.ReadWindow(level);
+				lvlLoader.GetWindow()->Initialise(nullptr, 5);
+				lvlLoader.Read(level);
+				
+				auto root = static_cast<TreeNode*> (ResourceManagerInstance()->GetService("root"));
+				auto nodeObject = static_cast<ObjectNode*> (root->children["move"]->children["car"]);
+				auto GO = &nodeObject->GetGameObject(); 
+
+				Assert::IsNotNull(GO);
+
+			}
+
+		
 		
 	};
 }

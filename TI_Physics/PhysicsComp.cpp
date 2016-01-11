@@ -6,11 +6,11 @@ namespace Indecisive
 	{
 		_transform = Itransform;
 		Acceleration = Vector3(0.0f, 0.0f, -0.1f);
-		mass = 100.0f;
-		force = Vector3(1000.0f, 0.0f, 0.0f);
+		mass = 10.0f;
+		force = Vector3(0.0f, 0.0f, 0.0f);
 		velocity = Vector3(10.0f, 0.0f, -0.1f);
 		netForce = Vector3(0.0f, 0.0f, 0.0f);
-		forceMag = 10.0f;
+		forceMag = 0.0f;
 		sForce = Vector3(0.0f, 0.0f, 0.0f);
 		dragFactor = 1.0f;
 		gravity = -9.81f;
@@ -133,8 +133,8 @@ namespace Indecisive
 
 		if (sForce.y > 0.0f)
 		{
-			/*sForce.x = 0.0f;
-			sForce.y = 0.0f;*/
+			sForce.x = 0.0f;
+			sForce.y = 0.0f;
 		}
 	}
 
@@ -232,18 +232,20 @@ namespace Indecisive
 
 	void PhysicsComp::Update(float t)
 	{
-		_transform->Update(t);
+		
 		if (useConstAcc)
 		{
 			if (boolsForce)
 			{
-				SlidingForce(XMConvertToRadians(90.0f), 0.2f);
+				SlidingForce(XMConvertToRadians(90.0f), 20.0f);
+				
 			}
 			else
 			{
 				sForce.x = 0.0f;
 				sForce.y = mass * gravity;
 				sForce.z = 0.0f;
+					
 			}
 
 			DragForce();
@@ -254,13 +256,9 @@ namespace Indecisive
 		else
 		{
 			MoveConstVel(t);
-			UpdateAccel();
-		
 		}
-	
+	_transform->Update(t);
 	}
-
-
 
 }
 
