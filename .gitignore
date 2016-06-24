@@ -67,6 +67,8 @@ artifacts/
 *.pidb
 *.svclog
 *.scc
+*.VC.db
+*.VC.opendb
 
 # Chutzpah Test files
 _Chutzpah*
@@ -223,3 +225,5 @@ _Pvt_Extensions
 
 # FAKE - F# Make
 .fake/
+
+*.obj.bin
