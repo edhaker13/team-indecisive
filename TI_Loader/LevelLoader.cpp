@@ -12,13 +12,15 @@
 
 namespace Indecisive
 {
-	const std::string LevelLoader::_PATH = ".\\/Levels\\/";
+	// Reader expects files to be at this location
+	const std::string LevelLoader::_PATH = "./Levels/";
 
 	void LevelLoader::_Open(const std::string& filename, std::ifstream& stream)
 	{
 		assert(!filename.empty());
 		if (!stream.is_open())
 		{
+			// Set fail bit so exceptions will throw on read errors
 			stream.exceptions(std::ifstream::failbit);
 			stream.open(_PATH + filename);
 		}
@@ -39,6 +41,7 @@ namespace Indecisive
 
 	void LevelLoader::ReadWindow(const std::string& filename)
 	{
+		// A lot of win32 interfaces depend of a window handle, so it needs be initialised separately
 		std::ifstream stream;
 		UINT width, height;
 		std::string name;
@@ -76,6 +79,7 @@ namespace Indecisive
 
 	void LevelLoader::Read(const std::string& filename)
 	{
+		// A lot of win32 interfaces depend of a window handle, so it needs be initialised before hand.
 		if (_pWindow == nullptr)
 		{
 			TI_LOG_E("Window was not assigned before reading a level file.");
@@ -83,6 +87,7 @@ namespace Indecisive
 		}
 		std::ifstream stream;
 		_Open(filename, stream);
+		// Set initial variables
 		bool initialised = false;
 		std::string input = "";
 		TreeNode* parent = new TreeNode("root");
@@ -92,6 +97,7 @@ namespace Indecisive
 		auto edgecosts = new EdgeMap();
 		auto waypoints = new WaypointList();
 		pSoundManager->Initialize(_pWindow->GetHWND());
+		// Allocate initialised services to the resource manager
 		ResourceManagerInstance()->AddService("edgecosts", edgecosts);
 		ResourceManagerInstance()->AddService("waypoints", waypoints);
 		ResourceManagerInstance()->AddService("root", parent);
@@ -102,7 +108,7 @@ namespace Indecisive
 		{
 			assert(parent != nullptr);
 			stream >> input;
-
+			// Specifies which graphics interface to use, only directx is implemented atm
 			if (input.compare("graphics") == 0)
 			{
 				stream >> input;
@@ -112,6 +118,8 @@ namespace Indecisive
 					ResourceManagerInstance()->AddService("graphics", _pGraphics);
 				}
 			}
+			// Specifies the number of waypoints, then lists them
+			// Waypoints are ID(CHAR) Position(VECTOR3) Connections(comma separated ID list)
 			else if (input.compare("waypoints") == 0)
 			{
 				WaypointList::size_type size;
@@ -119,10 +127,12 @@ namespace Indecisive
 				for (WaypointList::size_type i = 0; i < size; i++)
 				{
 					auto w = new Waypoint();
-					stream >> *w;
+					stream >> *w; // Waypoint implements its own read function.
 					waypoints->push_back(w);
 				}
 			}
+			// Specifies the number of edges, then list them
+			// Edges are ID(CHAR) ID(CHAR) Cost(FLOAT)
 			else if (input.compare("edgecosts") == 0)
 			{
 				EdgeMap::size_type size;
@@ -136,6 +146,8 @@ namespace Indecisive
 					edgecosts->emplace(edge, cost);
 				}
 			}
+			// Camera is Name(STRING) Eye(VECTOR3) Center(VECTOR3) UP(VECTOR3) NEAR(FLOAT) FAR(FLOAT)
+			// Optionally you can specify movement as a key and an amount to move in the direction
 			else if (input.compare("camera") == 0)
 			{
 				std::string name; Vector3 eye, center, up; float nearZ, farZ; char key; float amount;
@@ -149,7 +161,7 @@ namespace Indecisive
 					else if (input.compare("up") == 0)		stream >> up;
 					else if (input.compare("near") == 0)	stream >> nearZ;
 					else if (input.compare("far") == 0)		stream >> farZ;
-					else if (input.compare("actions") == 0)	cam = new CameraNode(name, eye, center, up, nearZ, farZ);
+					else if (input.compare("actions") == 0)	cam = new CameraNode(name, eye, center, up, nearZ, farZ); // TODO: put in an start end loop
 					else if (input.compare("moveright") == 0)
 					{
 						stream >> key;
@@ -176,7 +188,7 @@ namespace Indecisive
 					}
 				}
 				if (cam == nullptr) TI_LOG_E("Couldn't make a camera node");
-				// A camera needs to be used in graphics initialise, so add to locator
+				// A camera needs to be used in the graphics initialisation, so add to resource manager
 				ResourceManagerInstance()->AddService(name, cam);
 				// Add node to tree, set last node as this
 				parent->Append(cam);
@@ -187,12 +199,13 @@ namespace Indecisive
 					initialised = _pGraphics->Initialise(_pWindow);
 				}
 			}
+			// Sounds can be played at start and played by a key
 			else if (input.compare("sound") == 0)
 			{
 				if (pSoundManager->IsInitialised())
 				{
 					std::string name;
-					char key;
+					char key = 0;
 					DWORD flag;
 					bool playAtStart = false;
 					while (input.compare("endsound") != 0)
@@ -204,18 +217,23 @@ namespace Indecisive
 						else if (input.compare("flag") == 0)		stream >> flag;
 					}
 					pSoundManager->Load(name);
-					if (playAtStart != false)
+					if (playAtStart)
 					{
 						pSoundManager->Play(name, 0, 0, flag);
 					}
-					pInputManager->RegisterAction((KeyCode)key, [pSoundManager, name, flag](){ pSoundManager->Play(name, 0, 0, flag); });
+					if (key != 0)
+					{
+						pInputManager->RegisterAction((KeyCode)key, [pSoundManager, name, flag]() { pSoundManager->Play(name, 0, 0, flag); });
+					}
 				}
 			}
+			// Start a new tree level
 			else if (input.compare("children") == 0)
 			{
-				// Set parent to last node
+				
 				parent = last;
 			}
+			// Set a new translation node
 			else if (input.compare("position") == 0)
 			{
 				Vector3 pos;
@@ -225,15 +243,23 @@ namespace Indecisive
 				last = new PositionNode(input, pos);
 				parent->Append(last);
 			}
+			// Creates a game object from an obj file
 			else if (input.compare("object") == 0)
 			{
+				// object creation makes use of the graphics interface so it needs to be initialised before hand
+				if (!initialised)
+				{
+					auto ex = std::runtime_error("Graphics interface must be initialised before loading objects.");
+					TI_LOG_EXCEPTION(".", ex);
+					throw ex;
+				}
 				std::string obj;
 				stream >> input;
 				stream >> obj;
-				// Initialise game objects (OBJLoader makes uses of graphics so it needs to be done after it)
 				last = new ObjectNode(input, *ComponentFactory::MakeObjectFromObj(obj));
 				parent->Append(last);
 			}
+			// Creates an engine component
 			else if (input.compare("comp") == 0)
 			{
 				if (ObjectNode* o = dynamic_cast<ObjectNode*>(last))
@@ -276,7 +302,7 @@ namespace Indecisive
 				}
 			
 			}
-
+			// Ends the current tree hierarchy, if top level it will reset failbit so it can close.
 			else if (input.compare("end") == 0)
 			{
 				if (parent->parent != nullptr)

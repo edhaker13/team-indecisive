@@ -27,7 +27,7 @@ namespace Indecisive
 		{
 			Texture* pTexture = nullptr;
 			auto pGraphics = static_cast<IGraphics*>(GetService("graphics"));
-			const std::wstring file = L".\\/Assets\\/" + std::wstring(name.cbegin(), name.cend());
+			const std::wstring file = L"./Assets/" + std::wstring(name.cbegin(), name.cend());
 			if (pGraphics == nullptr)
 			{
 				TI_LOG_E("Couldn't find graphics interface");

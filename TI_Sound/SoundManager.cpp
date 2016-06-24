@@ -7,6 +7,7 @@ namespace Indecisive
 
 	bool SoundManager::Initialize(HWND hwnd)
 	{
+		// TODO: Too many lines, just return method
 		bool result;
 
 		// Initialize direct sound and the primary sound buffer.
@@ -57,6 +58,7 @@ namespace Indecisive
 
 		// Setup the format of the primary sound bufffer.
 		// In this case it is a .WAV file recorded at 44,100 samples per second in 16-bit stereo (cd audio format).
+		// TODO: Read format??
 		waveFormat.wFormatTag = WAVE_FORMAT_PCM;
 		waveFormat.nSamplesPerSec = 44100;
 		waveFormat.wBitsPerSample = 16;
@@ -204,6 +206,8 @@ namespace Indecisive
 		tempBuffer->Release();
 		tempBuffer = 0;
 
+		// TODO: Read file using std::ifstream
+
 		// Move to the beginning of the wave data which starts at the end of the data chunk header.
 		fseek(filePtr, sizeof(WaveHeaderType), SEEK_SET);
 
@@ -258,7 +262,7 @@ namespace Indecisive
 	bool SoundManager::Play(const std::string& filename, DWORD dwReserved1, DWORD dwPriority, DWORD dwFlags)
 	{
 		HRESULT result;
-
+		// TODO: use map.find and handle failure
 		IDirectSoundBuffer8* secondaryBuffer = m_Sounds[filename];
 		if (secondaryBuffer == nullptr)
 		{

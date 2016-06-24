@@ -4,7 +4,6 @@
 namespace Indecisive
 {
 	typedef std::function<void()> InputCallback;
-	// Key codes
 	enum KeyCode
 	{
 		KEY_UNKNOWN = 0,
@@ -179,6 +178,7 @@ namespace Indecisive
 
 		KEY_LAST
 	};
+	// Maps Actions to Key Presses
 	class IInputManager
 	{
 	public:

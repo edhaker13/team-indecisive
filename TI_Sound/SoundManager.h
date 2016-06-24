@@ -26,7 +26,7 @@ namespace Indecisive
 		std::map<std::string, IDirectSoundBuffer8*> m_Sounds;
 		IDirectSound8* m_DirectSound = nullptr;
 		IDirectSoundBuffer* m_primaryBuffer = nullptr;
-
+		// TODO: Merge with Initialize and Shutdown?
 		bool InitializeDirectSound(HWND);
 		void ShutdownDirectSound();
 

@@ -9,7 +9,7 @@ namespace Indecisive
 	struct Texture;
 	struct Vertex;
 	class Window;
-
+	// The graphics interface needs to have methods accessible from elsewhere.
 	class IGraphics
 	{
 	public:

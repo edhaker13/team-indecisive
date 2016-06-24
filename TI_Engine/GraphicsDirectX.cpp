@@ -28,6 +28,7 @@ namespace Indecisive
 
 	bool GraphicsDirectX::Initialise(const Window* pWindow)
 	{
+		// Handle the possibilty of a headless interface
 		if (pWindow == nullptr)
 		{
 			if (FAILED(InitDevice()))
@@ -37,10 +38,10 @@ namespace Indecisive
 				throw GetLastError();
 			}
 
-			TI_LOG_V("Initialised Barebones?! DirectX Graphics");
+			TI_LOG_V("Initialised Barebones DirectX Graphics");
 			return true;
 		}
-
+		// Assign window details
 		_hWnd = pWindow->GetHWND();
 		_windowWidth = pWindow->GetWidth();
 		_windowHeight = pWindow->GetHeight();
@@ -491,7 +492,7 @@ namespace Indecisive
 		static float dt = 0.0f;
 		static float lastT = 0.0f;
 
-		//To be removed (placed in game loop)
+		// TODO: To be removed (placed in game loop)
 		if (_driverType == D3D_DRIVER_TYPE_REFERENCE)
 		{
 			t += (float)XM_PI * 0.0125f;
@@ -539,7 +540,7 @@ namespace Indecisive
 		// Present our back buffer to our front buffer
 		_pSwapChain->Present(0, 0);
 	}
-	// TODO: Call this for each node and subobject somehow. Possible solution method DrawNode: Updates CB, DrawsMesh. Alt: Method takes subobject, grabs current cb, updates.
+	// TODO: Call this for each subobject somehow. Possible solution DrawNode: Updates CB, DrawsMesh. Alt: Method takes subobject, grabs current cb, updates.
 	// Alt Alt: Node::Draw doesnt do recursion, DrawNode sets initial cb, calls DrawNode on children, updates world for all, updates lighting for subobjects.
 	// Alt^3: UpdateCB(SubObject){ _cb; set lighting from mat; update cb; } SetCB(Node){ _cb->World = world; set lighting; update cb; }
 	void GraphicsDirectX::UpdateConstantBuffer(const TreeNode& n, const XMMATRIX& parentWorld)

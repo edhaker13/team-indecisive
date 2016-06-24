@@ -7,6 +7,8 @@
 namespace Indecisive
 {
 	//--------------------------------------------------------------------------------------------------
+	// Stream operators for quick, clean and reusable text output
+	//--------------------------------------------------------------------------------------------------
 	std::ostream& operator <<(std::ostream& s, const Waypoint& w)
 	{
 		return s << "ID " << w.id << "\t" << w.position;
@@ -30,20 +32,22 @@ namespace Indecisive
 	PositionList PathFinder::Find(const Vector3& start, const Vector3& end, const WaypointList& waypoints
 		, const EdgeMap& edges)
 	{
-		NodeList openNodes, closedNodes;
 		PositionList path;
-		Node* current = nullptr;
-
 		auto nearestToStart = GetNearest(start, waypoints);
 		auto nearestToEnd = GetNearest(end, waypoints);
 
 		if (nearestToStart == nearestToEnd || nearestToStart == nullptr || nearestToEnd == nullptr)
 		{
-			return path;
+			return path; // Early exit, no path can be found.
 		}
+
+		Node* current = nullptr;
+		NodeList openNodes, closedNodes;
 		openNodes.push_back(new Node(0, nullptr, nearestToStart));
+		
 		while (!openNodes.empty())
 		{
+			// Set current node to the next cheap node
 			for (auto n : openNodes)
 			{
 				if (current == nullptr || n->cost < current->cost)
@@ -51,10 +55,12 @@ namespace Indecisive
 					current = n;
 				}
 			}
+			// Last waypoint to target, we have finished our search
 			if (current->waypoint == nearestToEnd)
 			{
 				return ConstructPath(current, end);
 			}
+			// For each connected node calculate effective cost from current node
 			for (auto id : current->waypoint->connectedIDs)
 			{
 
@@ -64,8 +70,9 @@ namespace Indecisive
 					continue;
 				}
 				float cost = current->cost;
+				// TODO: Handle the possibilty of an invalid ID.
 				auto connected = *(std::find_if(waypoints.cbegin(), waypoints.cend(),
-					[id](Waypoint* n){ return n->id == id; }));
+					[id](Waypoint* n){ return n->id == id; })); // Short lambda to get the node from it's ID.
 				cost += GetEdgeCost(current->waypoint, connected, edges);
 				cost += GetEuclidianCost(connected->position, end);
 				openNodes.push_back(new Node(cost, current, connected));
@@ -83,6 +90,7 @@ namespace Indecisive
 	{
 		PositionList path;
 		auto current = targetNode;
+		// Root node be the one with out a parent, move up til found.
 		while (current != nullptr)
 		{
 			path.push_back(current->waypoint->position);
@@ -95,25 +103,28 @@ namespace Indecisive
 	//--------------------------------------------------------------------------------------------------
 	float PathFinder::GetEdgeCost(Waypoint const* from, Waypoint const* to, const EdgeMap& edges)
 	{
+		// Appropiate edge cost should have the same IDs for the edges as the supplied waypoints
 		auto it = std::find_if(edges.begin(), edges.end(), [from, to](const EdgeCost& e){
 			return e.first.first == from->id && e.first.second == to->id
 				|| e.first.first == to->id && e.second == from->id; });
-			if (it != edges.cend())
-			{
-				return it->second;
-			}
-			return std::numeric_limits<float>::max();
+		// Only return if the cost was found, otherwise return numeric maximum
+		if (it != edges.cend())
+		{
+			return it->second;
+		}
+		return std::numeric_limits<float>::max(); //TODO: use cost type for max?
 	}
 	//--------------------------------------------------------------------------------------------------
 	float PathFinder::GetEuclidianCost(const Vector3& positionOne, const Vector3& positionTwo)
 	{
+		// Distance can be squared as its only being used for comparison
 		return Vector3::DistanceSquared(positionOne, positionTwo);
 	}
 	//--------------------------------------------------------------------------------------------------
 	Waypoint* PathFinder::GetNearest(const Vector3& position, const WaypointList& waypoints)
 	{
 		Waypoint* nearest = nullptr;
-		auto minDist = std::numeric_limits<float>::max();
+		auto minDist = std::numeric_limits<float>::max(); //TODO: use waypoint type for max?
 		auto dist = 0.f;
 
 		for (auto w : waypoints)
@@ -143,13 +154,13 @@ namespace Indecisive
 		, float deceleration, float maxSpeed)
 	{
 		Vector3 vectorToTarget = target - position;
-		// calculate the distance to the target
+		// Calculate the distance to the target
 		auto distance = vectorToTarget.Length();
 
 		if (distance > 0)
 		{
 			float speed = distance / deceleration;
-			//speed = std::min(speed, maxSpeed);
+			speed = std::min(speed, maxSpeed);
 
 			Vector3 resultingVelocity = Vector3::Normalize(vectorToTarget) * speed;
 
@@ -170,7 +181,7 @@ namespace Indecisive
 	Vector3 Steering::Flee(const Vector3& position, const Vector3& target, const Vector3& velocity
 		, float maxSpeed)
 	{
-		//only flee if the target is within 'panic distance'. Work in distance squared space.
+		// Only flee if the target is within 'panic distance'. Work in distance squared space.
 		static const float PanicDistanceSq = 100.0f * 100.0f;
 		if (Vector3::DistanceSquared(position, target) > PanicDistanceSq)
 		{
@@ -195,7 +206,7 @@ namespace Indecisive
 		}
 
 		assert(!path.empty());
-		// Get current target in model space
+		// Get current target in local space
 		currentTarget = Vector3ToLocalSpace(path[currentIndex], node.GetParentWorld());
 
 		// New target has been clicked
@@ -206,14 +217,17 @@ namespace Indecisive
 				currentIndex = 0;
 				currentTarget = Vector3ToLocalSpace(path[currentIndex], node.GetParentWorld());
 			}
+			// Once a target has been set, apply the appropiate flags.
 			hasTarget = true;
 			newTarget = false;
 			endOnTarget = false;
 		}
+		// Last destination is the target position, use arrive to not overshoot.
 		else if (endOnTarget)
 		{
 			return Steering::Arrive(position, endTarget, velocity, decel, maxSpeed);
 		}
+		// Current destination is part of a path, move along the path if applicable.
 		else if (hasTarget)
 		{
 			auto distToCurrent = Vector3::DistanceSquared(position, currentTarget);
@@ -226,10 +240,11 @@ namespace Indecisive
 					currentTarget = Vector3ToLocalSpace(path[++currentIndex], node.GetParentWorld());
 				}
 			}
+			// End on target if closer to the target or if the destination is the target
 			else if (distToEnd < distToCurrent || currentTarget == endTarget)
 			{
 				endOnTarget = true;
-				hasTarget = true;
+				hasTarget = true; // TODO:? using the word target too much
 				newTarget = false;
 				return Vector3::Zero; //Steering::Arrive(position, endTarget, velocity, decel, maxSpeed);
 			}
@@ -242,15 +257,16 @@ namespace Indecisive
 	void Steering::MoveInHeadingDirection(float dt, Vector3& steering, Vector3& velocity
 		, Vector3& position, float mass, float maxSpeed)
 	{
+		// Force is usually steering + obstacle avoidance. The latter is not implemented here.
 		Vector3 force = steering;
 
-		//Acceleration = Force/Mass
+		// Acceleration = Force/Mass
 		Vector3 acceleration = force / mass;
 
-		//Update velocity.
+		// Update velocity.
 		velocity += acceleration * dt;
 
-		//Finally, update the position.
+		// Finally, update the position.
 		position += velocity * dt;
 	}
 	//------------------------------------------------------------------------------------------------//
@@ -258,15 +274,16 @@ namespace Indecisive
 	//-------------------------------------------------------------------------------------------------
 	float GetMinDistanceInPath(const PositionList& path)
 	{
+		// Using a static variable to reuse the result in subsequent calls
 		static float result = 0;
 		if (result == 0)
 		{
 			float minDist = std::numeric_limits<float>::max();
-			Vector3 lastV = path[0];
+			Vector3 lastP = path[0]; //TODO: More descriptive names
 			std::for_each(path.cbegin() + 1, path.cend(),
-				[&minDist, &lastV](Vector3 v){
-				auto d = Vector3::DistanceSquared(lastV, v);
-				lastV = v;
+				[&minDist, &lastP](Vector3 v){
+				auto d = Vector3::DistanceSquared(lastP, v);
+				lastP = v;
 				if (d < minDist) minDist = d / 4;
 			});
 			result = minDist;
@@ -284,23 +301,24 @@ namespace Indecisive
 	//--------------------------------------------------------------------------------------------------
 	void AIComponent::SetTarget(const Vector3& t)
 	{
+		// Need to find a path from our position to the target
 		mPath = PathFinder::Find(mPosition, t, mWaypoints, mEdges);
+		// Set the target in local space
 		mTarget = Vector3ToLocalSpace(t, mNode.GetParentWorld());
+		// Set the appropiate flags
 		mNewTarget = true;
 		mHasTarget = true;
 	}
 	//--------------------------------------------------------------------------------------------------
 	void AIComponent::Update(float dt)
 	{
-		//dt = 0.002f;
-		if (mPath.empty())
-			return;
-
+		// Generate steering force based on selected behaviour
 		switch (mBehaviour)
 		{
 		case Indecisive::AIComponent::NoBehaviour:
 			break;
 		case Indecisive::AIComponent::FollowBehaviour:
+			if (mPath.empty()) return; // Can't follow a path where there is none
 			mSteering = Steering::PathFollow(mPosition, mTarget, mHasTarget, mNewTarget, mEndOnTarget
 				, mVelocity, mDeceleration, mMaxSpeed, mPath, mCurrentIndex, mNode);
 			break;
@@ -310,7 +328,9 @@ namespace Indecisive
 		default:
 			break;
 		}
+		// Apply forces
 		Steering::MoveInHeadingDirection(dt, mSteering, mVelocity, mPosition, mMass, mMaxSpeed);
+		// Apply translation to use for the tree node
 		if (mHasTarget) mWorld = Matrix::CreateTranslation(mPosition);
 	}
 	//------------------------------------------------------------------------------------------------//

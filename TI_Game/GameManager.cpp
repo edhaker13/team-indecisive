@@ -11,7 +11,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	auto _gameMngr = Indecisive::GameManager(hInstance, nCmdShow);
 	// Main message loop
 	MSG msg = { 0 };
-
+	// Ignore most messages at this level
 	while (WM_QUIT != msg.message)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -23,7 +23,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		{
 			_gameMngr.Draw();
 			_gameMngr.Update();
-			// Cam Movement
 		}
 	}
 
@@ -32,9 +31,12 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 namespace Indecisive
 {
+	// TODO: Not really a manager so why the name
 	GameManager::GameManager(HINSTANCE hInstance, int nCmdShow)
 	{
+		// Allocate level object loader
 		auto lvlLoader = LevelLoader();
+		// TODO: Make this constant a parameter?
 		static const std::string level = "dummy.lvl";
 
 		if (!lvlLoader.CanRead(level))
@@ -47,15 +49,22 @@ namespace Indecisive
 			lvlLoader.ReadWindow(level);
 			lvlLoader.GetWindow()->Initialise(hInstance, nCmdShow);
 			lvlLoader.Read(level);
-			_pGraphics = lvlLoader.GetGraphics();
 		}
 		catch (const std::exception& ex)
 		{
 			TI_LOG_EXCEPTION("failed to read level.", ex);
 		}
+		try
+		{
+			_pGraphics = lvlLoader.GetGraphics();
+		}
+		catch (const std::exception& ex)
+		{
+			TI_LOG_EXCEPTION("failed to allocate graphics interface.", ex);
+		}
 		TI_LOG_V("Loaded Level: " + level);
 	};
-
+	
 	void GameManager::Draw() const
 	{
 		_pGraphics->Draw();
@@ -68,5 +77,6 @@ namespace Indecisive
 
 	void GameManager::SetTimer()
 	{
+		//TODO: TIMER CLASS
 	};
 }

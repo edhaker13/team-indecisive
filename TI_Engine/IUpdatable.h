@@ -3,7 +3,8 @@
 namespace Indecisive
 {
 	struct Matrix;
-	 class IUpdatable
+	// Components that need to call Update() will also need to store it's changes in a Matrix.
+	class IUpdatable
 	{
 	public:
 		 virtual void Update(float elapsedTime) = 0;

@@ -6,7 +6,7 @@
 
 namespace Indecisive
 {
-
+	// Common methods to be use when reading data
 	class IReadable
 	{
 	protected:

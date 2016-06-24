@@ -39,6 +39,7 @@ namespace Indecisive
 			{
 				g = _groups[i];
 
+				// Materials per group are disables until I can find how to update the constant buffer
 				/*cb->diffuseMaterial = currentGroup->mat->diffuse;
 				cb->ambientMaterial = currentGroup->mat->ambient;
 				cb->specularMtrl = currentGroup->mat->specular;

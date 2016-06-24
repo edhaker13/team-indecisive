@@ -4,6 +4,7 @@
 
 namespace Indecisive
 {
+	// Load, Store, Play sounds from a filename
 	class ISoundManager
 	{
 	public:

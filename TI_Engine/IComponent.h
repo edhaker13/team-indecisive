@@ -3,6 +3,7 @@
 
 namespace Indecisive
 {
+	// Basic component interface, type will be it's identifier
 	class IComponent
 	{
 	private:

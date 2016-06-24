@@ -4,6 +4,7 @@
 
 namespace Indecisive
 {
+	// A game object have a list of updateble and drawable elements to execute.
 	class IGameObject : public IDrawable, public IUpdatable
 	{
 	public:

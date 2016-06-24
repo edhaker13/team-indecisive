@@ -33,7 +33,7 @@ namespace Indecisive
 		auto pSubObject = new SubObject();
 		auto pGameObject = new GameObject();
 		auto pMeshComponent = new MeshComponent(*pMesh);
-
+		// Set descriptive variables
 		pMesh->vertexBuffer = pGraphics->InitVertexBuffer(vertices, 4);
 		pSubObject->vertexEnd = 4;
 		pMesh->vertexBufferStride = sizeof(Vertex);
@@ -52,9 +52,11 @@ namespace Indecisive
 		{
 			TI_LOG_W("No default texture loaded.");
 		}
+		// Set textures to object
 		pSubObject->ambientTexture = none;
 		pSubObject->diffuseTexture = none;
 		pSubObject->specularTexture = none;
+		// Assemble Object
 		pMeshComponent->AddGroup(pSubObject);
 		pGameObject->AddDrawable(pMeshComponent);
 		return pGameObject;
@@ -67,11 +69,13 @@ namespace Indecisive
 		{
 			TI_LOG_W("No default texture loaded.");
 		}
+		// Load Obj file
 		auto ObjLoader = OBJLoader();
 		ObjLoader.Load(filename);
 		auto pMeshComponent = ObjLoader.ConstructFromMesh(filename);
 		if (pMeshComponent != nullptr)
 		{
+			// Assemble object if mesh is valid
 			auto pGameObject = new GameObject();
 			pGameObject->AddDrawable(pMeshComponent);
 			return pGameObject;

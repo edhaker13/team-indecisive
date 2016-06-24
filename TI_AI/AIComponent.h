@@ -55,10 +55,11 @@ namespace Indecisive
 	class PathFinder // Calculates the shortest path from the supplied
 	{
 	public:
-		// Using A* algorithm
+		// Finds a path between start to target using euclidian A* algorithm
 		AI_API static PositionList Find(const Vector3&, const Vector3&, const WaypointList&, const EdgeMap&);
 	
 	private:
+		// Path is back to front during the search, reverse it
 		static PositionList ConstructPath(Node*, const Vector3&);
 		static float GetEdgeCost(const Waypoint*, const Waypoint*, const EdgeMap&);
 		static float GetEuclidianCost(const Vector3&, const Vector3&);
@@ -66,7 +67,7 @@ namespace Indecisive
 		static bool IsInList(const NodeList&, const char&);
 	};
 	//--------------------------------------------------------------------------------------------------
-	// Steering behaviours, likely to be reused so separate
+	// Steering behaviours, likely to be reused, so they are separate
 	//--------------------------------------------------------------------------------------------------
 	namespace Steering
 	{
@@ -83,6 +84,7 @@ namespace Indecisive
 	//--------------------------------------------------------------------------------------------------
 	float GetMinDistanceInPath(const PositionList&);
 	Vector3 Vector3ToLocalSpace(const Vector3&, const Matrix&);
+
 	//--------------------------------------------------------------------------------------------------
 	// Binding class, path finding and steering to our engine methods
 	//--------------------------------------------------------------------------------------------------
