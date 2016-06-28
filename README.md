@@ -47,6 +47,21 @@ Dependencies:
 The build order results in
 TI_Engine, TI_Physics, TI_Sound, TI_AI, TI_Input, TI_Loader, TI_Game.
 
+## Demo Levels ##
+There are four levels inside TI_Game, demonstrating how each component should be used and a level using them together.
+Here is a video for each of them.
+
+[AI]
+
+[Input & Sound]
+
+[Physics]
+
+[Combined]
 
 [1]: https://github.com/Microsoft/DirectXTex
 [2]: http://libcinder.org
+[AI]: https://dl.dropboxusercontent.com/u/13561556/Media/ai.webm
+[Input & Sound]: https://dl.dropboxusercontent.com/u/13561556/Media/input.webm
+[Physics]: https://dl.dropboxusercontent.com/u/13561556/Media/physics.webm
+[Combined]: https://dl.dropboxusercontent.com/u/13561556/Media/combined.webm
